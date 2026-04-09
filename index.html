@@ -73,7 +73,6 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col transition-colors duration-300 text-sm sm:text-base">
 
-    <!-- Toast Notification -->
     <div id="toastNotification" class="fixed top-4 right-4 sm:top-5 sm:right-5 z-[200] transform translate-x-full transition-transform duration-300 flex items-center p-3 sm:p-4 mb-4 rounded-xl sm:rounded-2xl premium-shadow border glass border-white/50 dark:border-slate-700/50 max-w-[90vw] overflow-hidden">
         <div id="toastIcon" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 relative z-10">
             <i class="fas fa-check text-sm sm:text-base"></i>
@@ -257,12 +256,39 @@
                                 <input type="number" id="inputGuruTarget" required min="1" placeholder="Target" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none text-xs sm:text-sm font-medium transition-all shadow-sm">
                             </div>
                         </div>
+                        
+                        <!-- FITUR BARU: Dropdown Multi-Select Add Guru -->
                         <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm mb-4">
                             <p class="text-[10px] sm:text-xs font-bold text-brand-600 dark:text-brand-400 mb-2"><i class="fas fa-filter"></i> Batas Akses Upload (Pilih spesifik atau biarkan default untuk bebas akses)</p>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                <select id="inputGuruLembaga" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500/30 outline-none text-xs font-medium cursor-pointer"><option value="">-- Semua Lembaga --</option></select>
-                                <select id="inputGuruMapel" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500/30 outline-none text-xs font-medium cursor-pointer"><option value="">-- Semua Mapel --</option></select>
-                                <select id="inputGuruKelas" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500/30 outline-none text-xs font-medium cursor-pointer"><option value="">-- Semua Kelas --</option></select>
+                                
+                                <div class="relative custom-multiselect">
+                                    <input type="hidden" id="inputGuruLembaga" value="">
+                                    <button type="button" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500/30 outline-none text-xs font-medium text-left flex justify-between items-center" onclick="toggleMS('ms-add-lembaga')">
+                                        <span id="label-ms-add-lembaga" class="truncate opacity-60">-- Bebas Lembaga --</span>
+                                        <i class="fas fa-chevron-down text-[10px] opacity-50"></i>
+                                    </button>
+                                    <div id="ms-add-lembaga" class="ms-dropdown hidden absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-48 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                                </div>
+                                
+                                <div class="relative custom-multiselect">
+                                    <input type="hidden" id="inputGuruMapel" value="">
+                                    <button type="button" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500/30 outline-none text-xs font-medium text-left flex justify-between items-center" onclick="toggleMS('ms-add-mapel')">
+                                        <span id="label-ms-add-mapel" class="truncate opacity-60">-- Bebas Mapel --</span>
+                                        <i class="fas fa-chevron-down text-[10px] opacity-50"></i>
+                                    </button>
+                                    <div id="ms-add-mapel" class="ms-dropdown hidden absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-48 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                                </div>
+                                
+                                <div class="relative custom-multiselect">
+                                    <input type="hidden" id="inputGuruKelas" value="">
+                                    <button type="button" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500/30 outline-none text-xs font-medium text-left flex justify-between items-center" onclick="toggleMS('ms-add-kelas')">
+                                        <span id="label-ms-add-kelas" class="truncate opacity-60">-- Bebas Kelas --</span>
+                                        <i class="fas fa-chevron-down text-[10px] opacity-50"></i>
+                                    </button>
+                                    <div id="ms-add-kelas" class="ms-dropdown hidden absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-48 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                                </div>
+
                             </div>
                         </div>
                         <button type="submit" id="btnSaveGuru" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl sm:rounded-2xl shadow-lg shadow-brand-500/20 transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 text-sm"><i class="fas fa-user-plus"></i> Tambah Guru</button>
@@ -462,45 +488,14 @@
         </div>
     </div>
 
-    <div id="guruDetailModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="guruDetailContent">
-            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div>
-            <div class="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80"><h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight"><div class="bg-brand-100 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 p-1.5 sm:p-2 rounded-lg sm:rounded-xl"><i class="fas fa-chart-pie text-sm"></i></div> Laporan</h2><button type="button" onclick="closeGuruDetailModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all border border-slate-200 dark:border-slate-600 shadow-sm"><i class="fas fa-times text-xs sm:text-sm"></i></button></div>
-            <div class="p-4 sm:p-6 md:p-8">
-                <div class="text-center mb-4 sm:mb-6"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-slate-100 dark:bg-slate-700 rounded-full mx-auto mb-2 sm:mb-3 flex items-center justify-center border-2 sm:border-4 border-white dark:border-slate-800 shadow-sm"><i class="fas fa-user-tie text-xl sm:text-2xl text-slate-400"></i></div><h3 id="detailGuruName" class="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-200 tracking-tight leading-tight"></h3></div>
-                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-slate-100 dark:border-slate-700/50 mb-4 sm:mb-6 shadow-inner"><div class="flex justify-between items-center mb-2 sm:mb-2.5 text-xs sm:text-sm font-black"><span class="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[9px] sm:text-[10px]">Terkumpul</span><span class="text-brand-600 dark:text-brand-400 text-sm sm:text-base" id="detailGuruPct">0%</span></div><div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 sm:h-3 overflow-hidden mb-2.5 sm:mb-3 shadow-inner"><div id="detailGuruBar" class="bg-brand-500 h-2.5 sm:h-3 rounded-full transition-all duration-700 relative"><div class="absolute inset-0 bg-white/20 w-full h-full"></div></div></div><div class="flex justify-between items-center font-bold"><span class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm" id="detailGuruCount">0 / 0 Dok.</span><span id="detailGuruMissing" class="text-[10px] sm:text-xs text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-500/10 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-red-100 dark:border-red-500/20">Kurang: 0</span></div></div>
-                <h4 class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase mb-2 sm:mb-3 tracking-widest ml-1">Rincian Dokumen:</h4><ul id="detailGuruMapels" class="space-y-2 sm:space-y-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 max-h-32 sm:max-h-40 overflow-y-auto custom-scrollbar font-medium"></ul>
-            </div>
-        </div>
-    </div>
-
-    <div id="loginModal" class="fixed inset-0 z-[100] hidden bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2.5rem] premium-shadow w-full max-w-xs sm:max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="loginModalContent">
-            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div>
-            <div class="p-6 sm:p-10 text-center"><div class="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6"><div class="absolute inset-0 bg-brand-500/20 dark:bg-brand-500/30 rounded-2xl sm:rounded-3xl blur-xl transform rotate-6"></div><div class="relative w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-brand-100 to-indigo-200 dark:from-slate-700 dark:to-slate-800 text-brand-600 dark:text-brand-400 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto shadow-inner border border-white dark:border-slate-600 transform rotate-3 hover:rotate-0 transition-all duration-300"><i class="fas fa-fingerprint text-2xl sm:text-3xl"></i></div></div><h2 class="text-xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight mb-1 sm:mb-2">Otentikasi</h2><p class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 mb-6 sm:mb-8">Masuk sebagai Administrator.</p><form id="loginForm" class="space-y-4 sm:space-y-5"><div><input type="password" id="adminPassword" required placeholder="PIN" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-3 sm:py-4 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 outline-none transition-all text-center tracking-[0.4em] font-black text-base sm:text-lg shadow-inner"></div><button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 dark:bg-brand-600 dark:hover:bg-brand-500 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg shadow-slate-800/20 dark:shadow-brand-500/20 transition-all transform hover:-translate-y-1 text-sm sm:text-base">Berikan Akses</button><button type="button" onclick="closeLoginModal()" class="w-full text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300 font-bold py-2 mt-1 sm:mt-2 transition-colors text-xs sm:text-sm">Kembali</button></form></div>
-        </div>
-    </div>
-
-    <div id="editBukuModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="editBukuModalContent">
-            <div class="flex justify-between items-center p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80"><h2 class="text-sm sm:text-base font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3"><div class="bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 p-1.5 sm:p-2 rounded-lg sm:rounded-xl"><i class="fas fa-edit text-sm"></i></div> Edit Dokumen</h2><button type="button" onclick="closeEditBukuModal()" class="text-slate-400 hover:text-red-500 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition shadow-sm border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700"><i class="fas fa-times text-xs sm:text-sm"></i></button></div>
-            <div class="p-4 sm:p-6 md:p-8 max-h-[75vh] overflow-y-auto custom-scrollbar"><form id="editBukuForm" class="space-y-3 sm:space-y-5"><input type="hidden" id="editBukuRowIndex"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Tahun</label><select id="editBukuTahun" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Lembaga</label><select id="editBukuLembaga" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Guru</label><select id="editBukuGuru" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Kelas</label><select id="editBukuKelas" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Mapel</label><select id="editBukuMapel" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div></div><button type="submit" id="btnSubmitEditBuku" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg mt-2 sm:mt-4 transition-all text-sm sm:text-base">Simpan Update</button></form></div>
-        </div>
-    </div>
-
-    <div id="editLembagaModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-xs overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50">
-            <div class="p-6 sm:p-8"><h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 tracking-tight">Edit Data Lembaga</h2><form id="editLembagaForm" class="space-y-4 sm:space-y-5"><input type="hidden" id="editLembagaOldName"><div><label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Nama Lembaga</label><input type="text" id="editLembagaName" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm transition-all shadow-inner font-medium"></div><div><label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Target Total Buku</label><input type="number" id="editLembagaTarget" required min="1" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm transition-all shadow-inner font-medium"></div><div class="flex gap-2 sm:gap-3"><button type="button" onclick="closeEditLembagaModal()" class="w-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-600 dark:text-slate-300 font-bold py-2.5 sm:py-3.5 rounded-xl transition text-xs sm:text-sm">Batal</button><button type="submit" id="btnSubmitEditLembaga" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 sm:py-3.5 rounded-xl shadow-lg transition text-xs sm:text-sm">Simpan</button></div></form></div>
-        </div>
-    </div>
-
-    <div id="editDataModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-xs overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50">
-            <div class="p-6 sm:p-8"><h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 tracking-tight"><span id="editDataModalTitle">Edit Data</span></h2><form id="editDataForm" class="space-y-4 sm:space-y-5"><input type="hidden" id="editDataOldName"><input type="hidden" id="editDataType"><div><input type="text" id="editDataName" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 focus:ring-2 focus:ring-brand-500/40 outline-none text-xs sm:text-sm transition-all shadow-inner font-medium"></div><div class="flex gap-2 sm:gap-3"><button type="button" onclick="closeEditDataModal()" class="w-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-600 dark:text-slate-300 font-bold py-2.5 sm:py-3.5 rounded-xl transition text-xs sm:text-sm">Batal</button><button type="submit" id="btnSubmitEditData" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 sm:py-3.5 rounded-xl shadow-lg transition text-xs sm:text-sm">Simpan</button></div></form></div>
-        </div>
-    </div>
-
-    <!-- MODAL EDIT GURU YANG SUDAH DIPERBAIKI -->
+    <div id="guruDetailModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="guruDetailContent"><div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div><div class="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80"><h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight"><div class="bg-brand-100 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 p-1.5 sm:p-2 rounded-lg sm:rounded-xl"><i class="fas fa-chart-pie text-sm"></i></div> Laporan</h2><button type="button" onclick="closeGuruDetailModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all border border-slate-200 dark:border-slate-600 shadow-sm"><i class="fas fa-times text-xs sm:text-sm"></i></button></div><div class="p-4 sm:p-6 md:p-8"><div class="text-center mb-4 sm:mb-6"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-slate-100 dark:bg-slate-700 rounded-full mx-auto mb-2 sm:mb-3 flex items-center justify-center border-2 sm:border-4 border-white dark:border-slate-800 shadow-sm"><i class="fas fa-user-tie text-xl sm:text-2xl text-slate-400"></i></div><h3 id="detailGuruName" class="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-200 tracking-tight leading-tight"></h3></div><div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-slate-100 dark:border-slate-700/50 mb-4 sm:mb-6 shadow-inner"><div class="flex justify-between items-center mb-2 sm:mb-2.5 text-xs sm:text-sm font-black"><span class="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[9px] sm:text-[10px]">Terkumpul</span><span class="text-brand-600 dark:text-brand-400 text-sm sm:text-base" id="detailGuruPct">0%</span></div><div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 sm:h-3 overflow-hidden mb-2.5 sm:mb-3 shadow-inner"><div id="detailGuruBar" class="bg-brand-500 h-2.5 sm:h-3 rounded-full transition-all duration-700 relative"><div class="absolute inset-0 bg-white/20 w-full h-full"></div></div></div><div class="flex justify-between items-center font-bold"><span class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm" id="detailGuruCount">0 / 0 Dok.</span><span id="detailGuruMissing" class="text-[10px] sm:text-xs text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-500/10 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-red-100 dark:border-red-500/20">Kurang: 0</span></div></div><h4 class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase mb-2 sm:mb-3 tracking-widest ml-1">Rincian Dokumen:</h4><ul id="detailGuruMapels" class="space-y-2 sm:space-y-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 max-h-32 sm:max-h-40 overflow-y-auto custom-scrollbar font-medium"></ul></div></div></div>
+    <div id="loginModal" class="fixed inset-0 z-[100] hidden bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2.5rem] premium-shadow w-full max-w-xs sm:max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="loginModalContent"><div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div><div class="p-6 sm:p-10 text-center"><div class="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6"><div class="absolute inset-0 bg-brand-500/20 dark:bg-brand-500/30 rounded-2xl sm:rounded-3xl blur-xl transform rotate-6"></div><div class="relative w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-brand-100 to-indigo-200 dark:from-slate-700 dark:to-slate-800 text-brand-600 dark:text-brand-400 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto shadow-inner border border-white dark:border-slate-600 transform rotate-3 hover:rotate-0 transition-all duration-300"><i class="fas fa-fingerprint text-2xl sm:text-3xl"></i></div></div><h2 class="text-xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight mb-1 sm:mb-2">Otentikasi</h2><p class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 mb-6 sm:mb-8">Masuk sebagai Administrator.</p><form id="loginForm" class="space-y-4 sm:space-y-5"><div><input type="password" id="adminPassword" required placeholder="PIN" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-3 sm:py-4 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 outline-none transition-all text-center tracking-[0.4em] font-black text-base sm:text-lg shadow-inner"></div><button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 dark:bg-brand-600 dark:hover:bg-brand-500 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg shadow-slate-800/20 dark:shadow-brand-500/20 transition-all transform hover:-translate-y-1 text-sm sm:text-base">Berikan Akses</button><button type="button" onclick="closeLoginModal()" class="w-full text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300 font-bold py-2 mt-1 sm:mt-2 transition-colors text-xs sm:text-sm">Kembali</button></form></div></div></div>
+    
+    <div id="editLembagaModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-xs overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50"><div class="p-6 sm:p-8"><h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 tracking-tight">Edit Data Lembaga</h2><form id="editLembagaForm" class="space-y-4 sm:space-y-5"><input type="hidden" id="editLembagaOldName"><div><label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Nama Lembaga</label><input type="text" id="editLembagaName" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm transition-all shadow-inner font-medium"></div><div><label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Target Total Buku</label><input type="number" id="editLembagaTarget" required min="1" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm transition-all shadow-inner font-medium"></div><div class="flex gap-2 sm:gap-3"><button type="button" onclick="closeEditLembagaModal()" class="w-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-600 dark:text-slate-300 font-bold py-2.5 sm:py-3.5 rounded-xl transition text-xs sm:text-sm">Batal</button><button type="submit" id="btnSubmitEditLembaga" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 sm:py-3.5 rounded-xl shadow-lg transition text-xs sm:text-sm">Simpan</button></div></form></div></div></div>
+    
+    <div id="editDataModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-xs overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50"><div class="p-6 sm:p-8"><h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 tracking-tight"><span id="editDataModalTitle">Edit Data</span></h2><form id="editDataForm" class="space-y-4 sm:space-y-5"><input type="hidden" id="editDataOldName"><input type="hidden" id="editDataType"><div><input type="text" id="editDataName" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 focus:ring-2 focus:ring-brand-500/40 outline-none text-xs sm:text-sm transition-all shadow-inner font-medium"></div><div class="flex gap-2 sm:gap-3"><button type="button" onclick="closeEditDataModal()" class="w-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-600 dark:text-slate-300 font-bold py-2.5 sm:py-3.5 rounded-xl transition text-xs sm:text-sm">Batal</button><button type="submit" id="btnSubmitEditData" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 sm:py-3.5 rounded-xl shadow-lg transition text-xs sm:text-sm">Simpan</button></div></form></div></div></div>
+    
+    <!-- MODAL EDIT GURU -->
     <div id="editGuruModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50">
             <div class="p-6 sm:p-8">
@@ -511,23 +506,48 @@
                         <label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Nama Lengkap</label>
                         <input type="text" id="editGuruName" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm shadow-inner font-medium">
                     </div>
-                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                         <div>
-                            <label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Target Buku</label>
+                            <label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Target</label>
                             <input type="number" id="editGuruTarget" required min="1" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm shadow-inner font-medium text-center">
                         </div>
                         <div>
-                            <label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Ganti PIN</label>
+                            <label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">PIN</label>
                             <input type="text" id="editGuruPin" required maxlength="6" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm shadow-inner font-bold text-center tracking-widest text-brand-600">
                         </div>
+                        <div class="col-span-2 sm:col-span-1">
+                            <label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">NIY</label>
+                            <input type="text" id="editGuruNiy" placeholder="NIY" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm shadow-inner font-medium text-center">
+                        </div>
                     </div>
-                    <div class="mt-2">
-                        <p class="text-[10px] font-bold text-slate-500 mb-1">Akses Batasan:</p>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                            <input type="text" id="editGuruNiy" placeholder="NIY" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-2 py-1.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs shadow-inner">
-                            <select id="editGuruLembaga" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-2 py-1.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs shadow-inner cursor-pointer"><option value="">-- Lembaga --</option></select>
-                            <select id="editGuruMapel" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-2 py-1.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs shadow-inner cursor-pointer"><option value="">-- Mapel --</option></select>
-                            <select id="editGuruKelas" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-2 py-1.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs shadow-inner cursor-pointer"><option value="">-- Kelas --</option></select>
+                    
+                    <div class="mt-3">
+                        <p class="text-[10px] font-bold text-slate-500 mb-1.5">Akses Batasan:</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="relative custom-multiselect">
+                                <input type="hidden" id="editGuruLembaga" value="">
+                                <button type="button" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-2 py-1.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-[10px] font-medium text-left flex justify-between items-center" onclick="toggleMS('ms-edit-lembaga')">
+                                    <span id="label-ms-edit-lembaga" class="truncate opacity-60">Lembaga</span>
+                                    <i class="fas fa-chevron-down text-[8px] opacity-50 ml-1"></i>
+                                </button>
+                                <div id="ms-edit-lembaga" class="ms-dropdown hidden absolute z-50 min-w-[160px] left-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-40 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                            </div>
+                            <div class="relative custom-multiselect">
+                                <input type="hidden" id="editGuruMapel" value="">
+                                <button type="button" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-2 py-1.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-[10px] font-medium text-left flex justify-between items-center" onclick="toggleMS('ms-edit-mapel')">
+                                    <span id="label-ms-edit-mapel" class="truncate opacity-60">Mapel</span>
+                                    <i class="fas fa-chevron-down text-[8px] opacity-50 ml-1"></i>
+                                </button>
+                                <div id="ms-edit-mapel" class="ms-dropdown hidden absolute z-50 min-w-[160px] left-1/2 -translate-x-1/2 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-40 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                            </div>
+                            <div class="relative custom-multiselect">
+                                <input type="hidden" id="editGuruKelas" value="">
+                                <button type="button" class="w-full rounded-lg border border-slate-200/80 dark:border-slate-700 px-2 py-1.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-[10px] font-medium text-left flex justify-between items-center" onclick="toggleMS('ms-edit-kelas')">
+                                    <span id="label-ms-edit-kelas" class="truncate opacity-60">Kelas</span>
+                                    <i class="fas fa-chevron-down text-[8px] opacity-50 ml-1"></i>
+                                </button>
+                                <div id="ms-edit-kelas" class="ms-dropdown hidden absolute z-50 min-w-[160px] right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-40 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="flex gap-2 sm:gap-3 mt-2 sm:mt-4">
@@ -538,7 +558,8 @@
             </div>
         </div>
     </div>
-
+    
+    <div id="editBukuModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="editBukuModalContent"><div class="flex justify-between items-center p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80"><h2 class="text-sm sm:text-base font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3"><div class="bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 p-1.5 sm:p-2 rounded-lg sm:rounded-xl"><i class="fas fa-edit text-sm"></i></div> Edit Dokumen</h2><button type="button" onclick="closeEditBukuModal()" class="text-slate-400 hover:text-red-500 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition shadow-sm border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700"><i class="fas fa-times text-xs sm:text-sm"></i></button></div><div class="p-4 sm:p-6 md:p-8 max-h-[75vh] overflow-y-auto custom-scrollbar"><form id="editBukuForm" class="space-y-3 sm:space-y-5"><input type="hidden" id="editBukuRowIndex"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Tahun</label><select id="editBukuTahun" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Lembaga</label><select id="editBukuLembaga" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Guru</label><select id="editBukuGuru" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Kelas</label><select id="editBukuKelas" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Mapel</label><select id="editBukuMapel" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div></div><button type="submit" id="btnSubmitEditBuku" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg mt-2 sm:mt-4 transition-all text-sm sm:text-base">Simpan Update</button></form></div></div></div>
     <div id="deleteConfirmModal" class="fixed inset-0 z-[120] hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-xs overflow-hidden transform scale-95 transition-transform duration-300 text-center border border-white/20 dark:border-slate-700/50 relative" id="deleteConfirmModalContent"><div class="absolute inset-x-0 top-0 h-1 bg-red-500"></div><div class="p-6 sm:p-8"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-5 transform rotate-3 shadow-inner border border-red-100 dark:border-red-500/20"><i class="fas fa-trash-alt text-xl sm:text-2xl transform -rotate-3"></i></div><h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white mb-1.5 sm:mb-2 tracking-tight">Konfirmasi Hapus</h2><p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-6 sm:mb-8 font-medium leading-relaxed">Tindakan ini tidak dapat dibatalkan. <br><span id="deleteDataTargetName" class="font-bold text-slate-700 dark:text-slate-300"></span></p><div class="flex gap-2 sm:gap-3"><button type="button" onclick="closeDeleteModal()" class="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold py-2.5 sm:py-3.5 rounded-xl transition-colors text-xs sm:text-sm">Batal</button><button type="button" id="btnConfirmDelete" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 sm:py-3.5 rounded-xl shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-xs sm:text-sm">Hapus</button></div></div></div></div>
 
     <!-- AREA CETAK STRUK -->
@@ -587,13 +608,77 @@
         let sortConfigGuru = { key: 'nama', asc: true };
         let filteredGuruData = [];
 
+        // FITUR BARU: MULTI-SELECT CUSTOM COMPONENT
+        function toggleMS(id) {
+            document.querySelectorAll('.ms-dropdown').forEach(el => {
+                if(el.id !== id) el.classList.add('hidden');
+            });
+            document.getElementById(id).classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.custom-multiselect')) {
+                document.querySelectorAll('.ms-dropdown').forEach(el => el.classList.add('hidden'));
+            }
+        });
+
+        function renderMultiSelect(containerId, labelId, hiddenInputId, dataArray, defaultText, selectedCSV) {
+            const container = document.getElementById(containerId);
+            const hiddenInput = document.getElementById(hiddenInputId);
+            if(!container || !hiddenInput) return;
+
+            let selectedArr = selectedCSV ? selectedCSV.split(',').map(s => s.trim()).filter(s => s) : [];
+            hiddenInput.value = selectedArr.join(', ');
+
+            let html = '';
+            dataArray.forEach(item => {
+                let val = typeof item === 'object' ? (item.nama || item) : item;
+                let isChecked = selectedArr.includes(val) ? 'checked' : '';
+                html += `
+                <label class="flex items-center gap-2 p-1.5 sm:p-2 hover:bg-slate-50 dark:hover:bg-slate-700 rounded cursor-pointer transition-colors text-xs font-medium text-slate-700 dark:text-slate-300">
+                    <input type="checkbox" value="${val}" class="rounded border-slate-300 text-brand-500 focus:ring-brand-500 bg-white dark:bg-slate-900 w-3.5 h-3.5 sm:w-4 sm:h-4" ${isChecked} onchange="updateMS('${containerId}', '${labelId}', '${hiddenInputId}', '${defaultText}')">
+                    <span class="truncate">${val}</span>
+                </label>`;
+            });
+            if(dataArray.length === 0) html = `<div class="p-2 text-xs text-slate-400 text-center italic">Belum ada data</div>`;
+            container.innerHTML = html;
+            updateMSLabel(containerId, labelId, defaultText);
+        }
+
+        function updateMS(containerId, labelId, hiddenInputId, defaultText) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+            const vals = Array.from(checkboxes).map(cb => cb.value);
+            document.getElementById(hiddenInputId).value = vals.join(', ');
+            updateMSLabel(containerId, labelId, defaultText);
+        }
+
+        function updateMSLabel(containerId, labelId, defaultText) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+            const vals = Array.from(checkboxes).map(cb => cb.value);
+            const label = document.getElementById(labelId);
+            if(!label) return;
+            
+            if(vals.length === 0) {
+                label.innerText = defaultText;
+                label.classList.add('opacity-60');
+            } else if(vals.length <= 1) {
+                label.innerText = vals[0];
+                label.classList.remove('opacity-60');
+            } else {
+                label.innerText = `${vals.length} Terpilih`;
+                label.classList.remove('opacity-60');
+            }
+        }
+
         async function runGoogleScriptPromise(method, ...args) {
             if(SCRIPT_URL.includes('EXAMPLE_URL_XYZ')) {
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         if (method === 'getInitialData') {
                             resolve({
-                                options: { guru: [{nama:'Ahmad Muzakki, S.Pd', target:2, pin:'123456', niy:'112233'}], lembaga:[{nama:'MI', target: 50},{nama:'MTs', target: 100}], tahun:['2026','2025'], mapel:['Matematika'], kelas:['Kelas X'], pengumuman:'Batas: 30 Juli', deadline:'' },
+                                options: { guru: [{nama:'Ahmad Muzakki, S.Pd', target:2, pin:'123456', niy:'112233'}], lembaga:[{nama:'MI', target: 50},{nama:'MTs', target: 100}], tahun:['2026','2025'], mapel:['Matematika', 'IPA'], kelas:['Kelas X', 'Kelas XI'], pengumuman:'Batas: 30 Juli', deadline:'' },
                                 stats: { total: 45, lembaga: [{name:'MTs', count:15}, {name:'MI', count:12}], guru: [{name:'Ahmad Muzakki, S.Pd', count:2, target:2, mapels:['Matematika (Kelas X)']}], totalRegisteredLembaga: 2 }
                             });
                         } else if (method === 'getDashboardStats') {
@@ -678,27 +763,12 @@
 
             const inpP = document.getElementById('inputPengumuman'); if(inpP) inpP.value = masterPengumuman;
             const inpD = document.getElementById('inputDeadline'); if(inpD && masterDeadline) inpD.value = masterDeadline;
-            
             const ban = document.getElementById('pengumumanBanner'); if(ban) { if(masterPengumuman.trim()!==""){ document.getElementById('pengumumanText').innerText=masterPengumuman; ban.classList.remove('hidden');} else ban.classList.add('hidden'); }
 
-            // FITUR BARU: Dropdown Admin Akses Guru
-            const fillAdminAccess = (id, arr, defaultText) => {
-                const el = document.getElementById(id);
-                if(el) {
-                    el.innerHTML = `<option value="">${defaultText}</option>`;
-                    arr.forEach(i => {
-                        let val = typeof i === 'object' ? (i.nama || i) : i;
-                        el.add(new Option(val, val));
-                    });
-                }
-            };
-            fillAdminAccess('inputGuruLembaga', masterLembaga, '-- Semua Lembaga --');
-            fillAdminAccess('inputGuruMapel', masterMapel, '-- Semua Mapel --');
-            fillAdminAccess('inputGuruKelas', masterKelas, '-- Semua Kelas --');
-            
-            fillAdminAccess('editGuruLembaga', masterLembaga, '-- Semua Lembaga --');
-            fillAdminAccess('editGuruMapel', masterMapel, '-- Semua Mapel --');
-            fillAdminAccess('editGuruKelas', masterKelas, '-- Semua Kelas --');
+            // Render UI Multi-Select untuk Form Tambah Guru
+            renderMultiSelect('ms-add-lembaga', 'label-ms-add-lembaga', 'inputGuruLembaga', masterLembaga, '-- Bebas Lembaga --', '');
+            renderMultiSelect('ms-add-mapel', 'label-ms-add-mapel', 'inputGuruMapel', masterMapel, '-- Bebas Mapel --', '');
+            renderMultiSelect('ms-add-kelas', 'label-ms-add-kelas', 'inputGuruKelas', masterKelas, '-- Bebas Kelas --', '');
         }
 
         function renderAdminLists() {
@@ -720,20 +790,12 @@
             if(tbodyM) tbodyM.innerHTML=masterMapel.length === 0 ? `<tr><td colspan="3" class="text-center py-6 sm:py-8 text-slate-400"><i class="fas fa-folder-open text-2xl sm:text-3xl mb-2 opacity-50"></i><br>Kosong</td></tr>` : masterMapel.map((n, idx) => { let sn = String(n).replace(/'/g, "\\'"); return `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition"><td class="px-4 sm:px-6 py-3 sm:py-5 text-center text-slate-500 font-bold text-xs sm:text-sm">${idx+1}</td><td class="px-4 sm:px-6 py-3 sm:py-5 font-black text-slate-700 dark:text-slate-200 text-xs sm:text-sm">${n}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><button onclick="editDataAdmin('Mapel', '${sn}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl mr-1 sm:mr-1.5 transition border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Mapel', '${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl transition border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></td></tr>`;}).join('');
         }
 
+        // TABS & THEME
         function toggleTheme() {
             const icon = document.getElementById('themeToggleIcon');
             if (document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.setItem('color-theme', 'light'); if (icon) icon.classList.replace('fa-sun', 'fa-moon'); } 
             else { document.documentElement.classList.add('dark'); localStorage.setItem('color-theme', 'dark'); if (icon) icon.classList.replace('fa-moon', 'fa-sun'); }
             if (lembagaChartInstance) fetchDashboardOnly();
-        }
-        let toastTimeout;
-        function showToast(message, type = 'success') {
-            const t = document.getElementById('toastNotification'); const i = document.getElementById('toastIcon'); const m = document.getElementById('toastMessage'); const p = document.getElementById('toastProgress');
-            if (!t || !i || !m) return; clearTimeout(toastTimeout);
-            i.className = `inline-flex items-center justify-center flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl relative z-10 ${type==='success'?'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400':'bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400'}`;
-            i.innerHTML = `<i class="fas ${type==='success'?'fa-check':'fa-exclamation-triangle'} text-sm sm:text-base"></i>`; m.innerText = message;
-            p.className = `absolute bottom-0 left-0 h-1.5 transition-all ease-linear ${type==='success'?'bg-emerald-500':'bg-red-500'}`; p.style.transitionDuration = '0ms'; p.style.width = '100%';
-            t.classList.remove('translate-x-full'); setTimeout(() => { p.style.transitionDuration = '3000ms'; p.style.width = '0%'; }, 50); toastTimeout = setTimeout(() => t.classList.add('translate-x-full'), 3000);
         }
 
         function animateTransition(elementId, callback) {
@@ -783,6 +845,7 @@
             close: (id, cid, cb) => { const m=document.getElementById(id), c=document.getElementById(cid); if(m){ m.classList.add('opacity-0'); c?.classList.add('scale-95'); setTimeout(()=>{ m.classList.add('hidden'); if(cb) cb(); },300); } }
         };
 
+        // --- SISTEM UPLOAD 2 LANGKAH (NIY) ---
         function openModal() { 
             if(isDeadlinePassed) return showToast('Batas Waktu Pengumpulan Telah Habis', 'error');
             resetUploadFormUI();
@@ -858,6 +921,7 @@
             if(addedCount === 1) el.value = lastAddedValue;
         }
 
+        // --- SISTEM ADMIN MODAL ---
         function openLoginModal() { modalHelper.open('loginModal', 'loginModalContent', 'adminPassword'); }
         function closeLoginModal() { modalHelper.close('loginModal', 'loginModalContent', ()=>document.getElementById('adminPassword').value=''); }
         
@@ -867,9 +931,12 @@
             document.getElementById('editGuruTarget').value = target; 
             document.getElementById('editGuruPin').value = pin; 
             document.getElementById('editGuruNiy').value = niy || '';
-            document.getElementById('editGuruLembaga').value = lembaga || '';
-            document.getElementById('editGuruMapel').value = mapel || '';
-            document.getElementById('editGuruKelas').value = kelas || '';
+            
+            // FITUR BARU: Render Checkbox ke dalam form Edit Guru
+            renderMultiSelect('ms-edit-lembaga', 'label-ms-edit-lembaga', 'editGuruLembaga', masterLembaga, 'Bebas', lembaga);
+            renderMultiSelect('ms-edit-mapel', 'label-ms-edit-mapel', 'editGuruMapel', masterMapel, 'Bebas', mapel);
+            renderMultiSelect('ms-edit-kelas', 'label-ms-edit-kelas', 'editGuruKelas', masterKelas, 'Bebas', kelas);
+            
             modalHelper.open('editGuruModal', 'editGuruModalContent'); 
         }
         function closeEditGuruModal() { modalHelper.close('editGuruModal', 'editGuruModalContent'); }
@@ -1034,11 +1101,6 @@
             }
         }
 
-        function handleSearchGuru(query) { 
-            if(!currentActiveGurus) return; 
-            const q = query.toLowerCase(); let filtered = currentActiveGurus.filter(g => g.name.toLowerCase().includes(q)); renderGuruListOnly(filtered); 
-        }
-
         function renderGuruListOnly(gurus) {
             const lst = document.getElementById('listGuru'); if (!lst) return;
             if (gurus.length === 0) { lst.innerHTML = '<li class="p-10 sm:p-16 flex flex-col items-center justify-center text-slate-400 opacity-70"><i class="fas fa-search text-4xl sm:text-5xl mb-3 sm:mb-4"></i><p class="text-xs sm:text-sm font-semibold">Pencarian kosong.</p></li>'; return; }
@@ -1056,109 +1118,6 @@
                     <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 sm:h-2.5 overflow-hidden shadow-inner"><div class="bg-gradient-to-r ${col} h-2 sm:h-2.5 rounded-full transition-all relative" style="width: ${pct}%"></div></div>
                 </li>`;
             }).join('');
-        }
-
-        function animateValue(id, start, end, duration) {
-            if (start === end) { document.getElementById(id).innerText = end; return; }
-            let cur = start; const inc = end > start ? 1 : -1; const step = Math.abs(Math.floor(duration / (end - start)));
-            const obj = document.getElementById(id); if (!obj) return;
-            const timer = setInterval(() => { cur += inc; obj.innerText = cur; if (cur == end) clearInterval(timer); }, step);
-        }
-
-        function changeGuruPage(dir) { currentGuruPage += dir; renderTableGuruAdminData(); }
-        function sortGuru(key) {
-            if (sortConfigGuru.key === key) sortConfigGuru.asc = !sortConfigGuru.asc; else { sortConfigGuru.key = key; sortConfigGuru.asc = true; }
-            renderTableGuruAdminData();
-        }
-        function renderTableGuruAdminData() {
-            const tb = document.getElementById('tableGuruBody'); const paginationCtrl = document.getElementById('guruPagination');
-            if(!tb) return;
-
-            let dataArr = [...filteredGuruData];
-            if(dataArr.length === 0) { 
-                tb.innerHTML = '<tr><td colspan="5" class="text-center py-10 sm:py-20 text-slate-400 opacity-70"><i class="fas fa-users-slash text-3xl sm:text-5xl mb-2 sm:mb-4"></i><br><span class="font-bold text-xs sm:text-sm">Guru tidak ditemukan</span></td></tr>'; 
-                if(paginationCtrl) paginationCtrl.style.display = 'none'; return; 
-            }
-
-            dataArr.sort((a, b) => {
-                let valA = a[sortConfigGuru.key]; let valB = b[sortConfigGuru.key];
-                if (typeof valA === 'string') valA = valA.toLowerCase(); if (typeof valB === 'string') valB = valB.toLowerCase();
-                if (valA < valB) return sortConfigGuru.asc ? -1 : 1; if (valA > valB) return sortConfigGuru.asc ? 1 : -1; return 0;
-            });
-
-            const totalPages = Math.ceil(dataArr.length / rowsPerPage);
-            if (currentGuruPage < 1) currentGuruPage = 1; if (currentGuruPage > totalPages) currentGuruPage = totalPages;
-            
-            const startIndex = (currentGuruPage - 1) * rowsPerPage; const paginatedData = dataArr.slice(startIndex, startIndex + rowsPerPage);
-
-            tb.innerHTML = paginatedData.map((i, idx) => {
-                let realIndex = startIndex + idx + 1; let sn = String(i.nama).replace(/'/g, "\\'"); 
-                let extParams = `, ${i.target||1}, '${i.pin||'123456'}', '${i.niy||''}', '${i.lembaga||''}', '${i.mapel||''}', '${i.kelas||''}'`;
-                return `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition border-b border-slate-100/50 dark:border-slate-800/50"><td class="px-4 sm:px-6 py-3 sm:py-5 text-center text-slate-500 font-bold text-xs sm:text-sm">${realIndex}</td><td class="px-4 sm:px-6 py-3 sm:py-5 font-black text-slate-700 dark:text-slate-200 text-xs sm:text-sm">${i.nama}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center font-mono text-brand-600 font-bold text-xs sm:text-sm">${i.niy||'-'}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center font-mono text-slate-500 font-bold text-xs sm:text-sm">${i.pin||'123456'}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><span class="bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg font-black border border-brand-100 dark:border-brand-500/20 text-xs sm:text-sm">${i.target||1}</span></td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><button onclick="editDataAdmin('Guru', '${sn}'${extParams})" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl mr-1 sm:mr-1.5 transition border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit text-sm"></i></button><button onclick="deleteDataAdmin('Guru', '${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl transition border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash text-sm"></i></button></td></tr>`;
-            }).join('');
-
-            if(paginationCtrl) {
-                paginationCtrl.style.display = 'flex';
-                document.getElementById('guruPageInfo').innerText = `Halaman ${currentGuruPage} dari ${totalPages}`;
-                document.getElementById('btnPrevGuru').disabled = currentGuruPage === 1; document.getElementById('btnNextGuru').disabled = currentGuruPage === totalPages;
-            }
-        }
-
-        function handleSearchBukuAdmin(query) { 
-            if(!masterBukuUploaded) return; 
-            const q = query.toLowerCase(); filteredBukuData = masterBukuUploaded.filter(b => b.guru.toLowerCase().includes(q) || b.mapel.toLowerCase().includes(q) || b.fileName.toLowerCase().includes(q));
-            currentBukuPage = 1; renderTableBukuAdminData(); 
-        }
-
-        function sortBuku(key) {
-            if (sortConfigBuku.key === key) sortConfigBuku.asc = !sortConfigBuku.asc; else { sortConfigBuku.key = key; sortConfigBuku.asc = true; }
-            renderTableBukuAdminData();
-        }
-
-        function changeBukuPage(dir) { currentBukuPage += dir; renderTableBukuAdminData(); }
-
-        async function loadDataBukuAdmin() {
-            const tb = document.getElementById('tableBukuBody'); const paginationCtrl = document.getElementById('bukuPagination');
-            if(tb) tb.innerHTML = `<tr><td colspan="6" class="p-6"><div class="h-10 bg-slate-200 dark:bg-slate-700 animate-skeleton skeleton-bg rounded-lg w-full mb-3"></div><div class="h-10 bg-slate-200 dark:bg-slate-700 animate-skeleton skeleton-bg rounded-lg w-full mb-3"></div><div class="h-10 bg-slate-200 dark:bg-slate-700 animate-skeleton skeleton-bg rounded-lg w-full"></div></td></tr>`;
-            if(paginationCtrl) paginationCtrl.style.display = 'none';
-
-            try { let res = await runGoogleScriptPromise('getUploadedBooksList'); 
-                if(res?.success) { masterBukuUploaded = res.data||[]; filteredBukuData = [...masterBukuUploaded]; isBukuLoaded = true; renderTableBukuAdminData(); } 
-                else if(tb) tb.innerHTML=`<tr><td colspan="6" class="text-center py-6 sm:py-8 text-red-500 font-bold">${res?.message||'Gagal'}</td></tr>`; 
-            } catch(e) { if(tb) tb.innerHTML=`<tr><td colspan="6" class="text-center py-6 sm:py-8 text-red-500 font-bold">Error jaringan</td></tr>`; }
-        }
-
-        function renderTableBukuAdminData() {
-            const tb = document.getElementById('tableBukuBody'); const paginationCtrl = document.getElementById('bukuPagination');
-            if(!tb) return;
-
-            let dataArr = [...filteredBukuData];
-            if(dataArr.length === 0) { 
-                tb.innerHTML = '<tr><td colspan="6" class="text-center py-10 sm:py-20 text-slate-400 opacity-70"><i class="fas fa-folder-open text-3xl sm:text-5xl mb-2 sm:mb-4"></i><br><span class="font-bold text-xs sm:text-sm">Data kosong / Tidak ditemukan</span></td></tr>'; 
-                if(paginationCtrl) paginationCtrl.style.display = 'none'; return; 
-            }
-
-            dataArr.sort((a, b) => {
-                let valA = a[sortConfigBuku.key]; let valB = b[sortConfigBuku.key];
-                if (typeof valA === 'string') valA = valA.toLowerCase(); if (typeof valB === 'string') valB = valB.toLowerCase();
-                if (valA < valB) return sortConfigBuku.asc ? -1 : 1; if (valA > valB) return sortConfigBuku.asc ? 1 : -1; return 0;
-            });
-
-            const totalPages = Math.ceil(dataArr.length / rowsPerPage);
-            if (currentBukuPage < 1) currentBukuPage = 1; if (currentBukuPage > totalPages) currentBukuPage = totalPages;
-            
-            const startIndex = (currentBukuPage - 1) * rowsPerPage; const paginatedData = dataArr.slice(startIndex, startIndex + rowsPerPage);
-
-            tb.innerHTML = paginatedData.map((b,i) => {
-                let realIndex = startIndex + i + 1; let sd = encodeURIComponent(JSON.stringify(b)); let desc = (b.mapel+' - '+b.guru).replace(/'/g,"\\'");
-                return `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition border-b border-slate-100/50 dark:border-slate-800/50"><td class="px-4 sm:px-6 py-3 sm:py-5 text-center text-slate-500 font-bold text-xs sm:text-sm">${realIndex}</td><td class="px-4 sm:px-6 py-3 sm:py-5 font-black text-slate-700 dark:text-slate-300 text-xs sm:text-sm">${b.tahun}</td><td class="px-4 sm:px-6 py-3 sm:py-5"><div class="font-black text-slate-800 dark:text-slate-200 text-[11px] sm:text-[13px] uppercase tracking-wide">${b.guru}</div><div class="text-[9px] sm:text-[11px] font-bold text-slate-500 mt-1 sm:mt-1.5"><i class="fas fa-school mr-1 text-slate-400"></i>${b.lembaga}</div></td><td class="px-4 sm:px-6 py-3 sm:py-5"><div class="font-black text-brand-600 dark:text-brand-400 text-xs sm:text-sm">${b.mapel}</div><div class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-500 mt-1 sm:mt-1.5 inline-block bg-slate-100 dark:bg-slate-700 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md shadow-sm border border-slate-200 dark:border-slate-600">${b.kelas}</div></td><td class="px-4 sm:px-6 py-3 sm:py-5"><a href="${b.url}" target="_blank" class="inline-flex items-center gap-1 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600 text-blue-600 dark:text-blue-400 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition shadow-sm hover:shadow transform hover:-translate-y-0.5"><i class="fas fa-external-link-alt"></i> Buka File</a><div class="text-[8px] sm:text-[10px] font-semibold text-slate-400 mt-1.5 sm:mt-2 truncate w-24 sm:w-32" title="${b.fileName}">${b.fileName}</div></td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><button onclick="openEditBukuModal('${sd}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl mr-1 sm:mr-1.5 transition border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit text-sm"></i></button><button onclick="deleteBukuUploaded(${b.rowIndex}, '${desc}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl transition border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash text-sm"></i></button></td></tr>`;
-            }).join('');
-
-            if(paginationCtrl) {
-                paginationCtrl.style.display = 'flex';
-                document.getElementById('bukuPageInfo').innerText = `Halaman ${currentBukuPage} dari ${totalPages}`;
-                document.getElementById('btnPrevBuku').disabled = currentBukuPage === 1; document.getElementById('btnNextBuku').disabled = currentBukuPage === totalPages;
-            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
