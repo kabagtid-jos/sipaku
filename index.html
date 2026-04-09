@@ -440,6 +440,9 @@
         let lastDashboardData = null; let currentActiveGurus = [];
         let currentDeleteType = ''; let currentDeleteName = ''; let currentReceiptData = null;
 
+        // FITUR BARU: Penanda Lazy Loading Data Buku
+        let isBukuLoaded = false;
+
         // Pagination & Sorting State
         let currentBukuPage = 1; const rowsPerPage = 10;
         let sortConfigBuku = { key: 'timestamp', asc: false };
@@ -451,10 +454,9 @@
             const icon = document.getElementById('themeToggleIcon');
             if (document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.setItem('color-theme', 'light'); if (icon) icon.classList.replace('fa-sun', 'fa-moon'); } 
             else { document.documentElement.classList.add('dark'); localStorage.setItem('color-theme', 'dark'); if (icon) icon.classList.replace('fa-moon', 'fa-sun'); }
-            if (lembagaChartInstance) loadDashboard();
+            if (lembagaChartInstance) fetchDashboardOnly();
         }
 
-        // FITUR 3: SMART TOAST DENGAN PROGRESS BAR
         let toastTimeout;
         function showToast(message, type = 'success') {
             const t = document.getElementById('toastNotification'); const i = document.getElementById('toastIcon'); const m = document.getElementById('toastMessage'); const p = document.getElementById('toastProgress');
@@ -473,52 +475,39 @@
             toastTimeout = setTimeout(() => t.classList.add('translate-x-full'), 3000);
         }
 
-        // FITUR 5: TRANSISI HALUS ANTAR MENU
-        function animateTransition(elementId, callback) {
-            const el = document.getElementById(elementId);
-            if(el) {
-                el.classList.remove('animate-fade-in-up'); el.classList.add('animate-fade-out');
-                setTimeout(() => { 
-                    callback(); 
-                    el.classList.remove('animate-fade-out'); void el.offsetWidth; el.classList.add('animate-fade-in-up'); 
-                }, 200);
-            } else callback();
-        }
-
         function handleAuthClick() { if (isAdminLoggedIn) toggleViewMode(document.getElementById('adminView').classList.contains('hidden') ? 'admin' : 'dashboard'); else openLoginModal(); }
+        
         function toggleViewMode(mode) {
-            const mainCont = document.getElementById('mainContainer');
-            animateTransition('mainContainer', () => {
-                const pubView = document.getElementById('publicView'); const adView = document.getElementById('adminView');
-                const authText = document.getElementById('authText'); const authIcon = document.getElementById('authIcon');
-                const upHead = document.getElementById('btnUploadHeader'); const mobFab = document.getElementById('mobileFab');
-                if (mode === 'admin') {
-                    pubView?.classList.add('hidden'); adView?.classList.remove('hidden');
-                    if(authText) authText.innerText = 'Dashboard'; if(authIcon) authIcon.className = 'fas fa-home text-[10px] sm:text-sm';
-                    if(upHead) upHead.style.display = 'none'; if(mobFab) mobFab.style.display = 'none';
-                } else {
-                    pubView?.classList.remove('hidden'); adView?.classList.add('hidden');
-                    if(authText) authText.innerText = 'Akses Admin'; if(authIcon) authIcon.className = 'fas fa-user-shield text-[10px] sm:text-sm text-slate-400';
-                    if(upHead) upHead.style.display = isDeadlinePassed ? 'none' : ''; if(mobFab) mobFab.style.display = isDeadlinePassed ? 'none' : ''; loadDashboard();
-                }
-            });
+            const pubView = document.getElementById('publicView'); const adView = document.getElementById('adminView');
+            const authText = document.getElementById('authText'); const authIcon = document.getElementById('authIcon');
+            const upHead = document.getElementById('btnUploadHeader'); const mobFab = document.getElementById('mobileFab');
+            
+            // FITUR BARU: Snappy UI (Transisi Mode Instan tanpa Jeda 300ms)
+            if (mode === 'admin') {
+                pubView?.classList.add('hidden'); adView?.classList.remove('hidden');
+                if(authText) authText.innerText = 'Dashboard'; if(authIcon) authIcon.className = 'fas fa-home text-[10px] sm:text-sm';
+                if(upHead) upHead.style.display = 'none'; if(mobFab) mobFab.style.display = 'none';
+            } else {
+                pubView?.classList.remove('hidden'); adView?.classList.add('hidden');
+                if(authText) authText.innerText = 'Akses Admin'; if(authIcon) authIcon.className = 'fas fa-user-shield text-[10px] sm:text-sm text-slate-400';
+                if(upHead) upHead.style.display = isDeadlinePassed ? 'none' : ''; if(mobFab) mobFab.style.display = isDeadlinePassed ? 'none' : ''; 
+            }
         }
+        
         function switchAdminTab(tab) {
             document.querySelectorAll('.admin-menu-btn').forEach(btn => btn.classList.remove('admin-nav-active', 'bg-slate-50', 'dark:bg-slate-800'));
             const btn = document.getElementById('btnMenu' + tab.charAt(0).toUpperCase() + tab.slice(1));
             if (btn) { btn.classList.add('admin-nav-active'); btn.classList.remove('hover:bg-slate-50', 'dark:hover:bg-slate-700/50'); }
             
-            const activePanel = document.querySelector('section > div:not(.hidden)');
-            if(activePanel) {
-                activePanel.classList.remove('animate-fade-in-up'); activePanel.classList.add('animate-fade-out');
-                setTimeout(() => {
-                    ['panelGuru', 'panelMapel', 'panelSetting', 'panelBuku'].forEach(p => document.getElementById(p)?.classList.add('hidden'));
-                    const pnl = document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)); 
-                    pnl?.classList.remove('hidden', 'animate-fade-out'); void pnl.offsetWidth; pnl?.classList.add('animate-fade-in-up');
-                    if (tab === 'buku') loadDataBukuAdmin();
-                }, 200);
-            }
+            // FITUR BARU: Snappy UI & Lazy Loading
+            ['panelGuru', 'panelMapel', 'panelSetting', 'panelBuku'].forEach(p => document.getElementById(p)?.classList.add('hidden'));
+            const pnl = document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)); 
+            pnl?.classList.remove('hidden');
+            
+            // Hanya fetch dokumen BUKU jika tab Data Buku diklik (Lazy Load)
+            if (tab === 'buku' && !isBukuLoaded) loadDataBukuAdmin();
         }
+
         function logoutAdmin() { isAdminLoggedIn = false; toggleViewMode('dashboard'); showToast('Berhasil keluar', 'success'); }
 
         const modalHelper = {
@@ -567,28 +556,24 @@
             const iC = "w-1/2 py-2 px-1 sm:py-2.5 sm:px-2 text-center rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 transition-all transform scale-95 hover:scale-100";
             const cG = document.getElementById('contentGuru'); const cL = document.getElementById('contentLembaga');
             
-            const activeContent = t === 'guru' ? cL : cG;
-            const targetContent = t === 'guru' ? cG : cL;
-            
-            if(t === 'guru') { document.getElementById('tabGuru').className=aC; document.getElementById('tabLembaga').className=iC; } 
-            else { document.getElementById('tabLembaga').className=aC; document.getElementById('tabGuru').className=iC; }
-
-            activeContent.classList.add('opacity-0');
-            setTimeout(() => {
-                activeContent.classList.add('hidden');
-                targetContent.classList.remove('hidden');
-                setTimeout(() => targetContent.classList.remove('opacity-0'), 50);
-            }, 300);
+            // FITUR BARU: Snappy UI (Transisi Instan)
+            if(t === 'guru') { 
+                document.getElementById('tabGuru').className=aC; document.getElementById('tabLembaga').className=iC; 
+                cG.classList.remove('hidden'); cL.classList.add('hidden');
+            } else { 
+                document.getElementById('tabLembaga').className=aC; document.getElementById('tabGuru').className=iC; 
+                cL.classList.remove('hidden'); cG.classList.add('hidden');
+            }
         }
         
         function applyDashboardFilters() { 
             const fT = document.getElementById('filterTahun'); const fL = document.getElementById('filterLembaga');
             if(fT) currentYearFilter = fT.value; 
             if(fL) currentLembagaFilter = fL.value;
-            // Skeleton Dashboard Numbers
+            // Skeleton Dashboard Numbers saat diubah
             document.getElementById('statTotal').innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>'; 
             document.getElementById('statLembagaCount').innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>'; 
-            loadDashboard(); 
+            fetchDashboardOnly(); 
         }
 
         function startDeadlineTimer() {
@@ -600,8 +585,8 @@
             const btnFab = document.getElementById('mobileFab');
             
             if(!masterDeadline) {
-                if (wTimer) { wTimer.style.display = 'none'; }
-                if (wExpired) { wExpired.style.display = 'none'; }
+                if (wTimer) wTimer.style.display = 'none';
+                if (wExpired) wExpired.style.display = 'none';
                 isDeadlinePassed = false; 
                 if (btnHead) btnHead.style.display = ''; 
                 if (btnFab) btnFab.style.display = '';
@@ -651,14 +636,16 @@
         }
 
         async function runGoogleScriptPromise(method, ...args) {
-            const getMethods = ['getFormOptions', 'getDashboardStats', 'getUploadedBooksList'];
+            const getMethods = ['getFormOptions', 'getDashboardStats', 'getUploadedBooksList', 'getInitialData'];
             try {
                 let url = SCRIPT_URL;
                 let fetchOptions = {};
 
                 if (getMethods.includes(method)) {
                     url += `?action=${method}`;
-                    if (method === 'getDashboardStats') { url += `&year=${encodeURIComponent(args[0])}&lembaga=${encodeURIComponent(args[1])}`; }
+                    if (method === 'getDashboardStats' || method === 'getInitialData') { 
+                        url += `&year=${encodeURIComponent(args[0])}&lembaga=${encodeURIComponent(args[1])}`; 
+                    }
                     fetchOptions = { method: 'GET' };
                 } else {
                     let payloadData = {};
@@ -679,14 +666,53 @@
             } catch (error) { throw error; }
         }
 
-        async function loadDashboard() {
+        // ==========================================
+        // FITUR BARU: BATCHING & CACHING MEMORY (LOADING 0 DETIK)
+        // ==========================================
+        async function initApp() {
+            // 1. Panggil data dari Memori HP/PC agar Loading seketika (0 detik)
+            const cachedData = localStorage.getItem('sipaku_cache');
+            if (cachedData) {
+                try {
+                    const parsed = JSON.parse(cachedData);
+                    applyDataToUI(parsed.options, parsed.stats);
+                } catch(e) {}
+            }
+
+            // 2. Tarik data terbaru dari server di Background secara diam-diam (Batching API)
+            try {
+                const res = await runGoogleScriptPromise('getInitialData', currentYearFilter, currentLembagaFilter);
+                if (res && res.options && res.stats) {
+                    localStorage.setItem('sipaku_cache', JSON.stringify(res)); // Update memori
+                    applyDataToUI(res.options, res.stats);
+                }
+            } catch(e) {
+                console.log("Offline mode: Gagal sinkronisasi dengan Apps Script.");
+            }
+        }
+
+        function applyDataToUI(options, stats) {
+            masterGuru = options.guru||[]; masterLembaga = options.lembaga||[]; masterTahun = options.tahun||[]; 
+            masterMapel = options.mapel||[]; masterKelas = options.kelas||[]; masterPengumuman = options.pengumuman||""; masterDeadline = options.deadline||""; 
+            
+            populateDropdowns(); 
+            filteredGuruData = [...masterGuru];
+            renderTableGuruAdminData();
+            renderAdminLists(); 
+            startDeadlineTimer();
+
+            renderDashboard(stats);
+        }
+
+        // Fungsi khusus jika hanya filter dashboard yang berubah
+        async function fetchDashboardOnly() {
             try {
                 const res = await runGoogleScriptPromise('getDashboardStats', currentYearFilter, currentLembagaFilter);
                 renderDashboard(res);
-            } catch(e) { console.log("Loading dashboard failed."); }
+            } catch(e) { console.log("Gagal memuat filter dashboard."); }
         }
 
-        // FITUR 4: CUSTOM GLASS TOOLTIP UNTUK CHART.JS
+        // FITUR BARU: CUSTOM GLASS TOOLTIP UNTUK CHART.JS
         const getOrCreateTooltip = (chart) => {
             let tooltipEl = document.getElementById('chartjs-tooltip');
             if (!tooltipEl) {
@@ -701,7 +727,6 @@
         const externalTooltipHandler = (context) => {
             const {chart, tooltip} = context;
             const tooltipEl = getOrCreateTooltip(chart);
-
             if (tooltip.opacity === 0) { tooltipEl.style.opacity = 0; return; }
 
             if (tooltip.body) {
@@ -714,7 +739,6 @@
                 });
                 tooltipEl.innerHTML = innerHtml;
             }
-
             const position = chart.canvas.getBoundingClientRect();
             tooltipEl.style.opacity = 1;
             tooltipEl.style.left = position.left + window.pageXOffset + tooltip.caretX + 'px';
@@ -743,10 +767,7 @@
                             data: { labels: data.lembaga.map(i => i.name), datasets: [{ data: data.lembaga.map(i => i.count), backgroundColor: bgColors, borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 }, barPercentage: 0.6 }] },
                             options: { 
                                 responsive: true, maintainAspectRatio: false, 
-                                plugins: { 
-                                    legend: { display: false },
-                                    tooltip: { enabled: false, external: externalTooltipHandler } // Activate Custom Tooltip
-                                }, 
+                                plugins: { legend: { display: false }, tooltip: { enabled: false, external: externalTooltipHandler } }, 
                                 scales: { y: { beginAtZero: true, ticks: { stepSize: 1, color: textColor, font:{family: "'Inter', sans-serif", weight: '600', size: 10} }, grid: { color: gridColor, borderDash: [5, 5] } }, x: { ticks: { color: textColor, font:{family: "'Inter', sans-serif", weight: '700', size: 10} }, grid: { display: false } } } 
                             }
                         });
@@ -773,7 +794,7 @@
             }
         }
 
-        // FITUR 2: PAGINATION & SORTING (Dashboard Guru)
+        // FITUR BARU: TABEL GURU DENGAN PAGINATION & SORTING
         function handleSearchGuru(query) { 
             if(!currentActiveGurus) return; 
             const q = query.toLowerCase();
@@ -784,7 +805,6 @@
         function renderGuruListOnly(gurus) {
             const lst = document.getElementById('listGuru'); if (!lst) return;
             if (gurus.length === 0) { lst.innerHTML = '<li class="p-10 sm:p-16 flex flex-col items-center justify-center text-slate-400 opacity-70"><i class="fas fa-search text-4xl sm:text-5xl mb-3 sm:mb-4"></i><p class="text-xs sm:text-sm font-semibold">Pencarian kosong.</p></li>'; return; }
-            
             lst.innerHTML = gurus.map((i, idx) => {
                 let pct = i.target > 0 ? Math.min(100, Math.round((i.count / i.target) * 100)) : 0;
                 let col = pct === 100 ? 'from-emerald-400 to-emerald-500' : (pct >= 50 ? 'from-brand-400 to-brand-600' : 'from-amber-400 to-amber-500');
@@ -808,19 +828,7 @@
             const timer = setInterval(() => { cur += inc; obj.innerText = cur; if (cur == end) clearInterval(timer); }, step);
         }
 
-        async function fetchMasterData() {
-            try {
-                const res = await runGoogleScriptPromise('getFormOptions');
-                masterGuru = res.guru||[]; masterLembaga = res.lembaga||[]; masterTahun = res.tahun||[]; masterMapel = res.mapel||[]; masterKelas = res.kelas||[]; masterPengumuman = res.pengumuman||""; masterDeadline = res.deadline||""; 
-                populateDropdowns(); 
-                filteredGuruData = [...masterGuru];
-                renderTableGuruAdminData();
-                renderAdminLists(); startDeadlineTimer();
-            } catch(e) {
-                console.log("Gagal memuat master data.");
-            }
-        }
-
+        // SETUP DROPDOWN
         function populateDropdowns() {
             const fill = (id, arr, def) => { const el=document.getElementById(id); if(el){ el.innerHTML=`<option value="" disabled selected>${def}</option>`; arr.forEach(i=>el.add(new Option(i.nama||i, i.nama||i))); }};
             fill('lembaga', masterLembaga, '-- Pilih Lembaga --'); fill('tahun', masterTahun, '-- Pilih Tahun --'); fill('guru', masterGuru, '-- Pilih Guru --'); fill('mapelDropdown', masterMapel, '-- Mapel --'); fill('kelasDropdown', masterKelas, '-- Kelas --');
@@ -844,24 +852,18 @@
             const ban = document.getElementById('pengumumanBanner'); if(ban) { if(masterPengumuman.trim()!==""){ document.getElementById('pengumumanText').innerText=masterPengumuman; ban.classList.remove('hidden');} else ban.classList.add('hidden'); }
         }
 
+        // RENDER ADMIN LISTS LAINNYA
         function renderAdminLists() {
-            const rList = (arr, type, cols) => arr.length === 0 ? `<tr><td colspan="${cols}" class="text-center py-6 sm:py-8 text-slate-400"><i class="fas fa-folder-open text-2xl sm:text-3xl mb-2 opacity-50"></i><br>Kosong</td></tr>` : arr.map((i, idx) => {
-                let n = i.nama||i; let sn = String(n).replace(/'/g, "\\'");
-                let trg = type==='Guru' ? `<td class="px-4 sm:px-6 py-3 sm:py-5 text-center font-mono text-brand-600 font-bold text-xs sm:text-sm">${i.pin||'123456'}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><span class="bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg font-black border border-brand-100 dark:border-brand-500/20 text-xs sm:text-sm">${i.target||1}</span></td>` : '';
-                let extParams = type==='Guru' ? `, ${i.target||1}, '${i.pin||'123456'}'` : ``;
-                return `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition"><td class="px-4 sm:px-6 py-3 sm:py-5 text-center text-slate-500 font-bold text-xs sm:text-sm">${idx+1}</td><td class="px-4 sm:px-6 py-3 sm:py-5 font-black text-slate-700 dark:text-slate-200 text-xs sm:text-sm">${n}</td>${trg}<td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><button onclick="editDataAdmin('${type}', '${sn}'${extParams})" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl mr-1 sm:mr-1.5 transition border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('${type}', '${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl transition border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></td></tr>`;
-            }).join('');
-            
-            const tbodyM=document.getElementById('tableMapelBody'); if(tbodyM) tbodyM.innerHTML=rList(masterMapel, 'Mapel', 3);
-
             const rSet = (arr, type) => arr.length===0?'<li class="p-4 sm:p-6 text-center text-slate-400 text-xs sm:text-sm opacity-70">Kosong</li>':arr.map(i=>{ let sn=String(i).replace(/'/g,"\\'"); return `<li class="flex justify-between items-center px-4 sm:px-5 py-2.5 sm:py-3.5 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300"><span>${i}</span><div class="flex gap-1"><button onclick="editDataAdmin('${type}','${sn}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('${type}','${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></div></li>`}).join('');
             const lsL=document.getElementById('listSettingLembaga'); if(lsL) lsL.innerHTML=rSet(masterLembaga, 'Lembaga');
             const lsT=document.getElementById('listSettingTahun'); if(lsT) lsT.innerHTML=rSet(masterTahun, 'Tahun');
             const lsK=document.getElementById('listSettingKelas'); if(lsK) lsK.innerHTML=rSet(masterKelas, 'Kelas');
+            
+            const tbodyM=document.getElementById('tableMapelBody'); 
+            if(tbodyM) tbodyM.innerHTML=masterMapel.length === 0 ? `<tr><td colspan="3" class="text-center py-6 sm:py-8 text-slate-400"><i class="fas fa-folder-open text-2xl sm:text-3xl mb-2 opacity-50"></i><br>Kosong</td></tr>` : masterMapel.map((n, idx) => { let sn = String(n).replace(/'/g, "\\'"); return `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition"><td class="px-4 sm:px-6 py-3 sm:py-5 text-center text-slate-500 font-bold text-xs sm:text-sm">${idx+1}</td><td class="px-4 sm:px-6 py-3 sm:py-5 font-black text-slate-700 dark:text-slate-200 text-xs sm:text-sm">${n}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><button onclick="editDataAdmin('Mapel', '${sn}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl mr-1 sm:mr-1.5 transition border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Mapel', '${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl transition border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></td></tr>`;}).join('');
         }
 
-        // FITUR 2: TABEL GURU DENGAN PAGINATION
-        let filteredGuruData = [];
+        // FITUR BARU: TABEL GURU DENGAN PAGINATION & SORTING
         function changeGuruPage(dir) { currentGuruPage += dir; renderTableGuruAdminData(); }
         function sortGuru(key) {
             if (sortConfigGuru.key === key) sortConfigGuru.asc = !sortConfigGuru.asc;
@@ -908,7 +910,7 @@
         }
 
 
-        // FITUR 2: TABEL BUKU ADMIN DENGAN PAGINATION & SORTING
+        // FITUR BARU: TABEL BUKU ADMIN DENGAN PAGINATION & SORTING
         function handleSearchBukuAdmin(query) { 
             if(!masterBukuUploaded) return; 
             const q = query.toLowerCase();
@@ -924,9 +926,11 @@
 
         function changeBukuPage(dir) { currentBukuPage += dir; renderTableBukuAdminData(); }
 
+        // FITUR BARU: LAZY LOADING (Hanya dimuat saat tab buku diklik)
         async function loadDataBukuAdmin() {
-            // Skeleton Loader
             const tb = document.getElementById('tableBukuBody'); const paginationCtrl = document.getElementById('bukuPagination');
+            
+            // Skeleton Loader Effect
             if(tb) tb.innerHTML = `<tr><td colspan="6" class="p-6"><div class="h-10 bg-slate-200 dark:bg-slate-700 animate-skeleton skeleton-bg rounded-lg w-full mb-3"></div><div class="h-10 bg-slate-200 dark:bg-slate-700 animate-skeleton skeleton-bg rounded-lg w-full mb-3"></div><div class="h-10 bg-slate-200 dark:bg-slate-700 animate-skeleton skeleton-bg rounded-lg w-full"></div></td></tr>`;
             if(paginationCtrl) paginationCtrl.style.display = 'none';
 
@@ -934,6 +938,7 @@
                 if(res?.success) { 
                     masterBukuUploaded = res.data||[]; 
                     filteredBukuData = [...masterBukuUploaded];
+                    isBukuLoaded = true; // Tandai bahwa buku sudah dimuat agar tidak direload ulang terus menerus
                     renderTableBukuAdminData(); 
                 } else if(tb) tb.innerHTML=`<tr><td colspan="6" class="text-center py-6 sm:py-8 text-red-500 font-bold">${res?.message||'Gagal'}</td></tr>`; 
             } catch(e) { if(tb) tb.innerHTML=`<tr><td colspan="6" class="text-center py-6 sm:py-8 text-red-500 font-bold">Error jaringan</td></tr>`; }
@@ -978,6 +983,7 @@
             }
         }
 
+        // EVENT LISTENERS INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
             const ttIcon = document.getElementById('themeToggleIcon'); if (document.documentElement.classList.contains('dark') && ttIcon) ttIcon.classList.replace('fa-moon', 'fa-sun');
 
@@ -1018,7 +1024,7 @@
                             currentReceiptData = { guru: dataObj.guru, lembaga: dataObj.lembaga, mapel: dataObj.mapel, kelas: dataObj.kelas, timestamp: res.timestamp || new Date().toLocaleString() };
                             document.getElementById('uploadForm').reset(); document.getElementById('fileNameDisplay').innerText="Maks 500MB"; 
                             document.getElementById('printReceiptBtnContainer').classList.remove('hidden');
-                            loadDashboard(); 
+                            fetchDashboardOnly(); 
                         }
                     } catch(err) {
                         btn.disabled = false; txt.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Proses Unggah';
@@ -1029,21 +1035,21 @@
                 }; reader.readAsDataURL(file);
             });
 
-            async function submitAdminForm(e, type, formId, btnId, dataObj) { e.preventDefault(); const btn = document.getElementById(btnId); const ori = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true; try { let res = await runGoogleScriptPromise('addDataAdmin', type, dataObj); if(res.success){ showToast('Berhasil'); document.getElementById(formId).reset(); fetchMasterData(); } else showToast(res.message, 'error'); } catch(err){ showToast('Error', 'error'); } btn.innerHTML = ori; btn.disabled = false; }
+            async function submitAdminForm(e, type, formId, btnId, dataObj) { e.preventDefault(); const btn = document.getElementById(btnId); const ori = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true; try { let res = await runGoogleScriptPromise('addDataAdmin', type, dataObj); if(res.success){ showToast('Berhasil'); document.getElementById(formId).reset(); initApp(); } else showToast(res.message, 'error'); } catch(err){ showToast('Error', 'error'); } btn.innerHTML = ori; btn.disabled = false; }
             document.getElementById('formAddGuru')?.addEventListener('submit', e => submitAdminForm(e, 'Guru', 'formAddGuru', 'btnSaveGuru', { nama: document.getElementById('inputGuruNama').value.trim(), target: parseInt(document.getElementById('inputGuruTarget').value)||1, pin: document.getElementById('inputGuruPin').value }));
             document.getElementById('formAddMapel')?.addEventListener('submit', e => submitAdminForm(e, 'Mapel', 'formAddMapel', 'btnSaveMapel', { nama: document.getElementById('inputMapelNama').value.trim() }));
             document.getElementById('formAddLembaga')?.addEventListener('submit', e => submitAdminForm(e, 'Lembaga', 'formAddLembaga', 'btnSaveLembaga', { nama: document.getElementById('inputLembagaNama').value.trim() }));
             document.getElementById('formAddTahun')?.addEventListener('submit', e => submitAdminForm(e, 'Tahun', 'formAddTahun', 'btnSaveTahun', { nama: document.getElementById('inputTahunNama').value.trim() }));
             document.getElementById('formAddKelas')?.addEventListener('submit', e => submitAdminForm(e, 'Kelas', 'formAddKelas', 'btnSaveKelas', { nama: document.getElementById('inputKelasNama').value.trim() }));
             
-            document.getElementById('formPengumuman')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSavePengumuman'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateDataAdmin','Settings','',null,{pengumuman: document.getElementById('inputPengumuman').value, deadline: masterDeadline}); if(r.success){showToast('Banner Diupdate'); fetchMasterData();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
-            document.getElementById('formDeadline')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSaveDeadline'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateDataAdmin','Settings','',null,{deadline: document.getElementById('inputDeadline').value, pengumuman: masterPengumuman}); if(r.success){showToast('Deadline Diupdate'); fetchMasterData();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
+            document.getElementById('formPengumuman')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSavePengumuman'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateDataAdmin','Settings','',null,{pengumuman: document.getElementById('inputPengumuman').value, deadline: masterDeadline}); if(r.success){showToast('Banner Diupdate'); initApp();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
+            document.getElementById('formDeadline')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSaveDeadline'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateDataAdmin','Settings','',null,{deadline: document.getElementById('inputDeadline').value, pengumuman: masterPengumuman}); if(r.success){showToast('Deadline Diupdate'); initApp();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
 
-            document.getElementById('editGuruForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditGuru'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateDataAdmin','Guru',document.getElementById('editGuruOldName').value,document.getElementById('editGuruName').value.trim(), {target: parseInt(document.getElementById('editGuruTarget').value)||1, pin: document.getElementById('editGuruPin').value }); if(r.success){showToast('Berhasil'); fetchMasterData(); closeEditGuruModal();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
-            document.getElementById('editDataForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditData'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; let t=document.getElementById('editDataType').value; let old=document.getElementById('editDataOldName').value; let nw=document.getElementById('editDataName').value.trim(); if(old===nw){closeEditDataModal(); b.innerHTML=o; b.disabled=false; return;} try { let r=await runGoogleScriptPromise('updateDataAdmin',t,old,nw,null); if(r.success){showToast('Berhasil'); fetchMasterData(); closeEditDataModal();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
-            document.getElementById('editBukuForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditBuku'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; let nd={tahun:document.getElementById('editBukuTahun').value, lembaga:document.getElementById('editBukuLembaga').value, guru:document.getElementById('editBukuGuru').value, kelas:document.getElementById('editBukuKelas').value, mapel:document.getElementById('editBukuMapel').value}; try { let r=await runGoogleScriptPromise('updateUploadedBook',parseInt(document.getElementById('editBukuRowIndex').value),nd); if(r.success){showToast('Berhasil'); closeEditBukuModal(); loadDataBukuAdmin(); loadDashboard();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
+            document.getElementById('editGuruForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditGuru'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateDataAdmin','Guru',document.getElementById('editGuruOldName').value,document.getElementById('editGuruName').value.trim(), {target: parseInt(document.getElementById('editGuruTarget').value)||1, pin: document.getElementById('editGuruPin').value }); if(r.success){showToast('Berhasil'); initApp(); closeEditGuruModal();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
+            document.getElementById('editDataForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditData'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; let t=document.getElementById('editDataType').value; let old=document.getElementById('editDataOldName').value; let nw=document.getElementById('editDataName').value.trim(); if(old===nw){closeEditDataModal(); b.innerHTML=o; b.disabled=false; return;} try { let r=await runGoogleScriptPromise('updateDataAdmin',t,old,nw,null); if(r.success){showToast('Berhasil'); initApp(); closeEditDataModal();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
+            document.getElementById('editBukuForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditBuku'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; let nd={tahun:document.getElementById('editBukuTahun').value, lembaga:document.getElementById('editBukuLembaga').value, guru:document.getElementById('editBukuGuru').value, kelas:document.getElementById('editBukuKelas').value, mapel:document.getElementById('editBukuMapel').value}; try { let r=await runGoogleScriptPromise('updateUploadedBook',parseInt(document.getElementById('editBukuRowIndex').value),nd); if(r.success){showToast('Berhasil'); closeEditBukuModal(); loadDataBukuAdmin(); fetchDashboardOnly();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
             
-            document.getElementById('btnConfirmDelete')?.addEventListener('click', async function() { const b=this; const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r; if(currentDeleteType==='BukuUploaded'){ r=await runGoogleScriptPromise('deleteUploadedBook',currentDeleteName); if(r.success){showToast('Dihapus'); closeDeleteModal(); loadDataBukuAdmin(); loadDashboard();} else showToast(r.message,'error'); }else{ r=await runGoogleScriptPromise('deleteDataAdmin',currentDeleteType,currentDeleteName); if(r.success){showToast('Dihapus'); fetchMasterData(); closeDeleteModal();} else showToast(r.message,'error'); } }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
+            document.getElementById('btnConfirmDelete')?.addEventListener('click', async function() { const b=this; const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r; if(currentDeleteType==='BukuUploaded'){ r=await runGoogleScriptPromise('deleteUploadedBook',currentDeleteName); if(r.success){showToast('Dihapus'); closeDeleteModal(); loadDataBukuAdmin(); fetchDashboardOnly();} else showToast(r.message,'error'); }else{ r=await runGoogleScriptPromise('deleteDataAdmin',currentDeleteType,currentDeleteName); if(r.success){showToast('Dihapus'); initApp(); closeDeleteModal();} else showToast(r.message,'error'); } }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
 
             window.exportLaporan = () => {
                 if (!lastDashboardData?.guru) return showToast('Data belum siap', 'error');
@@ -1052,11 +1058,11 @@
                 let l=document.createElement("a"); l.href=window.URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'})); l.download=`Laporan_SiPAKU_${currentYearFilter}.csv`; document.body.appendChild(l); l.click(); document.body.removeChild(l); showToast('Laporan diunduh');
             };
 
-            if(SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbx82fggrOOm6bV5l7Q96iuRsz0hQo-Fe0l-gUiu0caymtdUk7NLRcM_e2QHGXjo13HnEg/exec")) {
+            if(SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbwHOx5uxmX3ed-m0ECdpzAXM1jORYD7sBd4SFpJN745gs2XDWSZ6BJqMQU6UrxkWrE5sQ/exec")) {
                 console.log("Menjalankan Mode Pratinjau (Tanpa URL Apps Script yang valid)");
             }
             
-            loadDashboard(); fetchMasterData();
+            initApp(); 
         });
     </script>
 </body>
