@@ -55,10 +55,19 @@
         .dark .admin-nav-active { background: linear-gradient(to right, rgba(99, 102, 241, 0.15), transparent); color: #818cf8; border-color: #818cf8; }
         @media (max-width: 767px) { .admin-nav-active { border-left: none; border-bottom: 3px solid #4f46e5; background: transparent; } .dark .admin-nav-active { background: transparent; } }
         .delay-75 { animation-delay: 75ms; } .delay-150 { animation-delay: 150ms; } .delay-200 { animation-delay: 200ms; } .delay-300 { animation-delay: 300ms; }
-        @media print { body * { visibility: hidden; } #printArea, #printArea * { visibility: visible; } #printArea { position: absolute; left: 0; top: 0; width: 100%; } }
         .skeleton-bg { background: linear-gradient(90deg, rgba(203, 213, 225, 0.4) 25%, rgba(203, 213, 225, 0.8) 50%, rgba(203, 213, 225, 0.4) 75%); background-size: 1000px 100%; }
         .dark .skeleton-bg { background: linear-gradient(90deg, rgba(51, 65, 85, 0.4) 25%, rgba(51, 65, 85, 0.8) 50%, rgba(51, 65, 85, 0.4) 75%); background-size: 1000px 100%; }
         .sortable:hover { cursor: pointer; background-color: rgba(99, 102, 241, 0.05); }
+
+        /* PERBAIKAN FITUR CETAK (PRINT) MULTI-BROWSER */
+        @media screen { 
+            #printArea { display: none !important; } 
+        }
+        @media print { 
+            body { background: white !important; }
+            body > *:not(#printArea) { display: none !important; } 
+            #printArea { display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; margin: 0 !important; padding: 0 !important; background: white !important; color: black !important; } 
+        }
     </style>
     <script>
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -414,24 +423,26 @@
     <div id="editGuruModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50"><div class="p-6 sm:p-8"><h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 tracking-tight">Update Data Guru</h2><form id="editGuruForm" class="space-y-4 sm:space-y-5"><input type="hidden" id="editGuruOldName"><div><label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Nama Lengkap</label><input type="text" id="editGuruName" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm shadow-inner font-medium"></div><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Target Buku</label><input type="number" id="editGuruTarget" required min="1" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm shadow-inner font-medium text-center"></div><div><label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Ganti PIN</label><input type="text" id="editGuruPin" required maxlength="6" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm shadow-inner font-bold text-center tracking-widest text-brand-600"></div></div><div class="flex gap-2 sm:gap-3 mt-2 sm:mt-4"><button type="button" onclick="closeEditGuruModal()" class="w-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-600 dark:text-slate-300 font-bold py-2.5 sm:py-3.5 rounded-xl transition text-xs sm:text-sm">Batal</button><button type="submit" id="btnSubmitEditGuru" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 sm:py-3.5 rounded-xl shadow-lg transition text-xs sm:text-sm">Update</button></div></form></div></div></div>
     <div id="deleteConfirmModal" class="fixed inset-0 z-[120] hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-xs overflow-hidden transform scale-95 transition-transform duration-300 text-center border border-white/20 dark:border-slate-700/50 relative" id="deleteConfirmModalContent"><div class="absolute inset-x-0 top-0 h-1 bg-red-500"></div><div class="p-6 sm:p-8"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-5 transform rotate-3 shadow-inner border border-red-100 dark:border-red-500/20"><i class="fas fa-trash-alt text-xl sm:text-2xl transform -rotate-3"></i></div><h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white mb-1.5 sm:mb-2 tracking-tight">Konfirmasi Hapus</h2><p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-6 sm:mb-8 font-medium leading-relaxed">Tindakan ini tidak dapat dibatalkan. <br><span id="deleteDataTargetName" class="font-bold text-slate-700 dark:text-slate-300"></span></p><div class="flex gap-2 sm:gap-3"><button type="button" onclick="closeDeleteModal()" class="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold py-2.5 sm:py-3.5 rounded-xl transition-colors text-xs sm:text-sm">Batal</button><button type="button" id="btnConfirmDelete" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 sm:py-3.5 rounded-xl shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-xs sm:text-sm">Hapus</button></div></div></div></div>
 
-    <div id="printArea" style="display:none; padding:40px; font-family:sans-serif; color:black; background:white; position:absolute; top:0; left:0; width:100%; z-index:9999;">
-        <div style="border:2px dashed #000; padding:30px; max-width:500px; margin:0 auto; text-align:center;">
-            <h1 style="margin:0; font-size:24px;">TANDA TERIMA Si PAKU</h1>
-            <p style="margin-top:5px; font-size:12px; color:#555;">Sistem Pengumpulan Buku P2S Abu Zairi</p>
-            <hr style="border:1px solid #000; margin:20px 0;">
-            <table style="width:100%; text-align:left; font-size:14px; margin-bottom:20px;">
-                <tr><td style="padding:5px 0;"><strong>Waktu Unggah</strong></td><td>: <span id="printWaktu"></span></td></tr>
-                <tr><td style="padding:5px 0;"><strong>Nama Guru</strong></td><td>: <span id="printGuru"></span></td></tr>
-                <tr><td style="padding:5px 0;"><strong>Lembaga</strong></td><td>: <span id="printLembaga"></span></td></tr>
-                <tr><td style="padding:5px 0;"><strong>Mata Pelajaran</strong></td><td>: <span id="printMapel"></span></td></tr>
-                <tr><td style="padding:5px 0;"><strong>Kelas</strong></td><td>: <span id="printKelas"></span></td></tr>
+    <!-- AREA CETAK STRUK -->
+    <div id="printArea" class="bg-white text-black font-sans">
+        <div class="border-2 border-dashed border-black p-8 max-w-lg mx-auto text-center">
+            <h1 class="m-0 text-2xl font-bold">TANDA TERIMA Si PAKU</h1>
+            <p class="mt-1 text-xs text-gray-600">Sistem Pengumpulan Buku P2S Abu Zairi</p>
+            <hr class="border-black my-5">
+            <table class="w-full text-left text-sm mb-5">
+                <tr><td class="py-1.5 w-1/3 font-bold">Waktu Unggah</td><td>: <span id="printWaktu"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Nama Guru</td><td>: <span id="printGuru"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Lembaga</td><td>: <span id="printLembaga"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Mata Pelajaran</td><td>: <span id="printMapel"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Kelas</td><td>: <span id="printKelas"></span></td></tr>
             </table>
-            <hr style="border:1px solid #000; margin:20px 0;">
-            <p style="font-size:12px;">Dokumen Anda telah terekam aman di dalam database sistem. Terima kasih atas kepatuhan Anda.</p>
-            <p style="font-size:10px; margin-top:20px;">Dicetak otomatis oleh Sistem Si PAKU</p>
+            <hr class="border-black my-5">
+            <p class="text-xs">Dokumen Anda telah terekam aman di dalam database sistem. Terima kasih atas kepatuhan Anda.</p>
+            <p class="text-[10px] mt-5 text-gray-500">Dicetak otomatis oleh Sistem Si PAKU</p>
         </div>
     </div>
 
+    <!-- Mobile FAB -->
     <div id="mobileFab" class="md:hidden fixed bottom-4 sm:bottom-6 left-0 right-0 px-4 sm:px-5 z-[90] flex justify-center transition-transform duration-300">
         <button onclick="openModal()" class="pointer-events-auto w-full max-w-sm bg-gradient-to-r from-brand-600 to-blue-600 text-white shadow-[0_10px_20px_-5px_rgba(79,70,229,0.5)] rounded-xl sm:rounded-2xl py-3.5 sm:py-4 font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all">
             <i class="fas fa-cloud-upload-alt text-base sm:text-xl"></i> Unggah Dokumen
@@ -462,6 +473,26 @@
         let filteredGuruData = [];
 
         async function runGoogleScriptPromise(method, ...args) {
+            if(SCRIPT_URL.includes('EXAMPLE_URL_XYZ')) {
+                console.warn("Menjalankan Mock API karena SCRIPT_URL belum diatur.");
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        if (method === 'getInitialData') {
+                            resolve({
+                                options: { guru: [{nama:'Ahmad Muzakki, S.Pd', target:2, pin:'123456'}], lembaga:['MI','MTs'], tahun:['2026','2025'], mapel:['Matematika'], kelas:['Kelas X'], pengumuman:'Batas: 30 Juli', deadline:'' },
+                                stats: { total: 45, lembaga: [{name:'MTs', count:15}, {name:'MI', count:12}], guru: [{name:'Ahmad Muzakki, S.Pd', count:2, target:2, mapels:['Matematika (Kelas X)']}], totalRegisteredLembaga: 2 }
+                            });
+                        } else if (method === 'getDashboardStats') {
+                            resolve({ total: 45, lembaga: [{name:'MTs', count:15}], guru: [{name:'Ahmad Muzakki, S.Pd', count:2, target:2, mapels:['Matematika (Kelas X)']}], totalRegisteredLembaga: 2 });
+                        } else if (method === 'getUploadedBooksList') {
+                            resolve({ success: true, data: [{rowIndex: 2, timestamp: '2026-04-09 10:00:00', lembaga: 'MTs', guru: 'Ahmad Muzakki, S.Pd', kelas: 'Kelas X', mapel: 'Matematika', fileName: 'RPP_Math.pdf', url: '#', tahun: '2026'}] });
+                        } else {
+                            resolve({ success: true, message: "Aksi Berhasil (Mode Pratinjau)" });
+                        }
+                    }, 800);
+                });
+            }
+
             const getMethods = ['getFormOptions', 'getDashboardStats', 'getUploadedBooksList', 'getInitialData'];
             try {
                 let url = SCRIPT_URL;
@@ -602,7 +633,6 @@
         function openDeleteModal(t, n) { currentDeleteType=t; currentDeleteName=n; document.getElementById('deleteDataTargetName').innerText=`"${n}"`; modalHelper.open('deleteConfirmModal', 'deleteConfirmModalContent'); }
         function closeDeleteModal() { modalHelper.close('deleteConfirmModal', 'deleteConfirmModalContent'); }
         
-        // FITUR PERBAIKAN: Fungsi penjembatan tombol Edit & Hapus Admin
         function editDataAdmin(type, name, target, pin) {
             if (type === 'Guru') openEditGuruModal(name, target, pin);
             else openEditDataModal(type, name);
@@ -624,6 +654,7 @@
         }
         function closeGuruDetailModal() { modalHelper.close('guruDetailModal', 'guruDetailContent'); }
 
+        // FITUR PERBAIKAN: Cetak Bukti (Lebih Stabil di Semua Browser)
         function triggerPrintReceipt() {
             if(!currentReceiptData) return;
             document.getElementById('printWaktu').innerText = currentReceiptData.timestamp || new Date().toLocaleString();
@@ -632,10 +663,10 @@
             document.getElementById('printMapel').innerText = currentReceiptData.mapel;
             document.getElementById('printKelas').innerText = currentReceiptData.kelas;
             
-            // Berikan jeda render agar browser sempat menuliskan teks sebelum nge-print
+            // Jeda agar teks sempat tertulis ke layar sebelum browser nge-freeze (dialog print muncul)
             setTimeout(() => {
                 window.print();
-            }, 100);
+            }, 250);
         }
 
         function switchTab(t) {
