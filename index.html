@@ -60,6 +60,11 @@
         .dark .skeleton-bg { background: linear-gradient(90deg, rgba(51, 65, 85, 0.4) 25%, rgba(51, 65, 85, 0.8) 50%, rgba(51, 65, 85, 0.4) 75%); background-size: 1000px 100%; }
         .sortable:hover { cursor: pointer; background-color: rgba(99, 102, 241, 0.05); }
     </style>
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else { document.documentElement.classList.remove('dark'); }
+    </script>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col transition-colors duration-300 text-sm sm:text-base">
 
@@ -360,8 +365,48 @@
         </main>
     </div>
 
-    <!-- Modals (Tetap Sama) -->
-    <div id="uploadModal" class="fixed inset-0 z-[100] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 relative flex flex-col max-h-[95vh] sm:max-h-[90vh] border border-white/20 dark:border-slate-700/50" id="uploadModalContent"><div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div><div class="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 shrink-0"><h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white flex items-center gap-2.5 sm:gap-3 tracking-tight"><div class="bg-gradient-to-br from-brand-500 to-blue-600 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center shadow-md shadow-brand-500/20"><i class="fas fa-cloud-upload-alt text-sm sm:text-base"></i></div> Form Unggah</h2><button type="button" onclick="closeModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-200 border border-slate-200 dark:border-slate-600 shadow-sm"><i class="fas fa-times text-xs sm:text-sm"></i></button></div><div class="p-4 sm:p-6 md:p-8 overflow-y-auto custom-scrollbar relative"><div id="pengumumanBanner" class="hidden mb-4 sm:mb-6 rounded-xl sm:rounded-2xl overflow-hidden relative bg-amber-50 dark:bg-amber-900/20 border border-amber-200/80 dark:border-amber-800/50 p-3 sm:p-4 marquee-container shadow-inner"><div class="flex items-center text-amber-700 dark:text-amber-400 text-[10px] sm:text-xs font-bold w-full overflow-hidden"><i class="fas fa-bullhorn mr-2 sm:mr-3 text-xs sm:text-sm flex-shrink-0 animate-pulse"></i><span id="pengumumanText" class="animate-marquee tracking-wide"></span></div></div><form id="uploadForm" class="space-y-3 sm:space-y-5"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Tahun Periode</label><select id="tahun" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-medium focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Asal Lembaga</label><select id="lembaga" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-medium focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Identitas Guru</label><select id="guru" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-medium focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">PIN Guru <span class="text-red-500">*</span></label><input type="password" id="pinGuru" required placeholder="••••••" maxlength="6" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-bold tracking-widest focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none transition-all text-xs sm:text-sm shadow-inner text-center"></div></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Kelas Mengajar</label><select id="kelasDropdown" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-medium focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Mata Pelajaran</label><select id="mapelDropdown" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-medium focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div></div><div class="pt-1 sm:pt-3"><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 sm:mb-2 ml-1">Dokumen Lampiran</label><div class="flex justify-center px-4 sm:px-6 pt-5 sm:pt-8 pb-5 sm:pb-8 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-2xl sm:rounded-3xl hover:border-brand-500 dark:hover:border-brand-400 hover:bg-brand-50/50 dark:hover:bg-brand-500/5 transition-all duration-300 relative bg-slate-50/50 dark:bg-slate-900/30 group cursor-pointer" onclick="document.getElementById('file').click()"><div class="space-y-2 sm:space-y-3 text-center"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl mx-auto flex items-center justify-center shadow-sm border border-slate-200 dark:border-slate-700 group-hover:scale-110 group-hover:shadow-md transition-all duration-300"><i class="fas fa-file-upload text-2xl sm:text-3xl text-brand-500 dark:text-brand-400"></i></div><div class="flex flex-col text-xs sm:text-sm text-slate-600 dark:text-slate-300 justify-center"><span class="font-bold text-slate-800 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Klik untuk memilih file</span><input id="file" name="file" type="file" class="sr-only" required accept=".pdf,.doc,.docx"></div><p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium bg-slate-100 dark:bg-slate-800 inline-block px-2 sm:px-3 py-1 rounded-full" id="fileNameDisplay">Maks 500MB</p></div></div></div><button type="submit" id="btnSubmit" class="w-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 hover:to-blue-700 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg shadow-brand-500/30 transition-all duration-300 flex items-center justify-center transform hover:-translate-y-1 mt-4 sm:mt-6 text-sm sm:text-base"><span id="btnText"><i class="fas fa-paper-plane mr-2"></i> Proses Unggah</span></button><div id="alertBox" class="hidden rounded-xl sm:rounded-2xl p-3 sm:p-4 text-xs sm:text-sm font-bold border mt-3 sm:mt-4 text-center"></div><div id="printReceiptBtnContainer" class="hidden mt-2 sm:mt-3"><button type="button" onclick="triggerPrintReceipt()" class="w-full bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:border-emerald-800 dark:text-emerald-400 font-bold py-2.5 sm:py-3 px-4 rounded-lg sm:rounded-xl shadow-sm transition-all flex justify-center items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"><i class="fas fa-print"></i> Cetak Bukti</button></div></form></div></div></div>
+    <!-- MODAL - MODAL -->
+    <div id="uploadModal" class="fixed inset-0 z-[100] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 relative flex flex-col max-h-[95vh] sm:max-h-[90vh] border border-white/20 dark:border-slate-700/50" id="uploadModalContent">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div>
+            <div class="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 shrink-0">
+                <h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white flex items-center gap-2.5 sm:gap-3 tracking-tight"><div class="bg-gradient-to-br from-brand-500 to-blue-600 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center shadow-md shadow-brand-500/20"><i class="fas fa-cloud-upload-alt text-sm sm:text-base"></i></div> Form Unggah</h2>
+                <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-200 border border-slate-200 dark:border-slate-600 shadow-sm"><i class="fas fa-times text-xs sm:text-sm"></i></button>
+            </div>
+            <div class="p-4 sm:p-6 md:p-8 overflow-y-auto custom-scrollbar relative">
+                <div id="pengumumanBanner" class="hidden mb-4 sm:mb-6 rounded-xl sm:rounded-2xl overflow-hidden relative bg-amber-50 dark:bg-amber-900/20 border border-amber-200/80 dark:border-amber-800/50 p-3 sm:p-4 marquee-container shadow-inner"><div class="flex items-center text-amber-700 dark:text-amber-400 text-[10px] sm:text-xs font-bold w-full overflow-hidden"><i class="fas fa-bullhorn mr-2 sm:mr-3 text-xs sm:text-sm flex-shrink-0 animate-pulse"></i><span id="pengumumanText" class="animate-marquee tracking-wide"></span></div></div>
+                <form id="uploadForm" class="space-y-3 sm:space-y-5">
+                    <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Tahun Periode</label><select id="tahun" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-medium focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div>
+                    <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Asal Lembaga</label><select id="lembaga" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-medium focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
+                        <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Identitas Guru</label><select id="guru" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-medium focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div>
+                        <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">PIN Guru <span class="text-red-500">*</span></label><input type="password" id="pinGuru" required placeholder="••••••" maxlength="6" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-bold tracking-widest focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none transition-all text-xs sm:text-sm shadow-inner text-center"></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
+                        <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Kelas Mengajar</label><select id="kelasDropdown" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-medium focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div>
+                        <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Mata Pelajaran</label><select id="mapelDropdown" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-medium focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div>
+                    </div>
+                    <div class="pt-1 sm:pt-3">
+                        <label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 sm:mb-2 ml-1">Dokumen Lampiran</label>
+                        <div class="flex justify-center px-4 sm:px-6 pt-5 sm:pt-8 pb-5 sm:pb-8 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-2xl sm:rounded-3xl hover:border-brand-500 dark:hover:border-brand-400 hover:bg-brand-50/50 dark:hover:bg-brand-500/5 transition-all duration-300 relative bg-slate-50/50 dark:bg-slate-900/30 group cursor-pointer" onclick="document.getElementById('file').click()">
+                            <div class="space-y-2 sm:space-y-3 text-center">
+                                <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl mx-auto flex items-center justify-center shadow-sm border border-slate-200 dark:border-slate-700 group-hover:scale-110 group-hover:shadow-md transition-all duration-300"><i class="fas fa-file-upload text-2xl sm:text-3xl text-brand-500 dark:text-brand-400"></i></div>
+                                <div class="flex flex-col text-xs sm:text-sm text-slate-600 dark:text-slate-300 justify-center"><span class="font-bold text-slate-800 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Klik untuk memilih file</span><input id="file" name="file" type="file" class="sr-only" required accept=".pdf,.doc,.docx"></div>
+                                <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium bg-slate-100 dark:bg-slate-800 inline-block px-2 sm:px-3 py-1 rounded-full" id="fileNameDisplay">Maks 500MB</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" id="btnSubmit" class="w-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 hover:to-blue-700 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg shadow-brand-500/30 transition-all duration-300 flex items-center justify-center transform hover:-translate-y-1 mt-4 sm:mt-6 text-sm sm:text-base"><span id="btnText"><i class="fas fa-paper-plane mr-2"></i> Proses Unggah</span></button>
+                    <div id="alertBox" class="hidden rounded-xl sm:rounded-2xl p-3 sm:p-4 text-xs sm:text-sm font-bold border mt-3 sm:mt-4 text-center"></div>
+                    <div id="printReceiptBtnContainer" class="hidden mt-2 sm:mt-3">
+                        <button type="button" onclick="triggerPrintReceipt()" class="w-full bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:border-emerald-800 dark:text-emerald-400 font-bold py-2.5 sm:py-3 px-4 rounded-lg sm:rounded-xl shadow-sm transition-all flex justify-center items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"><i class="fas fa-print"></i> Cetak Bukti</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals Lanjutan -->
     <div id="guruDetailModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="guruDetailContent"><div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div><div class="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80"><h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight"><div class="bg-brand-100 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 p-1.5 sm:p-2 rounded-lg sm:rounded-xl"><i class="fas fa-chart-pie text-sm"></i></div> Laporan</h2><button type="button" onclick="closeGuruDetailModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all border border-slate-200 dark:border-slate-600 shadow-sm"><i class="fas fa-times text-xs sm:text-sm"></i></button></div><div class="p-4 sm:p-6 md:p-8"><div class="text-center mb-4 sm:mb-6"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-slate-100 dark:bg-slate-700 rounded-full mx-auto mb-2 sm:mb-3 flex items-center justify-center border-2 sm:border-4 border-white dark:border-slate-800 shadow-sm"><i class="fas fa-user-tie text-xl sm:text-2xl text-slate-400"></i></div><h3 id="detailGuruName" class="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-200 tracking-tight leading-tight"></h3></div><div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-slate-100 dark:border-slate-700/50 mb-4 sm:mb-6 shadow-inner"><div class="flex justify-between items-center mb-2 sm:mb-2.5 text-xs sm:text-sm font-black"><span class="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[9px] sm:text-[10px]">Terkumpul</span><span class="text-brand-600 dark:text-brand-400 text-sm sm:text-base" id="detailGuruPct">0%</span></div><div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 sm:h-3 overflow-hidden mb-2.5 sm:mb-3 shadow-inner"><div id="detailGuruBar" class="bg-brand-500 h-2.5 sm:h-3 rounded-full transition-all duration-700 relative"><div class="absolute inset-0 bg-white/20 w-full h-full"></div></div></div><div class="flex justify-between items-center font-bold"><span class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm" id="detailGuruCount">0 / 0 Dok.</span><span id="detailGuruMissing" class="text-[10px] sm:text-xs text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-500/10 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-red-100 dark:border-red-500/20">Kurang: 0</span></div></div><h4 class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase mb-2 sm:mb-3 tracking-widest ml-1">Rincian Dokumen:</h4><ul id="detailGuruMapels" class="space-y-2 sm:space-y-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 max-h-32 sm:max-h-40 overflow-y-auto custom-scrollbar font-medium"></ul></div></div></div>
     <div id="loginModal" class="fixed inset-0 z-[100] hidden bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2.5rem] premium-shadow w-full max-w-xs sm:max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="loginModalContent"><div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div><div class="p-6 sm:p-10 text-center"><div class="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6"><div class="absolute inset-0 bg-brand-500/20 dark:bg-brand-500/30 rounded-2xl sm:rounded-3xl blur-xl transform rotate-6"></div><div class="relative w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-brand-100 to-indigo-200 dark:from-slate-700 dark:to-slate-800 text-brand-600 dark:text-brand-400 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto shadow-inner border border-white dark:border-slate-600 transform rotate-3 hover:rotate-0 transition-all duration-300"><i class="fas fa-fingerprint text-2xl sm:text-3xl"></i></div></div><h2 class="text-xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight mb-1 sm:mb-2">Otentikasi</h2><p class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 mb-6 sm:mb-8">Masuk sebagai Administrator.</p><form id="loginForm" class="space-y-4 sm:space-y-5"><div><input type="password" id="adminPassword" required placeholder="PIN" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-3 sm:py-4 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 outline-none transition-all text-center tracking-[0.4em] font-black text-base sm:text-lg shadow-inner"></div><button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 dark:bg-brand-600 dark:hover:bg-brand-500 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg shadow-slate-800/20 dark:shadow-brand-500/20 transition-all transform hover:-translate-y-1 text-sm sm:text-base">Berikan Akses</button><button type="button" onclick="closeLoginModal()" class="w-full text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300 font-bold py-2 mt-1 sm:mt-2 transition-colors text-xs sm:text-sm">Kembali</button></form></div></div></div>
     <div id="editBukuModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="editBukuModalContent"><div class="flex justify-between items-center p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80"><h2 class="text-sm sm:text-base font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3"><div class="bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 p-1.5 sm:p-2 rounded-lg sm:rounded-xl"><i class="fas fa-edit text-sm"></i></div> Edit Dokumen</h2><button type="button" onclick="closeEditBukuModal()" class="text-slate-400 hover:text-red-500 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition shadow-sm border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700"><i class="fas fa-times text-xs sm:text-sm"></i></button></div><div class="p-4 sm:p-6 md:p-8 max-h-[75vh] overflow-y-auto custom-scrollbar"><form id="editBukuForm" class="space-y-3 sm:space-y-5"><input type="hidden" id="editBukuRowIndex"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Tahun</label><select id="editBukuTahun" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Lembaga</label><select id="editBukuLembaga" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Guru</label><select id="editBukuGuru" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Kelas</label><select id="editBukuKelas" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Mapel</label><select id="editBukuMapel" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div></div><button type="submit" id="btnSubmitEditBuku" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg mt-2 sm:mt-4 transition-all text-sm sm:text-base">Simpan Update</button></form></div></div></div>
@@ -397,13 +442,13 @@
         // ==========================================
         // KONFIGURASI URL APPS SCRIPT
         // ==========================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx82fggrOOm6bV5l7Q96iuRsz0hQo-Fe0l-gUiu0caymtdUk7NLRcM_e2QHGXjo13HnEg/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHOx5uxmX3ed-m0ECdpzAXM1jORYD7sBd4SFpJN745gs2XDWSZ6BJqMQU6UrxkWrE5sQ/exec';
 
         let lembagaChartInstance = null; let isAdminLoggedIn = false;
         let currentYearFilter = new Date().getFullYear().toString();
         let currentLembagaFilter = "Semua"; 
         
-        let masterGuru = []; let masterLembaga = []; let masterTahun = []; let masterMapel = []; let masterKelas = []; let masterPengumuman = ""; let masterBukuUploaded = []; let isMockInitialized = false;
+        let masterGuru = []; let masterLembaga = []; let masterTahun = []; let masterMapel = []; let masterKelas = []; let masterPengumuman = ""; let masterBukuUploaded = [];
         let masterDeadline = ""; let deadlineInterval = null; let isDeadlinePassed = false;
         let lastDashboardData = null; let currentActiveGurus = [];
         let currentDeleteType = ''; let currentDeleteName = ''; let currentReceiptData = null;
@@ -414,11 +459,10 @@
         let filteredBukuData = [];
         let currentGuruPage = 1; 
         let sortConfigGuru = { key: 'nama', asc: true };
+        let filteredGuruData = [];
 
         async function runGoogleScriptPromise(method, ...args) {
-            if(SCRIPT_URL.includes('EXAMPLE_URL_XYZ')) throw new Error("Anda belum memasukkan SCRIPT_URL Apps Script di kode HTML.");
             const getMethods = ['getFormOptions', 'getDashboardStats', 'getUploadedBooksList', 'getInitialData'];
-
             try {
                 let url = SCRIPT_URL;
                 let fetchOptions = {};
@@ -449,7 +493,7 @@
                     return JSON.parse(textResponse);
                 } catch (e) {
                     console.error("Gagal membaca JSON dari Server. Balasan server:", textResponse);
-                    throw new Error("Format data tidak valid. Pastikan Anda telah melakukan 'New Deployment' di Apps Script.");
+                    throw new Error("Pengaturan Deployment Anda salah. Pastikan kolom 'Who has access' disetel ke 'Anyone' (Siapa saja) di Google Apps Script.");
                 }
 
             } catch (error) { 
@@ -475,11 +519,12 @@
                 }
             } catch(e) {
                 console.error("Offline mode: Gagal sinkronisasi", e);
+                document.getElementById('statTotal').innerHTML = '<span class="text-2xl text-red-500">Error</span>';
+                document.getElementById('statLembagaCount').innerHTML = '<span class="text-2xl text-red-500">Error</span>';
                 alert("GAGAL MEMUAT DATA: " + e.message);
             }
         }
 
-        // TABS & UI SCRIPT
         function toggleTheme() {
             const icon = document.getElementById('themeToggleIcon');
             if (document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.setItem('color-theme', 'light'); if (icon) icon.classList.replace('fa-sun', 'fa-moon'); } 
@@ -607,25 +652,59 @@
 
         function startDeadlineTimer() {
             clearInterval(deadlineInterval);
-            const wTimer = document.getElementById('countdownWidget'); const wExpired = document.getElementById('countdownExpired'); const disp = document.getElementById('timerDisplay'); const btnHead = document.getElementById('btnUploadHeader'); const btnFab = document.getElementById('mobileFab');
+            const wTimer = document.getElementById('countdownWidget');
+            const wExpired = document.getElementById('countdownExpired');
+            const disp = document.getElementById('timerDisplay');
+            const btnHead = document.getElementById('btnUploadHeader');
+            const btnFab = document.getElementById('mobileFab');
+            
             if(!masterDeadline) {
-                if (wTimer) wTimer.style.display = 'none'; if (wExpired) wExpired.style.display = 'none';
-                isDeadlinePassed = false; if (btnHead) btnHead.style.display = ''; if (btnFab) btnFab.style.display = ''; return;
+                if (wTimer) wTimer.style.display = 'none';
+                if (wExpired) wExpired.style.display = 'none';
+                isDeadlinePassed = false; 
+                if (btnHead) btnHead.style.display = ''; 
+                if (btnFab) btnFab.style.display = '';
+                return;
             }
+
             let dl = new Date(masterDeadline).getTime();
-            if (isNaN(dl)) { let parts = String(masterDeadline).split(/[-T :]/); if (parts.length >= 5) { dl = new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5] || 0).getTime(); } }
+            if (isNaN(dl)) {
+                let parts = String(masterDeadline).split(/[-T :]/);
+                if (parts.length >= 5) { dl = new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5] || 0).getTime(); }
+            }
+            
             deadlineInterval = setInterval(() => {
-                const now = new Date().getTime(); const dist = dl - now;
+                const now = new Date().getTime();
+                const dist = dl - now;
+                
                 if (isNaN(dist)) { clearInterval(deadlineInterval); return; }
+
                 if (dist < 0) {
-                    clearInterval(deadlineInterval); isDeadlinePassed = true;
-                    if (wTimer) wTimer.style.display = 'none'; if (wExpired) wExpired.style.display = 'flex';
-                    if(!isAdminLoggedIn) { if (btnHead) btnHead.style.display = 'none'; if (btnFab) btnFab.style.display = 'none'; } return;
+                    clearInterval(deadlineInterval);
+                    isDeadlinePassed = true;
+                    if (wTimer) wTimer.style.display = 'none';
+                    if (wExpired) wExpired.style.display = 'flex';
+                    if(!isAdminLoggedIn) { 
+                        if (btnHead) btnHead.style.display = 'none'; 
+                        if (btnFab) btnFab.style.display = 'none'; 
+                    }
+                    return;
                 }
+                
                 isDeadlinePassed = false;
-                if (wTimer) wTimer.style.display = 'flex'; if (wExpired) wExpired.style.display = 'none';
-                if(!isAdminLoggedIn) { if (btnHead) btnHead.style.display = ''; if (btnFab) btnFab.style.display = ''; }
-                let d = Math.floor(dist / (1000 * 60 * 60 * 24)); let h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); let m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60)); let s = Math.floor((dist % (1000 * 60)) / 1000);
+                if (wTimer) wTimer.style.display = 'flex';
+                if (wExpired) wExpired.style.display = 'none';
+                
+                if(!isAdminLoggedIn) { 
+                    if (btnHead) btnHead.style.display = ''; 
+                    if (btnFab) btnFab.style.display = ''; 
+                }
+
+                let d = Math.floor(dist / (1000 * 60 * 60 * 24));
+                let h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                let m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
+                let s = Math.floor((dist % (1000 * 60)) / 1000);
+                
                 if (disp) disp.innerHTML = `${d>0 ? d+'H ' : ''}${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
             }, 1000);
         }
@@ -693,7 +772,11 @@
                         lembagaChartInstance = new Chart(chartCtx, {
                             type: 'bar',
                             data: { labels: data.lembaga.map(i => i.name), datasets: [{ data: data.lembaga.map(i => i.count), backgroundColor: bgColors, borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 }, barPercentage: 0.6 }] },
-                            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { enabled: false, external: externalTooltipHandler } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1, color: textColor, font:{family: "'Inter', sans-serif", weight: '600', size: 10} }, grid: { color: gridColor, borderDash: [5, 5] } }, x: { ticks: { color: textColor, font:{family: "'Inter', sans-serif", weight: '700', size: 10} }, grid: { display: false } } } }
+                            options: { 
+                                responsive: true, maintainAspectRatio: false, 
+                                plugins: { legend: { display: false }, tooltip: { enabled: false, external: externalTooltipHandler } }, 
+                                scales: { y: { beginAtZero: true, ticks: { stepSize: 1, color: textColor, font:{family: "'Inter', sans-serif", weight: '600', size: 10} }, grid: { color: gridColor, borderDash: [5, 5] } }, x: { ticks: { color: textColor, font:{family: "'Inter', sans-serif", weight: '700', size: 10} }, grid: { display: false } } } 
+                            }
                         });
                     }
                 }
@@ -718,7 +801,6 @@
             }
         }
 
-        // FITUR BARU: TABEL GURU DENGAN PAGINATION & SORTING
         function handleSearchGuru(query) { 
             if(!currentActiveGurus) return; 
             const q = query.toLowerCase();
@@ -745,37 +827,11 @@
             }).join('');
         }
 
-        function populateDropdowns() {
-            const fill = (id, arr, def) => { const el=document.getElementById(id); if(el){ el.innerHTML=`<option value="" disabled selected>${def}</option>`; arr.forEach(i=>el.add(new Option(i.nama||i, i.nama||i))); }};
-            fill('lembaga', masterLembaga, '-- Pilih Lembaga --'); fill('tahun', masterTahun, '-- Pilih Tahun --'); fill('guru', masterGuru, '-- Pilih Guru --'); fill('mapelDropdown', masterMapel, '-- Mapel --'); fill('kelasDropdown', masterKelas, '-- Kelas --');
-            
-            const fillFilter = (id, arr, curVal) => {
-                const el = document.getElementById(id);
-                if(el && arr.length > 0) {
-                    let opts = id==='filterLembaga' ? '<option value="Semua">Semua Lembaga</option>' : '';
-                    let toAdd = [...arr];
-                    if(id==='filterTahun') toAdd.sort((a,b)=>b-a);
-                    toAdd.forEach(v => opts += `<option value="${v}">${v}</option>`);
-                    el.innerHTML = opts; el.value = curVal;
-                }
-            };
-            fillFilter('filterTahun', masterTahun, currentYearFilter);
-            fillFilter('filterLembaga', masterLembaga, currentLembagaFilter);
-
-            const inpP = document.getElementById('inputPengumuman'); if(inpP) inpP.value = masterPengumuman;
-            const inpD = document.getElementById('inputDeadline'); if(inpD && masterDeadline) inpD.value = masterDeadline;
-            
-            const ban = document.getElementById('pengumumanBanner'); if(ban) { if(masterPengumuman.trim()!==""){ document.getElementById('pengumumanText').innerText=masterPengumuman; ban.classList.remove('hidden');} else ban.classList.add('hidden'); }
-        }
-
-        function renderAdminLists() {
-            const rSet = (arr, type) => arr.length===0?'<li class="p-4 sm:p-6 text-center text-slate-400 text-xs sm:text-sm opacity-70">Kosong</li>':arr.map(i=>{ let sn=String(i).replace(/'/g,"\\'"); return `<li class="flex justify-between items-center px-4 sm:px-5 py-2.5 sm:py-3.5 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300"><span>${i}</span><div class="flex gap-1"><button onclick="editDataAdmin('${type}','${sn}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('${type}','${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></div></li>`}).join('');
-            const lsL=document.getElementById('listSettingLembaga'); if(lsL) lsL.innerHTML=rSet(masterLembaga, 'Lembaga');
-            const lsT=document.getElementById('listSettingTahun'); if(lsT) lsT.innerHTML=rSet(masterTahun, 'Tahun');
-            const lsK=document.getElementById('listSettingKelas'); if(lsK) lsK.innerHTML=rSet(masterKelas, 'Kelas');
-            
-            const tbodyM=document.getElementById('tableMapelBody'); 
-            if(tbodyM) tbodyM.innerHTML=masterMapel.length === 0 ? `<tr><td colspan="3" class="text-center py-6 sm:py-8 text-slate-400"><i class="fas fa-folder-open text-2xl sm:text-3xl mb-2 opacity-50"></i><br>Kosong</td></tr>` : masterMapel.map((n, idx) => { let sn = String(n).replace(/'/g, "\\'"); return `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition"><td class="px-4 sm:px-6 py-3 sm:py-5 text-center text-slate-500 font-bold text-xs sm:text-sm">${idx+1}</td><td class="px-4 sm:px-6 py-3 sm:py-5 font-black text-slate-700 dark:text-slate-200 text-xs sm:text-sm">${n}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><button onclick="editDataAdmin('Mapel', '${sn}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl mr-1 sm:mr-1.5 transition border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Mapel', '${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl transition border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></td></tr>`;}).join('');
+        function animateValue(id, start, end, duration) {
+            if (start === end) { document.getElementById(id).innerText = end; return; }
+            let cur = start; const inc = end > start ? 1 : -1; const step = Math.abs(Math.floor(duration / (end - start)));
+            const obj = document.getElementById(id); if (!obj) return;
+            const timer = setInterval(() => { cur += inc; obj.innerText = cur; if (cur == end) clearInterval(timer); }, step);
         }
 
         function changeGuruPage(dir) { currentGuruPage += dir; renderTableGuruAdminData(); }
@@ -829,15 +885,18 @@
             filteredBukuData = masterBukuUploaded.filter(b => b.guru.toLowerCase().includes(q) || b.mapel.toLowerCase().includes(q) || b.fileName.toLowerCase().includes(q));
             currentBukuPage = 1; renderTableBukuAdminData(); 
         }
+
         function sortBuku(key) {
             if (sortConfigBuku.key === key) sortConfigBuku.asc = !sortConfigBuku.asc;
             else { sortConfigBuku.key = key; sortConfigBuku.asc = true; }
             renderTableBukuAdminData();
         }
+
         function changeBukuPage(dir) { currentBukuPage += dir; renderTableBukuAdminData(); }
 
         async function loadDataBukuAdmin() {
             const tb = document.getElementById('tableBukuBody'); const paginationCtrl = document.getElementById('bukuPagination');
+            
             if(tb) tb.innerHTML = `<tr><td colspan="6" class="p-6"><div class="h-10 bg-slate-200 dark:bg-slate-700 animate-skeleton skeleton-bg rounded-lg w-full mb-3"></div><div class="h-10 bg-slate-200 dark:bg-slate-700 animate-skeleton skeleton-bg rounded-lg w-full mb-3"></div><div class="h-10 bg-slate-200 dark:bg-slate-700 animate-skeleton skeleton-bg rounded-lg w-full"></div></td></tr>`;
             if(paginationCtrl) paginationCtrl.style.display = 'none';
 
@@ -903,12 +962,13 @@
                     else { alert(res.message); document.getElementById('adminPassword').value=''; }
                 } catch(err) {
                     btn.innerText = ori; btn.disabled = false;
+                    alert("Error saat login, silakan cek koneksi/URL Apps Script");
                 }
             });
 
             document.getElementById('file')?.addEventListener('change', function(e) {
                 const f = e.target.files[0]; const d = document.getElementById('fileNameDisplay');
-                if (f) { if (f.size > 500*1024*1024) { d.innerHTML = `<span class="text-red-500 font-bold"><i class="fas fa-exclamation-triangle"></i> File terlalu besar!</span>`; this.value = ""; } else d.innerHTML = `<span class="text-brand-600 dark:text-brand-400 font-bold"><i class="fas fa-check"></i> ${f.name}</span>`; } else d.innerHTML = 'Maksimal Ukuran 500MB';
+                if (f) { if (f.size > 500*1024*1024) { d.innerHTML = `<span class="text-red-500 font-bold"><i class="fas fa-exclamation-triangle"></i> File terlalu besar!</span>`; this.value = ""; } else d.innerHTML = `<span class="text-brand-600 dark:text-brand-400 font-bold"><i class="fas fa-check"></i> ${f.name}</span>`; } else d.innerHTML = 'Maks 500MB';
             });
 
             document.getElementById('uploadForm')?.addEventListener('submit', function(e) {
@@ -963,11 +1023,7 @@
                 let l=document.createElement("a"); l.href=window.URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'})); l.download=`Laporan_SiPAKU_${currentYearFilter}.csv`; document.body.appendChild(l); l.click(); document.body.removeChild(l); showToast('Laporan diunduh');
             };
 
-            if(SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbwHOx5uxmX3ed-m0ECdpzAXM1jORYD7sBd4SFpJN745gs2XDWSZ6BJqMQU6UrxkWrE5sQ/exec")) {
-                alert("PENTING: Anda belum memasukkan SCRIPT_URL Apps Script Anda di kode HTML. Aplikasi gagal mengambil data.");
-            } else {
-                initApp(); 
-            }
+            initApp(); 
         });
     </script>
 </body>
