@@ -837,16 +837,23 @@
             
             const isDark = document.documentElement.classList.contains('dark');
             const textColor = isDark ? '#94a3b8' : '#64748b'; const gridColor = isDark ? '#334155' : '#f1f5f9';
-            const ctx = document.getElementById('lembagaChart');
-            if (ctx) {
-                if (data.lembaga.length === 0) ctx.outerHTML = '<div id="lembagaChart" class="flex flex-col items-center justify-center h-full text-slate-400 opacity-60"><i class="fas fa-chart-pie text-3xl sm:text-5xl mb-3 sm:mb-4"></i><p class="text-xs sm:text-sm font-semibold">Belum ada distribusi data.</p></div>';
-                else {
-                    if (ctx.tagName !== 'CANVAS') ctx.outerHTML = '<canvas id="lembagaChart" class="w-full h-full"></canvas>';
+            
+            // PERBAIKAN: Targetkan Container Utama, Bukan Canvas yang hilang
+            const chartContainer = document.getElementById('chartContainer');
+            if (chartContainer) {
+                if (data.lembaga.length === 0) {
+                    chartContainer.innerHTML = '<div class="w-full h-full flex flex-col items-center justify-center text-slate-400 opacity-60"><i class="fas fa-chart-pie text-3xl sm:text-5xl mb-3 sm:mb-4"></i><p class="text-xs sm:text-sm font-semibold">Belum ada distribusi data.</p></div>';
+                } else {
+                    // Masukkan canvas kembali ke dalam container setelah loading selesai
+                    chartContainer.innerHTML = '<canvas id="lembagaChart" class="w-full h-full"></canvas>';
                     const canvasEl = document.getElementById('lembagaChart');
+                    
                     if (canvasEl) {
                         const chartCtx = canvasEl.getContext('2d');
                         const bgColors = ['rgba(99, 102, 241, 0.9)', 'rgba(16, 185, 129, 0.9)', 'rgba(245, 158, 11, 0.9)', 'rgba(236, 72, 153, 0.9)', 'rgba(14, 165, 233, 0.9)', 'rgba(139, 92, 246, 0.9)'];
+                        
                         if (lembagaChartInstance) lembagaChartInstance.destroy();
+                        
                         lembagaChartInstance = new Chart(chartCtx, {
                             type: 'bar',
                             data: { labels: data.lembaga.map(i => i.name), datasets: [{ data: data.lembaga.map(i => i.count), backgroundColor: bgColors, borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 }, barPercentage: 0.6 }] },
@@ -859,6 +866,7 @@
                     }
                 }
             }
+
             currentActiveGurus = data.guru.filter(i => i.count > 0); handleSearchGuru(''); // Render init
             const lstL = document.getElementById('listLembaga');
             if (lstL) {
