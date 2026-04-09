@@ -73,6 +73,7 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col transition-colors duration-300 text-sm sm:text-base">
 
+    <!-- Toast Notification -->
     <div id="toastNotification" class="fixed top-4 right-4 sm:top-5 sm:right-5 z-[200] transform translate-x-full transition-transform duration-300 flex items-center p-3 sm:p-4 mb-4 rounded-xl sm:rounded-2xl premium-shadow border glass border-white/50 dark:border-slate-700/50 max-w-[90vw] overflow-hidden">
         <div id="toastIcon" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 relative z-10">
             <i class="fas fa-check text-sm sm:text-base"></i>
@@ -81,6 +82,7 @@
         <div id="toastProgress" class="absolute bottom-0 left-0 h-1.5 bg-emerald-500 transition-all ease-linear" style="width: 100%;"></div>
     </div>
 
+    <!-- Header -->
     <header class="glass border-b border-slate-200/60 dark:border-slate-800/60 sticky top-0 z-50 transition-colors duration-300 shadow-sm shadow-slate-200/20 dark:shadow-none">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-3.5 flex items-center justify-between">
             <div class="flex items-center gap-2.5 sm:gap-4 cursor-pointer hover:opacity-80 transition-opacity" onclick="toggleViewMode('dashboard')">
@@ -112,6 +114,7 @@
     </header>
 
     <div id="mainContainer" class="flex-grow w-full max-w-7xl mx-auto flex flex-col relative transition-all duration-300">
+        <!-- PUBLIC VIEW (DASHBOARD) -->
         <main id="publicView" class="w-full max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 md:pb-12 flex-grow animate-fade-in-up">
             <div class="space-y-4 sm:space-y-6">
                 
@@ -218,6 +221,7 @@
             </div>
         </main>
 
+        <!-- ADMIN PAGE VIEW -->
         <main id="adminView" class="hidden w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 sm:pb-28 flex-grow flex flex-col md:flex-row gap-4 sm:gap-6 items-start">
             <aside class="fixed md:sticky bottom-0 left-0 w-full md:w-64 z-[60] md:z-10 bg-white dark:bg-slate-800 border-t md:border border-slate-200/60 dark:border-slate-700/60 rounded-t-3xl md:rounded-[2rem] premium-shadow md:top-24 overflow-hidden transition-colors duration-300">
                 <div class="hidden md:block p-4 sm:p-6 bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200/60 dark:border-slate-700/60 relative">
@@ -237,6 +241,7 @@
             <section class="flex-grow w-full bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow border border-slate-200/60 dark:border-slate-700/60 overflow-hidden min-h-[500px] sm:min-h-[600px] relative">
                 <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-50"></div>
                 
+                <!-- PANEL GURU -->
                 <div id="panelGuru" class="p-4 sm:p-6 md:p-10 transition-opacity duration-300">
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 gap-3 sm:gap-4">
                         <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-users-cog text-sm sm:text-base"></i></div> Kelola Guru</h2>
@@ -289,6 +294,7 @@
                     </div>
                 </div>
 
+                <!-- PANEL MAPEL -->
                 <div id="panelMapel" class="hidden p-4 sm:p-6 md:p-10 transition-opacity duration-300 opacity-0">
                     <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight mb-6 sm:mb-8"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-book-reader text-sm sm:text-base"></i></div> Referensi Mapel</h2>
                     <form id="formAddMapel" class="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-6 sm:mb-10 bg-slate-50/50 dark:bg-slate-900/30 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner max-w-3xl">
@@ -303,6 +309,7 @@
                     </div>
                 </div>
 
+                <!-- PANEL SETTING -->
                 <div id="panelSetting" class="hidden p-4 sm:p-6 md:p-10 transition-opacity duration-300 opacity-0">
                     <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight mb-6 sm:mb-8"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-sliders-h text-sm sm:text-base"></i></div> Konfigurasi Sistem</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
@@ -340,6 +347,7 @@
                     </div>
                 </div>
                 
+                <!-- PANEL BUKU (DATA UPLOAD) -->
                 <div id="panelBuku" class="hidden p-4 sm:p-6 md:p-10 flex-col h-full transition-opacity duration-300 opacity-0">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 sm:mb-8 gap-3 sm:gap-4">
                         <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight whitespace-nowrap"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-file-signature text-sm sm:text-base"></i></div> Dokumen</h2>
@@ -384,6 +392,8 @@
         </main>
     </div>
 
+    <!-- MODAL - MODAL -->
+    
     <div id="uploadModal" class="fixed inset-0 z-[100] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 relative flex flex-col max-h-[95vh] sm:max-h-[90vh] border border-white/20 dark:border-slate-700/50" id="uploadModalContent">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div>
@@ -461,25 +471,23 @@
     
     <div id="editBukuModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="editBukuModalContent"><div class="flex justify-between items-center p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80"><h2 class="text-sm sm:text-base font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3"><div class="bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 p-1.5 sm:p-2 rounded-lg sm:rounded-xl"><i class="fas fa-edit text-sm"></i></div> Edit Dokumen</h2><button type="button" onclick="closeEditBukuModal()" class="text-slate-400 hover:text-red-500 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition shadow-sm border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700"><i class="fas fa-times text-xs sm:text-sm"></i></button></div><div class="p-4 sm:p-6 md:p-8 max-h-[75vh] overflow-y-auto custom-scrollbar"><form id="editBukuForm" class="space-y-3 sm:space-y-5"><input type="hidden" id="editBukuRowIndex"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Tahun</label><select id="editBukuTahun" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Lembaga</label><select id="editBukuLembaga" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Guru</label><select id="editBukuGuru" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Kelas</label><select id="editBukuKelas" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Mapel</label><select id="editBukuMapel" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div></div><button type="submit" id="btnSubmitEditBuku" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg mt-2 sm:mt-4 transition-all text-sm sm:text-base">Simpan Update</button></form></div></div></div>
 
-    <div id="editGuruModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50"><div class="p-6 sm:p-8"><h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 tracking-tight">Update Data Guru</h2><form id="editGuruForm" class="space-y-4 sm:space-y-5"><input type="hidden" id="editGuruOldName"><div><label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Nama Lengkap</label><input type="text" id="editGuruName" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm shadow-inner font-medium"></div><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Target Buku</label><input type="number" id="editGuruTarget" required min="1" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm shadow-inner font-medium text-center"></div><div><label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Ganti PIN</label><input type="text" id="editGuruPin" required maxlength="6" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none text-xs sm:text-sm shadow-inner font-bold text-center tracking-widest text-brand-600"></div></div><div class="mt-2"><p class="text-[10px] font-bold text-slate-500 mb-1">Akses Batasan (Koma):</p><div class="grid grid-cols-3 gap-2"><input type="text" id="editGuruNiy" placeholder="NIY" class="w-full rounded-lg border px-2 py-1.5 text-xs"><input type="text" id="editGuruLembaga" placeholder="Lembaga" class="w-full rounded-lg border px-2 py-1.5 text-xs"><input type="text" id="editGuruMapel" placeholder="Mapel" class="w-full rounded-lg border px-2 py-1.5 text-xs"></div></div><div class="flex gap-2 sm:gap-3 mt-2 sm:mt-4"><button type="button" onclick="closeEditGuruModal()" class="w-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-600 dark:text-slate-300 font-bold py-2.5 sm:py-3.5 rounded-xl transition text-xs sm:text-sm">Batal</button><button type="submit" id="btnSubmitEditGuru" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 sm:py-3.5 rounded-xl shadow-lg transition text-xs sm:text-sm">Update</button></div></form></div></div></div>
-    
     <div id="deleteConfirmModal" class="fixed inset-0 z-[120] hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-xs overflow-hidden transform scale-95 transition-transform duration-300 text-center border border-white/20 dark:border-slate-700/50 relative" id="deleteConfirmModalContent"><div class="absolute inset-x-0 top-0 h-1 bg-red-500"></div><div class="p-6 sm:p-8"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-5 transform rotate-3 shadow-inner border border-red-100 dark:border-red-500/20"><i class="fas fa-trash-alt text-xl sm:text-2xl transform -rotate-3"></i></div><h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white mb-1.5 sm:mb-2 tracking-tight">Konfirmasi Hapus</h2><p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-6 sm:mb-8 font-medium leading-relaxed">Tindakan ini tidak dapat dibatalkan. <br><span id="deleteDataTargetName" class="font-bold text-slate-700 dark:text-slate-300"></span></p><div class="flex gap-2 sm:gap-3"><button type="button" onclick="closeDeleteModal()" class="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold py-2.5 sm:py-3.5 rounded-xl transition-colors text-xs sm:text-sm">Batal</button><button type="button" id="btnConfirmDelete" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 sm:py-3.5 rounded-xl shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-xs sm:text-sm">Hapus</button></div></div></div></div>
 
-    <div id="printArea">
-        <div style="border:2px dashed #000; padding:30px; max-width:500px; margin:0 auto; text-align:center;">
-            <h1 style="margin:0; font-size:24px; font-weight:bold;">TANDA TERIMA Si PAKU</h1>
-            <p style="margin-top:5px; font-size:12px; color:#555;">Sistem Pengumpulan Buku P2S Abu Zairi</p>
-            <hr style="border:1px solid #000; margin:20px 0;">
-            <table style="width:100%; text-align:left; font-size:14px; margin-bottom:20px;">
-                <tr><td style="padding:5px 0; font-weight:bold;">Waktu Unggah</td><td>: <span id="printWaktu"></span></td></tr>
-                <tr><td style="padding:5px 0; font-weight:bold;">Nama Guru</td><td>: <span id="printGuru"></span></td></tr>
-                <tr><td style="padding:5px 0; font-weight:bold;">Lembaga</td><td>: <span id="printLembaga"></span></td></tr>
-                <tr><td style="padding:5px 0; font-weight:bold;">Mata Pelajaran</td><td>: <span id="printMapel"></span></td></tr>
-                <tr><td style="padding:5px 0; font-weight:bold;">Kelas</td><td>: <span id="printKelas"></span></td></tr>
+    <div id="printArea" class="bg-white text-black font-sans">
+        <div class="border-2 border-dashed border-black p-8 max-w-lg mx-auto text-center">
+            <h1 class="m-0 text-2xl font-bold">TANDA TERIMA Si PAKU</h1>
+            <p class="mt-1 text-xs text-gray-600">Sistem Pengumpulan Buku P2S Abu Zairi</p>
+            <hr class="border-black my-5">
+            <table class="w-full text-left text-sm mb-5">
+                <tr><td class="py-1.5 w-1/3 font-bold">Waktu Unggah</td><td>: <span id="printWaktu"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Nama Guru</td><td>: <span id="printGuru"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Lembaga</td><td>: <span id="printLembaga"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Mata Pelajaran</td><td>: <span id="printMapel"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Kelas</td><td>: <span id="printKelas"></span></td></tr>
             </table>
-            <hr style="border:1px solid #000; margin:20px 0;">
-            <p style="font-size:12px;">Dokumen Anda telah terekam aman di dalam database sistem. Terima kasih atas kepatuhan Anda.</p>
-            <p style="font-size:10px; margin-top:20px; color:#777;">Dicetak otomatis oleh Sistem Si PAKU</p>
+            <hr class="border-black my-5">
+            <p class="text-xs">Dokumen Anda telah terekam aman di dalam database sistem. Terima kasih atas kepatuhan Anda.</p>
+            <p class="text-[10px] mt-5 text-gray-500">Dicetak otomatis oleh Sistem Si PAKU</p>
         </div>
     </div>
 
@@ -490,9 +498,6 @@
     </div>
 
     <script>
-        // ==========================================
-        // KONFIGURASI URL APPS SCRIPT
-        // ==========================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHOx5uxmX3ed-m0ECdpzAXM1jORYD7sBd4SFpJN745gs2XDWSZ6BJqMQU6UrxkWrE5sQ/exec';
 
         let lembagaChartInstance = null; let isAdminLoggedIn = false;
@@ -514,6 +519,7 @@
 
         async function runGoogleScriptPromise(method, ...args) {
             if(SCRIPT_URL.includes('EXAMPLE_URL_XYZ')) {
+                console.warn("Menjalankan Mock API karena SCRIPT_URL belum diatur.");
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         if (method === 'getInitialData') {
@@ -578,6 +584,53 @@
                 document.getElementById('statTotal').innerHTML = '<span class="text-2xl text-red-500">Error</span>';
                 document.getElementById('statLembagaCount').innerHTML = '<span class="text-2xl text-red-500">Error</span>';
             }
+        }
+
+        function applyDataToUI(options, stats) {
+            masterGuru = options.guru||[]; masterLembaga = options.lembaga||[]; masterTahun = options.tahun||[]; masterMapel = options.mapel||[]; masterKelas = options.kelas||[]; masterPengumuman = options.pengumuman||""; masterDeadline = options.deadline||""; 
+            populateDropdowns(); filteredGuruData = [...masterGuru]; renderTableGuruAdminData(); renderAdminLists(); startDeadlineTimer(); renderDashboard(stats);
+        }
+
+        function populateDropdowns() {
+            const fillFilter = (id, arr, curVal) => {
+                const el = document.getElementById(id);
+                if(el && arr.length > 0) {
+                    let opts = id==='filterLembaga' ? '<option value="Semua">Semua Lembaga</option>' : '';
+                    let toAdd = [...arr];
+                    if(id==='filterTahun') toAdd.sort((a,b)=>b-a);
+                    toAdd.forEach(v => {
+                        let val = typeof v === 'object' ? (v.nama || v) : v;
+                        opts += `<option value="${val}">${val}</option>`
+                    });
+                    el.innerHTML = opts; el.value = curVal;
+                }
+            };
+            fillFilter('filterTahun', masterTahun, currentYearFilter);
+            fillFilter('filterLembaga', masterLembaga, currentLembagaFilter);
+
+            const inpP = document.getElementById('inputPengumuman'); if(inpP) inpP.value = masterPengumuman;
+            const inpD = document.getElementById('inputDeadline'); if(inpD && masterDeadline) inpD.value = masterDeadline;
+            
+            const ban = document.getElementById('pengumumanBanner'); if(ban) { if(masterPengumuman.trim()!==""){ document.getElementById('pengumumanText').innerText=masterPengumuman; ban.classList.remove('hidden');} else ban.classList.add('hidden'); }
+        }
+
+        function renderAdminLists() {
+            const rSet = (arr, type) => arr.length===0?'<li class="p-4 sm:p-6 text-center text-slate-400 text-xs sm:text-sm opacity-70">Kosong</li>':arr.map(i=>{ let sn=String(i).replace(/'/g,"\\'"); return `<li class="flex justify-between items-center px-4 sm:px-5 py-2.5 sm:py-3.5 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300"><span>${i}</span><div class="flex gap-1"><button onclick="editDataAdmin('${type}','${sn}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('${type}','${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></div></li>`}).join('');
+            
+            const rSetLembaga = (arr) => arr.length===0?'<li class="p-4 sm:p-6 text-center text-slate-400 text-xs sm:text-sm opacity-70">Kosong</li>':arr.map(i=>{ 
+                let n = typeof i === 'object' ? (i.nama || i) : i; 
+                let t = typeof i === 'object' ? (i.target || 100) : 100; 
+                let sn=String(n).replace(/'/g,"\\'"); 
+                return `<li class="flex justify-between items-center px-4 sm:px-5 py-2.5 sm:py-3.5 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition font-black text-slate-700 dark:text-slate-300">
+                    <div class="flex flex-col"><span class="text-xs sm:text-sm">${n}</span><span class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5 font-bold">Target: ${t} Buku</span></div>
+                    <div class="flex gap-1"><button onclick="editDataAdmin('Lembaga','${sn}', ${t})" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Lembaga','${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></div></li>`}).join('');
+            
+            const lsL=document.getElementById('listSettingLembaga'); if(lsL) lsL.innerHTML=rSetLembaga(masterLembaga);
+            const lsT=document.getElementById('listSettingTahun'); if(lsT) lsT.innerHTML=rSet(masterTahun, 'Tahun');
+            const lsK=document.getElementById('listSettingKelas'); if(lsK) lsK.innerHTML=rSet(masterKelas, 'Kelas');
+            
+            const tbodyM=document.getElementById('tableMapelBody'); 
+            if(tbodyM) tbodyM.innerHTML=masterMapel.length === 0 ? `<tr><td colspan="3" class="text-center py-6 sm:py-8 text-slate-400"><i class="fas fa-folder-open text-2xl sm:text-3xl mb-2 opacity-50"></i><br>Kosong</td></tr>` : masterMapel.map((n, idx) => { let sn = String(n).replace(/'/g, "\\'"); return `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition"><td class="px-4 sm:px-6 py-3 sm:py-5 text-center text-slate-500 font-bold text-xs sm:text-sm">${idx+1}</td><td class="px-4 sm:px-6 py-3 sm:py-5 font-black text-slate-700 dark:text-slate-200 text-xs sm:text-sm">${n}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><button onclick="editDataAdmin('Mapel', '${sn}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl mr-1 sm:mr-1.5 transition border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Mapel', '${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl transition border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></td></tr>`;}).join('');
         }
 
         function toggleTheme() {
@@ -765,7 +818,6 @@
         }
         function closeGuruDetailModal() { modalHelper.close('guruDetailModal', 'guruDetailContent'); }
 
-        // FITUR CETAK
         function triggerPrintReceipt() {
             if(!currentReceiptData) return;
             document.getElementById('printWaktu').innerText = currentReceiptData.timestamp || new Date().toLocaleString();
@@ -776,7 +828,6 @@
             setTimeout(() => { window.print(); }, 250);
         }
 
-        // TABS DASHBOARD
         function switchTab(t) {
             const aC = "w-1/2 py-2 px-1 sm:py-2.5 sm:px-2 text-center rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-400 shadow-sm transition-all transform scale-100";
             const iC = "w-1/2 py-2 px-1 sm:py-2.5 sm:px-2 text-center rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 transition-all transform scale-95 hover:scale-100";
@@ -820,11 +871,6 @@
                 let d = Math.floor(dist / (1000 * 60 * 60 * 24)); let h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); let m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60)); let s = Math.floor((dist % (1000 * 60)) / 1000);
                 if (disp) disp.innerHTML = `${d>0 ? d+'H ' : ''}${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
             }, 1000);
-        }
-
-        function applyDataToUI(options, stats) {
-            masterGuru = options.guru||[]; masterLembaga = options.lembaga||[]; masterTahun = options.tahun||[]; masterMapel = options.mapel||[]; masterKelas = options.kelas||[]; masterPengumuman = options.pengumuman||""; masterDeadline = options.deadline||""; 
-            populateDropdowns(); filteredGuruData = [...masterGuru]; renderTableGuruAdminData(); renderAdminLists(); startDeadlineTimer(); renderDashboard(stats);
         }
 
         async function fetchDashboardOnly() {
