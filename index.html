@@ -631,7 +631,11 @@
             document.getElementById('printLembaga').innerText = currentReceiptData.lembaga;
             document.getElementById('printMapel').innerText = currentReceiptData.mapel;
             document.getElementById('printKelas').innerText = currentReceiptData.kelas;
-            window.print();
+            
+            // Berikan jeda render agar browser sempat menuliskan teks sebelum nge-print
+            setTimeout(() => {
+                window.print();
+            }, 100);
         }
 
         function switchTab(t) {
