@@ -268,7 +268,7 @@
                                         <span id="label-ms-add-lembaga" class="truncate opacity-60">-- Bebas Lembaga --</span>
                                         <i class="fas fa-chevron-down text-[10px] opacity-50"></i>
                                     </button>
-                                    <div id="ms-add-lembaga" class="ms-dropdown hidden absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-48 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                                    <div id="ms-add-lembaga" class="ms-dropdown hidden absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-60 overflow-y-auto p-1.5 custom-scrollbar"></div>
                                 </div>
                                 
                                 <div class="relative custom-multiselect">
@@ -277,7 +277,7 @@
                                         <span id="label-ms-add-mapel" class="truncate opacity-60">-- Bebas Mapel --</span>
                                         <i class="fas fa-chevron-down text-[10px] opacity-50"></i>
                                     </button>
-                                    <div id="ms-add-mapel" class="ms-dropdown hidden absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-48 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                                    <div id="ms-add-mapel" class="ms-dropdown hidden absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-60 overflow-y-auto p-1.5 custom-scrollbar"></div>
                                 </div>
                                 
                                 <div class="relative custom-multiselect">
@@ -286,7 +286,7 @@
                                         <span id="label-ms-add-kelas" class="truncate opacity-60">-- Bebas Kelas --</span>
                                         <i class="fas fa-chevron-down text-[10px] opacity-50"></i>
                                     </button>
-                                    <div id="ms-add-kelas" class="ms-dropdown hidden absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-48 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                                    <div id="ms-add-kelas" class="ms-dropdown hidden absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-60 overflow-y-auto p-1.5 custom-scrollbar"></div>
                                 </div>
 
                             </div>
@@ -495,11 +495,10 @@
     
     <div id="editDataModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-xs overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50"><div class="p-6 sm:p-8"><h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 tracking-tight"><span id="editDataModalTitle">Edit Data</span></h2><form id="editDataForm" class="space-y-4 sm:space-y-5"><input type="hidden" id="editDataOldName"><input type="hidden" id="editDataType"><div><input type="text" id="editDataName" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 focus:ring-2 focus:ring-brand-500/40 outline-none text-xs sm:text-sm transition-all shadow-inner font-medium"></div><div class="flex gap-2 sm:gap-3"><button type="button" onclick="closeEditDataModal()" class="w-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-600 dark:text-slate-300 font-bold py-2.5 sm:py-3.5 rounded-xl transition text-xs sm:text-sm">Batal</button><button type="submit" id="btnSubmitEditData" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 sm:py-3.5 rounded-xl shadow-lg transition text-xs sm:text-sm">Simpan</button></div></form></div></div></div>
     
-    <div id="editBukuModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="editBukuModalContent"><div class="flex justify-between items-center p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80"><h2 class="text-sm sm:text-base font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3"><div class="bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 p-1.5 sm:p-2 rounded-lg sm:rounded-xl"><i class="fas fa-edit text-sm"></i></div> Edit Dokumen</h2><button type="button" onclick="closeEditBukuModal()" class="text-slate-400 hover:text-red-500 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition shadow-sm border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700"><i class="fas fa-times text-xs sm:text-sm"></i></button></div><div class="p-4 sm:p-6 md:p-8 max-h-[75vh] overflow-y-auto custom-scrollbar"><form id="editBukuForm" class="space-y-3 sm:space-y-5"><input type="hidden" id="editBukuRowIndex"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Tahun</label><select id="editBukuTahun" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Lembaga</label><select id="editBukuLembaga" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Guru</label><select id="editBukuGuru" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Kelas</label><select id="editBukuKelas" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div><div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Mapel</label><select id="editBukuMapel" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-xs sm:text-sm shadow-inner font-medium"></select></div></div><button type="submit" id="btnSubmitEditBuku" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg mt-2 sm:mt-4 transition-all text-sm sm:text-base">Simpan Update</button></form></div></div></div>
-    
     <!-- MODAL EDIT GURU -->
     <div id="editGuruModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50">
+        <!-- Hapus overflow-hidden di baris ini agar dropdown bebas keluar kotak -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-sm transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative">
             <div class="p-6 sm:p-8">
                 <h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white mb-4 sm:mb-6 tracking-tight">Update Data Guru</h2>
                 <form id="editGuruForm" class="space-y-4 sm:space-y-5">
@@ -532,7 +531,8 @@
                                     <span id="label-ms-edit-lembaga" class="truncate opacity-60">Lembaga</span>
                                     <i class="fas fa-chevron-down text-[8px] opacity-50 ml-1"></i>
                                 </button>
-                                <div id="ms-edit-lembaga" class="ms-dropdown hidden absolute z-50 min-w-[160px] left-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-40 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                                <!-- Menggunakan bottom-full agar terbuka ke atas -->
+                                <div id="ms-edit-lembaga" class="ms-dropdown hidden absolute z-50 min-w-[160px] bottom-full mb-1 left-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-60 overflow-y-auto p-1.5 custom-scrollbar"></div>
                             </div>
                             <div class="relative custom-multiselect">
                                 <input type="hidden" id="editGuruMapel" value="">
@@ -540,7 +540,7 @@
                                     <span id="label-ms-edit-mapel" class="truncate opacity-60">Mapel</span>
                                     <i class="fas fa-chevron-down text-[8px] opacity-50 ml-1"></i>
                                 </button>
-                                <div id="ms-edit-mapel" class="ms-dropdown hidden absolute z-50 min-w-[160px] left-1/2 -translate-x-1/2 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-40 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                                <div id="ms-edit-mapel" class="ms-dropdown hidden absolute z-50 min-w-[160px] bottom-full mb-1 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-60 overflow-y-auto p-1.5 custom-scrollbar"></div>
                             </div>
                             <div class="relative custom-multiselect">
                                 <input type="hidden" id="editGuruKelas" value="">
@@ -548,7 +548,7 @@
                                     <span id="label-ms-edit-kelas" class="truncate opacity-60">Kelas</span>
                                     <i class="fas fa-chevron-down text-[8px] opacity-50 ml-1"></i>
                                 </button>
-                                <div id="ms-edit-kelas" class="ms-dropdown hidden absolute z-50 min-w-[160px] right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-40 overflow-y-auto p-1.5 custom-scrollbar"></div>
+                                <div id="ms-edit-kelas" class="ms-dropdown hidden absolute z-50 min-w-[160px] bottom-full mb-1 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-60 overflow-y-auto p-1.5 custom-scrollbar"></div>
                             </div>
                         </div>
                     </div>
