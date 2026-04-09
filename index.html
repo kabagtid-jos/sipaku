@@ -601,6 +601,16 @@
         function closeEditDataModal() { modalHelper.close('editDataModal', 'editDataModalContent'); }
         function openDeleteModal(t, n) { currentDeleteType=t; currentDeleteName=n; document.getElementById('deleteDataTargetName').innerText=`"${n}"`; modalHelper.open('deleteConfirmModal', 'deleteConfirmModalContent'); }
         function closeDeleteModal() { modalHelper.close('deleteConfirmModal', 'deleteConfirmModalContent'); }
+        
+        // FITUR PERBAIKAN: Fungsi penjembatan tombol Edit & Hapus Admin
+        function editDataAdmin(type, name, target, pin) {
+            if (type === 'Guru') openEditGuruModal(name, target, pin);
+            else openEditDataModal(type, name);
+        }
+        function deleteDataAdmin(type, name) {
+            openDeleteModal(type, name);
+        }
+
         function deleteBukuUploaded(ri, d) { currentDeleteType='BukuUploaded'; currentDeleteName=ri; document.getElementById('deleteDataTargetName').innerText=`Data Buku: ${d}`; modalHelper.open('deleteConfirmModal', 'deleteConfirmModalContent'); }
         function openEditBukuModal(enc) { let d=JSON.parse(decodeURIComponent(enc)); document.getElementById('editBukuRowIndex').value=d.rowIndex; const pop=(id,arr,val)=>{const el=document.getElementById(id);if(el){el.innerHTML='<option value="" disabled>-- Pilih --</option>';arr.forEach(i=>{let v=typeof i==='object'?i.nama:i; let opt=new Option(v,v); if(v===val)opt.selected=true; el.add(opt);});}}; pop('editBukuTahun',masterTahun,d.tahun); pop('editBukuLembaga',masterLembaga,d.lembaga); pop('editBukuGuru',masterGuru,d.guru); pop('editBukuKelas',masterKelas,d.kelas); pop('editBukuMapel',masterMapel,d.mapel); modalHelper.open('editBukuModal', 'editBukuModalContent'); }
         function closeEditBukuModal() { modalHelper.close('editBukuModal', 'editBukuModalContent'); }
