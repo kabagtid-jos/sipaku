@@ -13,7 +13,19 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' }
+                        brand: { 
+                            50: '#eef2ff', 
+                            100: '#e0e7ff', 
+                            200: '#c7d2fe', 
+                            300: '#a5b4fc', 
+                            400: '#818cf8', 
+                            500: '#6366f1', 
+                            600: '#4f46e5', 
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                            950: '#1e1b4b'
+                        }
                     },
                     animation: {
                         'fade-in-up': 'fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
@@ -58,20 +70,19 @@
         .dark .skeleton-bg { background: linear-gradient(90deg, rgba(51, 65, 85, 0.4) 25%, rgba(51, 65, 85, 0.8) 50%, rgba(51, 65, 85, 0.4) 75%); background-size: 1000px 100%; }
         .sortable:hover { cursor: pointer; background-color: rgba(99, 102, 241, 0.05); }
 
-        /* Solusi Paksa Browser Autofill yang menabrak teks putih di Mode Gelap */
         input:-webkit-autofill,
         input:-webkit-autofill:hover, 
         input:-webkit-autofill:focus, 
         input:-webkit-autofill:active {
             -webkit-box-shadow: 0 0 0 30px #f8fafc inset !important;
-            -webkit-text-fill-color: #0f172a !important; /* text-slate-900 */
+            -webkit-text-fill-color: #0f172a !important;
         }
         .dark input:-webkit-autofill,
         .dark input:-webkit-autofill:hover, 
         .dark input:-webkit-autofill:focus, 
         .dark input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 30px #1e293b inset !important; /* bg-slate-800 */
-            -webkit-text-fill-color: #f1f5f9 !important; /* text-slate-100 */
+            -webkit-box-shadow: 0 0 0 30px #1e293b inset !important;
+            -webkit-text-fill-color: #f1f5f9 !important;
         }
 
         @media screen { #printArea { display: none !important; } }
@@ -451,14 +462,16 @@
                 </div>
                 
                 <div class="p-4 sm:p-6 md:p-8 overflow-y-auto custom-scrollbar relative max-h-[75vh] sm:max-h-[70vh]">
-                    <div class="bg-brand-50 dark:bg-brand-900/20 p-4 rounded-2xl mb-5 flex items-center gap-3 sm:gap-4 border border-brand-100 dark:border-brand-800/50">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm text-brand-500 text-lg sm:text-xl shrink-0"><i class="fas fa-user-check"></i></div>
+                    
+                    <!-- KOTAK SELAMAT DATANG YANG SUDAH DIPERBAIKI -->
+                    <div class="bg-brand-50 dark:bg-slate-700/50 p-4 rounded-2xl mb-5 flex items-center gap-3 sm:gap-4 border border-brand-100 dark:border-slate-600">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm text-brand-600 dark:text-brand-400 text-lg sm:text-xl shrink-0 border border-slate-100 dark:border-slate-700"><i class="fas fa-user-check"></i></div>
                         <div class="overflow-hidden">
                             <p class="text-[9px] sm:text-[10px] font-black text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-0.5">Selamat Datang,</p>
                             <h4 class="text-sm sm:text-base font-black text-slate-800 dark:text-white truncate" id="displayNamaGuru">Nama Guru</h4>
                             <input type="hidden" id="guru" required>
                         </div>
-                        <button type="button" onclick="resetUploadFormUI()" class="ml-auto text-slate-400 hover:text-red-500 text-xs sm:text-sm font-bold bg-white dark:bg-slate-800 w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center border border-slate-200 dark:border-slate-700 shadow-sm transition shrink-0" title="Ganti Akun"><i class="fas fa-sign-out-alt"></i></button>
+                        <button type="button" onclick="resetUploadFormUI()" class="ml-auto text-slate-400 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400 text-xs sm:text-sm font-bold bg-white dark:bg-slate-800 w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center border border-slate-200 dark:border-slate-600 shadow-sm transition shrink-0" title="Ganti Akun"><i class="fas fa-sign-out-alt"></i></button>
                     </div>
 
                     <div id="pengumumanBanner" class="hidden mb-4 sm:mb-6 rounded-xl sm:rounded-2xl overflow-hidden relative bg-amber-50 dark:bg-amber-900/20 border border-amber-200/80 dark:border-amber-800/50 p-3 sm:p-4 marquee-container shadow-inner"><div class="flex items-center text-amber-700 dark:text-amber-400 text-[10px] sm:text-xs font-bold w-full overflow-hidden"><i class="fas fa-bullhorn mr-2 sm:mr-3 text-xs sm:text-sm flex-shrink-0 animate-pulse"></i><span id="pengumumanText" class="animate-marquee tracking-wide"></span></div></div>
@@ -1024,7 +1037,7 @@
             currentActiveGurus = data.guru.filter(i => i.count > 0); handleSearchGuru(''); 
             const lstL = document.getElementById('listLembaga');
             if (lstL) {
-                lstL.innerHTML = data.lembaga.length === 0 ? '<li class="p-10 sm:p-16 flex flex-col items-center justify-center text-slate-400 opacity-70"><i class="fas fa-folder-open text-4xl sm:text-5xl mb-3 sm:mb-4"></i><p class="text-xs sm:text-sm font-semibold">Kosong.</p></li>' : data.lembaga.length === 0 ? '<li class="p-10 sm:p-16 flex flex-col items-center justify-center text-slate-400 opacity-70"><i class="fas fa-folder-open text-4xl sm:text-5xl mb-3 sm:mb-4"></i><p class="text-xs sm:text-sm font-semibold">Kosong.</p></li>' : data.lembaga.map((i, idx) => {
+                lstL.innerHTML = data.lembaga.length === 0 ? '<li class="p-10 sm:p-16 flex flex-col items-center justify-center text-slate-400 opacity-70"><i class="fas fa-folder-open text-4xl sm:text-5xl mb-3 sm:mb-4"></i><p class="text-xs sm:text-sm font-semibold">Kosong.</p></li>' : data.lembaga.map((i, idx) => {
                     let target = 100; 
                     let foundLembaga = masterLembaga.find(m => (m.nama || m) === i.name);
                     if (foundLembaga && foundLembaga.target) target = foundLembaga.target;
