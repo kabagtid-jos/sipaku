@@ -61,14 +61,12 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col transition-colors duration-300 text-sm sm:text-base">
 
-    <!-- TOAST NOTIFICATION -->
     <div id="toastNotification" class="fixed top-4 right-4 sm:top-5 sm:right-5 z-[200] transform translate-x-[calc(100%+3rem)] transition-transform duration-300 flex items-center p-3 sm:p-4 mb-4 rounded-xl sm:rounded-2xl premium-shadow border glass border-white/50 dark:border-slate-700/50 max-w-[90vw] overflow-hidden">
         <div id="toastIcon" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 relative z-10"><i class="fas fa-check text-sm sm:text-base"></i></div>
         <div id="toastMessage" class="ml-3 text-xs sm:text-sm font-bold tracking-wide pr-2 sm:pr-4 text-slate-700 dark:text-slate-200 relative z-10">Aksi Berhasil!</div>
         <div id="toastProgress" class="absolute bottom-0 left-0 h-1.5 bg-emerald-500 transition-all ease-linear" style="width: 100%;"></div>
     </div>
 
-    <!-- HEADER -->
     <header class="glass border-b border-slate-200/60 dark:border-slate-800/60 sticky top-0 z-50 transition-colors duration-300 shadow-sm shadow-slate-200/20 dark:shadow-none">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-3.5 flex items-center justify-between">
             <div class="flex items-center gap-2.5 sm:gap-4 cursor-pointer hover:opacity-80 transition-opacity" onclick="toggleViewMode('dashboard')">
@@ -91,13 +89,11 @@
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
     <div id="mainContainer" class="flex-grow w-full max-w-7xl mx-auto flex flex-col relative transition-all duration-300">
         
         <!-- PUBLIC DASHBOARD -->
         <main id="publicView" class="w-full max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 flex-grow animate-fade-in-up">
             <div class="space-y-4 sm:space-y-6">
-                
                 <div id="pengumumanBanner" class="hidden rounded-xl sm:rounded-2xl overflow-hidden relative bg-amber-50 dark:bg-amber-900/20 border border-amber-200/80 dark:border-amber-800/50 p-3 sm:p-4 shadow-inner marquee-container">
                     <div class="flex items-center text-amber-700 dark:text-amber-400 text-[10px] sm:text-xs font-bold w-full">
                         <div class="flex-shrink-0 z-10 mr-2 sm:mr-3 flex items-center justify-center"><i class="fas fa-bullhorn text-xs sm:text-sm animate-pulse"></i></div>
@@ -400,7 +396,7 @@
                 </div>
             </div>
 
-            <!-- STEP 3: FORM UPLOAD -->
+            <!-- STEP 3: FORM UPLOAD (Fitur 4: Multi-file) -->
             <div id="step3Form" class="hidden flex-col w-full h-full animate-fade-in-up">
                 <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 shrink-0 flex justify-between items-center">
                     <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2.5 sm:gap-3 tracking-tight"><div class="bg-gradient-to-br from-brand-500 to-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-cloud-upload-alt text-sm"></i></div> Form Unggah</h2>
@@ -441,7 +437,7 @@
         </div>
     </div>
 
-    <!-- MODAL REVISI DOKUMEN -->
+    <!-- MODAL REVISI DOKUMEN (Fitur 1) -->
     <div id="reuploadModal" class="fixed inset-0 z-[110] hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 transform scale-95 transition-transform duration-300" id="reuploadModalContent">
             <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
@@ -467,7 +463,7 @@
         </div>
     </div>
 
-    <!-- AREA CETAK BUKTI REKAP PDF ADMIN -->
+    <!-- AREA CETAK BUKTI REKAP PDF ADMIN (Fitur 6) -->
     <div id="printReportArea" class="bg-white text-black font-sans hidden">
         <div class="max-w-4xl mx-auto p-8">
             <div class="flex items-center justify-between border-b-4 border-black pb-4 mb-6">
@@ -978,6 +974,28 @@
             if (step1) step1.classList.remove('hidden'); 
         }
 
+        async function loadGuruHistory() {
+            const tBody = document.getElementById('tableRiwayatGuru'); 
+            if(!tBody || !loggedInGuru) return;
+            
+            tBody.innerHTML='<tr><td colspan="4" class="text-center py-4"><i class="fas fa-spinner fa-spin"></i> Memuat...</td></tr>';
+            try {
+                let res = await runGoogleScriptPromise('getGuruHistory', loggedInGuru.nama, loggedInGuru.pin);
+                if(res.success && res.data.length > 0) {
+                    tBody.innerHTML = res.data.map(d => {
+                        let encObj = encodeURIComponent(JSON.stringify(d)).replace(/'/g,"%27");
+                        let btnRevisi = d.status === 'Ditolak' ? `<button onclick="openReuploadModal(${d.rowIndex})" class="text-white bg-amber-500 hover:bg-amber-600 px-2 py-1 rounded text-[10px] font-bold shadow-sm ml-1" title="Revisi"><i class="fas fa-redo"></i></button>` : '';
+                        return `<tr class="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-700/20">
+                            <td class="px-4 py-3"><div class="font-bold">${d.tahun}</div><div class="text-[9px] text-slate-400">${d.timestamp.split(',')[0]}</div></td>
+                            <td class="px-4 py-3"><div class="font-bold">${d.mapel}</div><div class="text-[10px] text-slate-500">${d.kelas} • ${d.lembaga}</div><div class="text-[8px] text-slate-400 truncate w-32 mt-1" title="${d.fileName}">${d.fileName}</div></td>
+                            <td class="px-4 py-3">${getStatusBadge(d.status)}${d.catatan ? `<div class="text-[9px] text-red-500 mt-1 italic bg-red-50 dark:bg-red-500/10 p-1 rounded"><i class="fas fa-info-circle"></i> ${d.catatan}</div>` : ''}</td>
+                            <td class="px-4 py-3 text-center flex justify-center gap-1"><button onclick="reprintReceipt('${encObj}')" class="text-brand-600 bg-brand-50 hover:bg-brand-100 dark:bg-slate-700 p-1.5 rounded" title="Cetak Ulang"><i class="fas fa-print"></i></button>${btnRevisi}</td>
+                        </tr>`;
+                    }).join('');
+                } else tBody.innerHTML='<tr><td colspan="4" class="text-center py-6 text-slate-400 italic">Belum ada riwayat unggahan.</td></tr>';
+            } catch(e) { tBody.innerHTML='<tr><td colspan="4" class="text-center py-4 text-red-500">Gagal mengambil riwayat.</td></tr>'; }
+        }
+
         async function verifyNiy() {
             const niy=document.getElementById('inputCheckNiy').value.trim(), pin=document.getElementById('inputCheckPin').value; const btn=document.getElementById('btnVerifyNiy');
             if(!niy || !pin){ showToast('NIY dan PIN wajib diisi','error'); return; }
@@ -997,22 +1015,7 @@
 
                 document.getElementById('step1Niy').classList.add('hidden'); document.getElementById('step2Dashboard').classList.remove('hidden'); document.getElementById('step2Dashboard').classList.add('flex');
                 
-                const tBody = document.getElementById('tableRiwayatGuru'); tBody.innerHTML='<tr><td colspan="4" class="text-center py-4"><i class="fas fa-spinner fa-spin"></i> Memuat...</td></tr>';
-                try {
-                    let res = await runGoogleScriptPromise('getGuruHistory', found.nama, pin);
-                    if(res.success && res.data.length > 0) {
-                        tBody.innerHTML = res.data.map(d => {
-                            let encObj = encodeURIComponent(JSON.stringify(d)).replace(/'/g,"%27");
-                            let btnRevisi = d.status === 'Ditolak' ? `<button onclick="openReuploadModal(${d.rowIndex})" class="text-white bg-amber-500 hover:bg-amber-600 px-2 py-1 rounded text-[10px] font-bold shadow-sm ml-1" title="Revisi"><i class="fas fa-redo"></i></button>` : '';
-                            return `<tr class="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-700/20">
-                                <td class="px-4 py-3"><div class="font-bold">${d.tahun}</div><div class="text-[9px] text-slate-400">${d.timestamp.split(',')[0]}</div></td>
-                                <td class="px-4 py-3"><div class="font-bold">${d.mapel}</div><div class="text-[10px] text-slate-500">${d.kelas} • ${d.lembaga}</div><div class="text-[8px] text-slate-400 truncate w-32 mt-1" title="${d.fileName}">${d.fileName}</div></td>
-                                <td class="px-4 py-3">${getStatusBadge(d.status)}${d.catatan ? `<div class="text-[9px] text-red-500 mt-1 italic bg-red-50 dark:bg-red-500/10 p-1 rounded"><i class="fas fa-info-circle"></i> ${d.catatan}</div>` : ''}</td>
-                                <td class="px-4 py-3 text-center flex justify-center gap-1"><button onclick="reprintReceipt('${encObj}')" class="text-brand-600 bg-brand-50 hover:bg-brand-100 dark:bg-slate-700 p-1.5 rounded" title="Cetak Ulang"><i class="fas fa-print"></i></button>${btnRevisi}</td>
-                            </tr>`;
-                        }).join('');
-                    } else tBody.innerHTML='<tr><td colspan="4" class="text-center py-6 text-slate-400 italic">Belum ada riwayat unggahan.</td></tr>';
-                } catch(e) { tBody.innerHTML='<tr><td colspan="4" class="text-center py-4 text-red-500">Gagal mengambil riwayat.</td></tr>'; }
+                loadGuruHistory();
             } else { showToast('NIY atau PIN Salah!', 'error'); }
             btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Masuk';
         }
@@ -1046,7 +1049,13 @@
             pop('lembaga', masterLembaga, loggedInGuru.lembaga, '-- Lembaga --'); pop('kelasDropdown', masterKelas, loggedInGuru.kelas, '-- Kelas --'); pop('mapelDropdown', masterMapel, loggedInGuru.mapel, '-- Mapel --');
             const elT = document.getElementById('tahun'); elT.innerHTML='<option value="" disabled selected>-- Tahun --</option>'; masterTahun.forEach(t=>elT.add(new Option(t,t)));
         }
-        function backToDashboard() { document.getElementById('step3Form').classList.add('hidden'); document.getElementById('step2Dashboard').classList.remove('hidden'); document.getElementById('step2Dashboard').classList.add('flex'); verifyNiy(); }
+        
+        function backToDashboard() { 
+            document.getElementById('step3Form').classList.add('hidden'); 
+            document.getElementById('step2Dashboard').classList.remove('hidden'); 
+            document.getElementById('step2Dashboard').classList.add('flex'); 
+            if(loggedInGuru) loadGuruHistory(); 
+        }
 
         // Multi-File Input Helper
         function handleFileInput(e, displayId) {
@@ -1106,7 +1115,7 @@
                 clearInterval(simProg); pBar.style.width='100%'; txt.innerHTML=`<i class="fas fa-check-circle"></i> Selesai!`;
                 setTimeout(()=>{
                     btn.disabled=false; pBar.style.width='0%'; txt.innerHTML='Kirim Revisi';
-                    if(res.success){ showToast(res.message); closeReuploadModal(); fetchDashboardOnly(); verifyNiy(); } else showToast(res.message, 'error');
+                    if(res.success){ showToast(res.message); closeReuploadModal(); fetchDashboardOnly(); loadGuruHistory(); } else showToast(res.message, 'error');
                 }, 1000);
             } catch(err) { clearInterval(simProg); btn.disabled=false; pBar.style.width='0%'; txt.innerHTML='Kirim Revisi'; showToast('Error Jaringan','error'); }
         });
