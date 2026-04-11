@@ -628,6 +628,7 @@
                 <tr><td class="py-1.5 font-bold">Lembaga</td><td>: <span id="printLembaga"></span></td></tr>
                 <tr><td class="py-1.5 font-bold">Mata Pelajaran</td><td>: <span id="printMapel"></span></td></tr>
                 <tr><td class="py-1.5 font-bold">Kelas</td><td>: <span id="printKelas"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Status Dokumen</td><td>: <span id="printStatus" class="font-bold border border-gray-400 px-2 py-0.5 rounded"></span></td></tr>
             </table>
             <hr class="border-black my-5">
             <p class="text-xs">Dokumen Anda telah terekam aman di dalam database sistem. Terima kasih atas kepatuhan Anda.</p>
@@ -884,13 +885,14 @@
             document.getElementById('printLembaga').innerText = currentReceiptData.lembaga;
             document.getElementById('printMapel').innerText = currentReceiptData.mapel;
             document.getElementById('printKelas').innerText = currentReceiptData.kelas;
+            document.getElementById('printStatus').innerText = currentReceiptData.status ? currentReceiptData.status.toUpperCase() : 'MENUNGGU REVIEW';
             showToast("Menyiapkan dokumen cetak...", "success"); setTimeout(() => { window.print(); }, 500);
         };
 
         window.reprintReceipt = function(enc) {
             try {
                 let d = JSON.parse(decodeURIComponent(enc));
-                currentReceiptData = { guru: d.guru, lembaga: d.lembaga, mapel: d.mapel, kelas: d.kelas, timestamp: d.timestamp }; 
+                currentReceiptData = { guru: d.guru, lembaga: d.lembaga, mapel: d.mapel, kelas: d.kelas, timestamp: d.timestamp, status: d.status }; 
                 window.triggerPrintReceipt();
             } catch(e) { showToast("Gagal memuat data", "error"); }
         };
@@ -935,7 +937,7 @@
                     setTimeout(()=>{
                         btn.disabled=false; btnBg.classList.remove('opacity-0'); pBar.style.width='0%';
                         txt.innerHTML='<i class="fas fa-paper-plane"></i> Kirim Dokumen'; 
-                        if(res.success){ showToast(res.message); currentReceiptData={guru:dataObj.guru, lembaga:dataObj.lembaga, mapel:dataObj.mapel, kelas:dataObj.kelas, timestamp:res.timestamp}; document.getElementById('printReceiptBtnContainer')?.classList.remove('hidden'); fetchDashboardOnly(); backToDashboard(); } 
+                        if(res.success){ showToast(res.message); currentReceiptData={guru:dataObj.guru, lembaga:dataObj.lembaga, mapel:dataObj.mapel, kelas:dataObj.kelas, timestamp:res.timestamp, status: "Menunggu Review"}; document.getElementById('printReceiptBtnContainer')?.classList.remove('hidden'); fetchDashboardOnly(); backToDashboard(); } 
                         else showToast(res.message, 'error');
                     }, 1000);
                 } catch(err) { 
