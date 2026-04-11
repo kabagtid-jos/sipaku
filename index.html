@@ -46,7 +46,6 @@
         .skeleton-bg { background: linear-gradient(90deg, rgba(203, 213, 225, 0.4) 25%, rgba(203, 213, 225, 0.8) 50%, rgba(203, 213, 225, 0.4) 75%); background-size: 1000px 100%; }
         .dark .skeleton-bg { background: linear-gradient(90deg, rgba(51, 65, 85, 0.4) 25%, rgba(51, 65, 85, 0.8) 50%, rgba(51, 65, 85, 0.4) 75%); background-size: 1000px 100%; }
         .sortable:hover { cursor: pointer; background-color: rgba(99, 102, 241, 0.05); }
-
         input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { -webkit-box-shadow: 0 0 0 30px #f8fafc inset !important; -webkit-text-fill-color: #0f172a !important; }
         .dark input:-webkit-autofill, .dark input:-webkit-autofill:hover, .dark input:-webkit-autofill:focus, .dark input:-webkit-autofill:active { -webkit-box-shadow: 0 0 0 30px #1e293b inset !important; -webkit-text-fill-color: #f1f5f9 !important; }
 
@@ -63,12 +62,14 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col transition-colors duration-300 text-sm sm:text-base">
 
+    <!-- TOAST NOTIFICATION -->
     <div id="toastNotification" class="fixed top-4 right-4 sm:top-5 sm:right-5 z-[200] transform translate-x-[calc(100%+3rem)] transition-transform duration-300 flex items-center p-3 sm:p-4 mb-4 rounded-xl sm:rounded-2xl premium-shadow border glass border-white/50 dark:border-slate-700/50 max-w-[90vw] overflow-hidden">
         <div id="toastIcon" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 relative z-10"><i class="fas fa-check text-sm sm:text-base"></i></div>
         <div id="toastMessage" class="ml-3 text-xs sm:text-sm font-bold tracking-wide pr-2 sm:pr-4 text-slate-700 dark:text-slate-200 relative z-10">Aksi Berhasil!</div>
         <div id="toastProgress" class="absolute bottom-0 left-0 h-1.5 bg-emerald-500 transition-all ease-linear" style="width: 100%;"></div>
     </div>
 
+    <!-- HEADER -->
     <header class="glass border-b border-slate-200/60 dark:border-slate-800/60 sticky top-0 z-50 transition-colors duration-300 shadow-sm shadow-slate-200/20 dark:shadow-none">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-3.5 flex items-center justify-between">
             <div class="flex items-center gap-2.5 sm:gap-4 cursor-pointer hover:opacity-80 transition-opacity" onclick="toggleViewMode('dashboard')">
@@ -85,13 +86,16 @@
             
             <div class="flex items-center gap-1.5 sm:gap-4">
                 <button id="themeToggleBtn" onclick="toggleTheme()" class="text-slate-400 hover:text-brand-600 dark:text-slate-500 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800 p-2 sm:p-2.5 rounded-full transition-all duration-200 flex items-center justify-center"><i id="themeToggleIcon" class="fas fa-moon text-base sm:text-lg"></i></button>
-                <button id="btnUploadHeader" onclick="openModal()" class="hidden md:flex bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 hover:to-blue-700 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold shadow-md sm:shadow-lg shadow-brand-500/25 transition-all duration-300 transform hover:-translate-y-0.5 items-center gap-2 sm:gap-2.5 text-xs sm:text-sm"><i class="fas fa-cloud-upload-alt text-sm sm:text-lg"></i><span>Portal Guru</span></button>
+                <button id="btnUploadHeader" onclick="openPortalModal()" class="hidden md:flex bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 hover:to-blue-700 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold shadow-md sm:shadow-lg shadow-brand-500/25 transition-all duration-300 transform hover:-translate-y-0.5 items-center gap-2 sm:gap-2.5 text-xs sm:text-sm"><i class="fas fa-cloud-upload-alt text-sm sm:text-lg"></i><span>Portal Guru</span></button>
                 <button onclick="handleAuthClick()" id="btnAuth" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 hover:border-brand-300 dark:hover:border-brand-600 hover:text-brand-600 dark:hover:text-brand-400 px-3 sm:px-4 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-bold shadow-sm hover:shadow transition-all duration-300 flex items-center gap-1.5 sm:gap-2 transform hover:-translate-y-0.5 text-xs sm:text-sm"><i class="fas fa-user-shield text-[10px] sm:text-sm text-slate-400 dark:text-slate-500" id="authIcon"></i><span class="hidden sm:inline" id="authText">Akses Admin</span></button>
             </div>
         </div>
     </header>
 
+    <!-- MAIN CONTAINER -->
     <div id="mainContainer" class="flex-grow w-full max-w-7xl mx-auto flex flex-col relative transition-all duration-300">
+        
+        <!-- PUBLIC DASHBOARD -->
         <main id="publicView" class="w-full max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 flex-grow animate-fade-in-up">
             <div class="space-y-4 sm:space-y-6">
                 
@@ -151,7 +155,7 @@
                         </div>
                         <div class="flex-grow overflow-hidden relative bg-slate-50/30 dark:bg-slate-800/20">
                             <div id="contentGuru" class="absolute inset-0 flex flex-col transition-opacity duration-300">
-                                <div class="p-3 sm:p-4 pb-1.5 sm:pb-2 sticky top-0 z-10 glass border-b border-slate-200/50 dark:border-slate-700/50"><div class="relative"><i class="fas fa-search absolute left-3.5 top-2.5 sm:top-3.5 text-slate-400 text-xs sm:text-sm"></i><input type="text" id="searchGuruInput" onkeyup="handleSearchGuru(this.value)" placeholder="Cari guru..." class="w-full pl-9 pr-3 py-2 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all shadow-sm"></div></div>
+                                <div class="p-3 sm:p-4 pb-1.5 sm:pb-2 sticky top-0 z-10 glass border-b border-slate-200/50 dark:border-slate-700/50"><div class="relative"><i class="fas fa-search absolute left-3.5 top-2.5 sm:top-3.5 text-slate-400 text-xs sm:text-sm"></i><input type="text" id="searchGuruInput" onkeyup="handleSearchGuru(this.value)" placeholder="Cari guru..." class="w-full pl-9 pr-3 py-2 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-brand-500/30 outline-none transition-all shadow-sm"></div></div>
                                 <ul class="flex-grow overflow-y-auto custom-scrollbar p-3 sm:p-4 space-y-2 sm:space-y-3" id="listGuru"></ul>
                             </div>
                             <div id="contentLembaga" class="absolute inset-0 overflow-y-auto custom-scrollbar hidden p-3 sm:p-4 opacity-0 transition-opacity duration-300"><ul class="space-y-2 sm:space-y-3" id="listLembaga"></ul></div>
@@ -161,6 +165,7 @@
             </div>
         </main>
 
+        <!-- ADMIN DASHBOARD -->
         <main id="adminView" class="hidden w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 flex-grow flex flex-col md:flex-row gap-4 sm:gap-6 items-start">
             <aside class="fixed md:sticky bottom-0 left-0 w-full md:w-64 z-[60] md:z-10 bg-white dark:bg-slate-800 border-t md:border border-slate-200/60 dark:border-slate-700/60 rounded-t-3xl md:rounded-[2rem] premium-shadow md:top-24 transition-colors duration-300">
                 <div class="hidden md:block p-4 sm:p-6 bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200/60 dark:border-slate-700/60 rounded-t-[2rem] relative"><div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-50"></div><h3 class="text-[10px] sm:text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-2"><i class="fas fa-shield-check text-brand-500 text-xs sm:text-sm"></i> Panel Admin</h3></div>
@@ -262,17 +267,10 @@
                         
                         <!-- Fitur 5: Advanced Filters Admin -->
                         <div class="flex gap-2 w-full md:w-auto overflow-x-auto custom-scrollbar pb-1">
-                            <select id="filterAdminTahun" onchange="applyAdminBukuFilters()" class="rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-medium py-2 px-3 outline-none focus:ring-2 focus:ring-brand-500/30">
-                                <option value="Semua">Semua Tahun</option>
-                            </select>
-                            <select id="filterAdminLembaga" onchange="applyAdminBukuFilters()" class="rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-medium py-2 px-3 outline-none focus:ring-2 focus:ring-brand-500/30">
-                                <option value="Semua">Semua Lembaga</option>
-                            </select>
+                            <select id="filterAdminTahun" onchange="applyAdminBukuFilters()" class="rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-medium py-2 px-3 outline-none focus:ring-2 focus:ring-brand-500/30"><option value="Semua">Semua Tahun</option></select>
+                            <select id="filterAdminLembaga" onchange="applyAdminBukuFilters()" class="rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-medium py-2 px-3 outline-none focus:ring-2 focus:ring-brand-500/30"><option value="Semua">Semua Lembaga</option></select>
                             <select id="filterAdminStatus" onchange="applyAdminBukuFilters()" class="rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-medium py-2 px-3 outline-none focus:ring-2 focus:ring-brand-500/30">
-                                <option value="Semua">Semua Status</option>
-                                <option value="Menunggu Review">Menunggu Review</option>
-                                <option value="Diterima">Diterima</option>
-                                <option value="Ditolak">Ditolak</option>
+                                <option value="Semua">Semua Status</option><option value="Menunggu Review">Menunggu Review</option><option value="Diterima">Diterima</option><option value="Ditolak">Ditolak</option>
                             </select>
                         </div>
                         
@@ -283,7 +281,6 @@
                         
                         <div class="flex gap-2">
                             <button onclick="loadDataBukuAdmin()" class="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-600 hover:border-brand-400 text-slate-600 dark:text-slate-300 px-4 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-bold shadow-sm hover:shadow transition-all flex items-center justify-center gap-1.5"><i class="fas fa-sync-alt text-brand-500"></i> Refresh</button>
-                            <!-- Fitur 5: Tombol Hapus Terpilih -->
                             <button id="btnBulkDelete" onclick="confirmBulkDelete()" class="hidden bg-red-500 hover:bg-red-600 text-white px-4 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all items-center justify-center gap-1.5"><i class="fas fa-trash-alt"></i> Hapus (<span id="bulkDeleteCount">0</span>)</button>
                         </div>
                     </div>
@@ -293,7 +290,6 @@
                             <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
                                 <thead class="bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur-md text-slate-500 dark:text-slate-400 uppercase text-[9px] md:text-xs font-black tracking-wider border-b border-slate-200/80 dark:border-slate-700/80 sticky top-0 z-10 shadow-sm shadow-slate-200/20 dark:shadow-none">
                                     <tr>
-                                        <!-- Fitur 5: Checkbox Bulk Delete -->
                                         <th class="px-4 py-3 sm:py-5 w-10 text-center"><input type="checkbox" id="checkAllBuku" onchange="toggleSelectAllBuku()" class="rounded border-slate-300 text-brand-500 focus:ring-brand-500 w-4 h-4 cursor-pointer"></th>
                                         <th class="px-4 sm:px-6 py-3 sm:py-5 sortable group" onclick="sortBuku('tahun')">Periode <i class="fas fa-sort ml-1 opacity-50 group-hover:opacity-100"></i></th>
                                         <th class="px-4 sm:px-6 py-3 sm:py-5 sortable group" onclick="sortBuku('guru')">Guru & Lembaga <i class="fas fa-sort ml-1 opacity-50 group-hover:opacity-100"></i></th>
@@ -329,7 +325,6 @@
     <div id="uploadModal" class="fixed inset-0 z-[100] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-4xl overflow-hidden transform scale-95 transition-transform duration-300 relative flex flex-col max-h-[95vh] sm:max-h-[90vh] border border-white/20 dark:border-slate-700/50" id="uploadModalContent">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div>
-            
             <button type="button" onclick="closeModal()" class="absolute top-4 right-4 z-30 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-white/50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-600 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 border border-slate-200 dark:border-slate-600 shadow-sm backdrop-blur-sm"><i class="fas fa-times text-xs sm:text-sm"></i></button>
 
             <!-- STEP 1: LOGIN PORTAL -->
@@ -346,13 +341,12 @@
                 <button type="button" onclick="verifyNiy()" id="btnVerifyNiy" class="w-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-brand-500/30 transition-all flex justify-center items-center gap-2 transform hover:-translate-y-1"><i class="fas fa-sign-in-alt"></i> Masuk</button>
             </div>
 
-            <!-- STEP 2: FITUR 2 - DASHBOARD GURU -->
+            <!-- STEP 2: DASHBOARD GURU -->
             <div id="step2Dashboard" class="hidden flex-col w-full h-full animate-fade-in-up">
                 <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 shrink-0 flex justify-between items-center">
                     <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2.5 sm:gap-3 tracking-tight"><div class="bg-gradient-to-br from-brand-500 to-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-chalkboard-teacher text-sm"></i></div> Dashboard Pribadi</h2>
                     <button onclick="resetUploadFormUI()" class="text-xs sm:text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition"><i class="fas fa-sign-out-alt mr-1"></i> Keluar</button>
                 </div>
-                
                 <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar bg-slate-50/30 dark:bg-slate-900/20 flex-grow">
                     <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                         <div>
@@ -362,7 +356,6 @@
                         </div>
                         <button onclick="goToUploadForm()" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-md shadow-brand-500/20 transition-all flex items-center justify-center gap-2 text-sm"><i class="fas fa-plus-circle"></i> Unggah Dokumen</button>
                     </div>
-
                     <h4 class="text-sm font-black text-slate-700 dark:text-slate-300 mb-3"><i class="fas fa-history mr-1.5 text-slate-400"></i> Riwayat Unggahan Anda</h4>
                     <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm">
                         <div class="overflow-x-auto">
@@ -383,7 +376,6 @@
                     <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2.5 sm:gap-3 tracking-tight"><div class="bg-gradient-to-br from-brand-500 to-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-cloud-upload-alt text-sm"></i></div> Form Unggah</h2>
                     <button onclick="backToDashboard()" class="text-xs sm:text-sm font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg transition"><i class="fas fa-arrow-left mr-1"></i> Kembali</button>
                 </div>
-                
                 <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar bg-slate-50/30 dark:bg-slate-900/20 flex-grow">
                     <input type="hidden" id="guru" required>
                     <form id="uploadForm" class="max-w-2xl mx-auto space-y-4">
@@ -403,16 +395,59 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Fitur 3: Visual Loading Bar -->
                         <div id="uploadProgressContainer" class="hidden w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 mt-4 overflow-hidden relative shadow-inner">
                             <div id="uploadProgressBar" class="bg-gradient-to-r from-brand-500 to-blue-500 h-2.5 rounded-full transition-all ease-out duration-300" style="width: 0%"></div>
                             <div class="absolute inset-0 bg-white/20 w-full h-full animate-pulse-slow"></div>
                         </div>
-
                         <button type="submit" id="btnSubmit" class="w-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-brand-500/30 transition-all mt-6 text-sm"><span id="btnText"><i class="fas fa-paper-plane mr-2"></i> Kirim Dokumen</span></button>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL OTENTIKASI ADMIN -->
+    <div id="loginModal" class="fixed inset-0 z-[100] hidden bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2.5rem] premium-shadow w-full max-w-xs sm:max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="loginModalContent">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div>
+            <div class="p-6 sm:p-10 text-center">
+                <div class="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6"><div class="absolute inset-0 bg-brand-500/20 dark:bg-brand-500/30 rounded-2xl sm:rounded-3xl blur-xl transform rotate-6"></div><div class="relative w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-brand-100 to-indigo-200 dark:from-slate-700 dark:to-slate-800 text-brand-600 dark:text-brand-400 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto shadow-inner border border-white dark:border-slate-600 transform rotate-3 hover:rotate-0 transition-all duration-300"><i class="fas fa-fingerprint text-2xl sm:text-3xl"></i></div></div>
+                <h2 class="text-xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight mb-1 sm:mb-2">Otentikasi</h2>
+                <p class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 mb-6 sm:mb-8">Masuk sebagai Administrator.</p>
+                <form id="loginForm" class="space-y-4 sm:space-y-5">
+                    <div><input type="password" id="adminPassword" required placeholder="PIN" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-3 sm:py-4 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 outline-none transition-all text-center tracking-[0.4em] font-black text-base sm:text-lg shadow-inner"></div>
+                    <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 dark:bg-brand-600 dark:hover:bg-brand-500 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg shadow-slate-800/20 dark:shadow-brand-500/20 transition-all transform hover:-translate-y-1 text-sm sm:text-base">Berikan Akses</button>
+                    <button type="button" onclick="closeLoginModal()" class="w-full text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300 font-bold py-2 mt-1 sm:mt-2 transition-colors text-xs sm:text-sm">Kembali</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LAPORAN GURU -->
+    <div id="guruDetailModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="guruDetailContent">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div>
+            <div class="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80">
+                <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight"><div class="bg-brand-100 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 p-1.5 sm:p-2 rounded-lg sm:rounded-xl"><i class="fas fa-chart-pie text-sm"></i></div> Laporan</h2>
+                <button type="button" onclick="closeGuruDetailModal()" class="text-slate-400 hover:text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all border border-slate-200 dark:border-slate-600 shadow-sm"><i class="fas fa-times text-xs sm:text-sm"></i></button>
+            </div>
+            <div class="p-4 sm:p-6 md:p-8">
+                <div class="text-center mb-4 sm:mb-6"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-slate-100 dark:bg-slate-700 rounded-full mx-auto mb-2 sm:mb-3 flex items-center justify-center border-2 sm:border-4 border-white dark:border-slate-800 shadow-sm"><i class="fas fa-user-tie text-xl sm:text-2xl text-slate-400"></i></div><h3 id="detailGuruName" class="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-200 tracking-tight leading-tight"></h3></div>
+                <div class="bg-brand-50/50 dark:bg-brand-900/10 rounded-xl p-3 border border-brand-100 dark:border-brand-800/50 mb-4 sm:mb-5">
+                    <h4 class="text-[9px] sm:text-[10px] font-black text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-2 flex items-center gap-1.5"><i class="fas fa-id-card-alt"></i> Hak Akses</h4>
+                    <div class="grid grid-cols-3 gap-2 text-[10px] sm:text-xs">
+                        <div><span class="block text-slate-400 font-bold mb-0.5">Lembaga</span><span id="detailGuruAksesLembaga" class="font-bold text-slate-700 dark:text-slate-200 block truncate"></span></div>
+                        <div><span class="block text-slate-400 font-bold mb-0.5">Kelas</span><span id="detailGuruAksesKelas" class="font-bold text-slate-700 dark:text-slate-200 block truncate"></span></div>
+                        <div><span class="block text-slate-400 font-bold mb-0.5">Mapel</span><span id="detailGuruAksesMapel" class="font-bold text-slate-700 dark:text-slate-200 block truncate"></span></div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-slate-100 dark:border-slate-700/50 mb-4 sm:mb-6 shadow-inner">
+                    <div class="flex justify-between items-center mb-2 sm:mb-2.5 text-xs sm:text-sm font-black"><span class="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[9px] sm:text-[10px]">Terkumpul</span><span class="text-brand-600 dark:text-brand-400 text-sm sm:text-base" id="detailGuruPct">0%</span></div>
+                    <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 sm:h-3 overflow-hidden mb-2.5 sm:mb-3 shadow-inner"><div id="detailGuruBar" class="bg-brand-500 h-2.5 sm:h-3 rounded-full transition-all duration-700 relative"><div class="absolute inset-0 bg-white/20 w-full h-full"></div></div></div>
+                    <div class="flex justify-between items-center font-bold"><span class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm" id="detailGuruCount">0 / 0 Dok.</span><span id="detailGuruMissing" class="text-[10px] sm:text-xs text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-500/10 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-red-100 dark:border-red-500/20">Kurang: 0</span></div>
+                </div>
+                <h4 class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase mb-2 sm:mb-3 tracking-widest ml-1">Rincian Dokumen:</h4>
+                <ul id="detailGuruMapels" class="space-y-2 sm:space-y-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 max-h-32 sm:max-h-40 overflow-y-auto custom-scrollbar font-medium"></ul>
             </div>
         </div>
     </div>
@@ -425,7 +460,6 @@
                     <h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white tracking-tight">Edit Data Guru</h2>
                     <button type="button" onclick="closeEditGuruModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 w-8 h-8 rounded-full flex justify-center items-center transition"><i class="fas fa-times"></i></button>
                 </div>
-                
                 <form id="editGuruForm" class="flex flex-col gap-4">
                     <input type="hidden" id="editGuruOldName">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -437,7 +471,6 @@
                         </div>
                     </div>
                     <div><label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase mb-1 ml-1">Email Notifikasi</label><input type="email" id="editGuruEmail" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 outline-none text-sm font-medium"></div>
-
                     <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 mt-2">
                         <p class="text-[10px] sm:text-xs font-bold text-brand-600 dark:text-brand-400 mb-2"><i class="fas fa-filter"></i> Batas Akses Upload (Pilih spesifik)</p>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -502,9 +535,105 @@
         </div>
     </div>
 
-    <!-- ... existing Modals for Edit Lembaga, General Edit, Delete ... -->
-    <div id="editLembagaModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl premium-shadow w-full max-w-xs transform border border-slate-200 dark:border-slate-700"><div class="p-6"><h2 class="text-lg font-black text-slate-800 dark:text-white mb-4">Edit Lembaga</h2><form id="editLembagaForm" class="space-y-4"><input type="hidden" id="editLembagaOldName"><div><label class="block text-[9px] font-black text-slate-500 uppercase mb-1">Nama Lembaga</label><input type="text" id="editLembagaName" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 bg-slate-50 dark:bg-slate-900 text-sm"></div><div><label class="block text-[9px] font-black text-slate-500 uppercase mb-1">Target Buku</label><input type="number" id="editLembagaTarget" required min="1" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 bg-slate-50 dark:bg-slate-900 text-sm"></div><div class="flex gap-2"><button type="button" onclick="modalHelper.close('editLembagaModal')" class="w-full bg-slate-100 dark:bg-slate-700 font-bold py-2.5 rounded-xl text-sm">Batal</button><button type="submit" id="btnSubmitEditLembaga" class="w-full bg-brand-600 text-white font-bold py-2.5 rounded-xl text-sm">Simpan</button></div></form></div></div></div>
-    <div id="deleteConfirmModal" class="fixed inset-0 z-[120] hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-3 opacity-0 transition-opacity duration-300"><div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-xs text-center border border-slate-700 relative overflow-hidden" id="deleteConfirmModalContent"><div class="absolute inset-x-0 top-0 h-1 bg-red-500"></div><div class="p-6"><div class="w-12 h-12 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center mx-auto mb-3"><i class="fas fa-trash-alt text-xl"></i></div><h2 class="text-lg font-black text-slate-800 dark:text-white mb-1.5">Konfirmasi Hapus</h2><p class="text-xs text-slate-500 dark:text-slate-400 mb-6"><span id="deleteDataTargetName" class="font-bold text-slate-700 dark:text-slate-300"></span></p><div class="flex gap-2"><button type="button" onclick="closeDeleteModal()" class="w-full bg-slate-100 dark:bg-slate-700 font-bold py-2.5 rounded-xl text-xs">Batal</button><button type="button" id="btnConfirmDelete" class="w-full bg-red-500 text-white font-bold py-2.5 rounded-xl text-xs">Hapus</button></div></div></div></div>
+    <!-- MODAL EDIT LEMBAGA ADMIN -->
+    <div id="editLembagaModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl premium-shadow w-full max-w-xs transform border border-slate-200 dark:border-slate-700" id="editLembagaModalContent">
+            <div class="p-6">
+                <h2 class="text-lg font-black text-slate-800 dark:text-white mb-4">Edit Lembaga</h2>
+                <form id="editLembagaForm" class="space-y-4">
+                    <input type="hidden" id="editLembagaOldName">
+                    <div><label class="block text-[9px] font-black text-slate-500 uppercase mb-1">Nama Lembaga</label><input type="text" id="editLembagaName" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 bg-slate-50 dark:bg-slate-900 text-sm"></div>
+                    <div><label class="block text-[9px] font-black text-slate-500 uppercase mb-1">Target Buku</label><input type="number" id="editLembagaTarget" required min="1" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 bg-slate-50 dark:bg-slate-900 text-sm"></div>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="closeEditLembagaModal()" class="w-full bg-slate-100 dark:bg-slate-700 font-bold py-2.5 rounded-xl text-sm">Batal</button>
+                        <button type="submit" id="btnSubmitEditLembaga" class="w-full bg-brand-600 text-white font-bold py-2.5 rounded-xl text-sm">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT DATA (UMUM) ADMIN -->
+    <div id="editDataModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl premium-shadow w-full max-w-xs transform border border-slate-200 dark:border-slate-700" id="editDataModalContent">
+            <div class="p-6">
+                <h2 class="text-lg font-black text-slate-800 dark:text-white mb-4" id="editDataModalTitle">Edit Data</h2>
+                <form id="editDataForm" class="space-y-4">
+                    <input type="hidden" id="editDataOldName"><input type="hidden" id="editDataType">
+                    <div><input type="text" id="editDataName" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 bg-slate-50 dark:bg-slate-900 text-sm font-medium outline-none"></div>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="closeEditDataModal()" class="w-full bg-slate-100 dark:bg-slate-700 font-bold py-2.5 rounded-xl text-sm">Batal</button>
+                        <button type="submit" id="btnSubmitEditData" class="w-full bg-brand-600 text-white font-bold py-2.5 rounded-xl text-sm">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT DATA BUKU (ADMIN) -->
+    <div id="editBukuModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl premium-shadow w-full max-w-md transform border border-slate-200 dark:border-slate-700" id="editBukuModalContent">
+            <div class="flex justify-between items-center p-4 border-b border-slate-100 dark:border-slate-700">
+                <h2 class="text-sm font-black text-slate-800 dark:text-white"><i class="fas fa-edit text-amber-500 mr-2"></i>Edit Dokumen</h2>
+                <button type="button" onclick="closeEditBukuModal()" class="text-slate-400 hover:text-slate-700"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="p-4 sm:p-6 max-h-[75vh] overflow-y-auto custom-scrollbar">
+                <form id="editBukuForm" class="space-y-4">
+                    <input type="hidden" id="editBukuRowIndex">
+                    <div><label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Tahun</label><select id="editBukuTahun" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 text-sm outline-none"></select></div>
+                    <div><label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Lembaga</label><select id="editBukuLembaga" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 text-sm outline-none"></select></div>
+                    <div><label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Guru</label><select id="editBukuGuru" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 text-sm outline-none"></select></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Kelas</label><select id="editBukuKelas" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 text-sm outline-none"></select></div>
+                        <div><label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Mapel</label><select id="editBukuMapel" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 text-sm outline-none"></select></div>
+                    </div>
+                    <button type="submit" id="btnSubmitEditBuku" class="w-full bg-brand-600 text-white font-bold py-3 rounded-xl mt-2 text-sm">Simpan Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL KONFIRMASI HAPUS -->
+    <div id="deleteConfirmModal" class="fixed inset-0 z-[120] hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-xs text-center border border-slate-700 relative overflow-hidden transform scale-95 transition-transform duration-300" id="deleteConfirmModalContent">
+            <div class="absolute inset-x-0 top-0 h-1 bg-red-500"></div>
+            <div class="p-6">
+                <div class="w-12 h-12 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center mx-auto mb-3"><i class="fas fa-trash-alt text-xl"></i></div>
+                <h2 class="text-lg font-black text-slate-800 dark:text-white mb-1.5">Konfirmasi Hapus</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6"><span id="deleteDataTargetName" class="font-bold text-slate-700 dark:text-slate-300"></span></p>
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeDeleteModal()" class="w-full bg-slate-100 dark:bg-slate-700 font-bold py-2.5 rounded-xl text-xs">Batal</button>
+                    <button type="button" id="btnConfirmDelete" class="w-full bg-red-500 text-white font-bold py-2.5 rounded-xl text-xs">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AREA CETAK BUKTI -->
+    <div id="printArea" class="bg-white text-black font-sans">
+        <div class="border-2 border-dashed border-black p-8 max-w-lg mx-auto text-center">
+            <h1 class="m-0 text-2xl font-bold">TANDA TERIMA Si PAKU</h1>
+            <p class="mt-1 text-xs text-gray-600">Sistem Pengumpulan Buku P2S Abu Zairi</p>
+            <hr class="border-black my-5">
+            <table class="w-full text-left text-sm mb-5">
+                <tr><td class="py-1.5 w-1/3 font-bold">Waktu Unggah</td><td>: <span id="printWaktu"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Nama Guru</td><td>: <span id="printGuru"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Lembaga</td><td>: <span id="printLembaga"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Mata Pelajaran</td><td>: <span id="printMapel"></span></td></tr>
+                <tr><td class="py-1.5 font-bold">Kelas</td><td>: <span id="printKelas"></span></td></tr>
+            </table>
+            <hr class="border-black my-5">
+            <p class="text-xs">Dokumen Anda telah terekam aman di dalam database sistem. Terima kasih atas kepatuhan Anda.</p>
+            <p class="text-[10px] mt-5 text-gray-500">Dicetak otomatis oleh Sistem Si PAKU</p>
+        </div>
+    </div>
+
+    <!-- MOBILE FAB -->
+    <div id="mobileFab" class="md:hidden fixed bottom-4 sm:bottom-6 left-0 right-0 px-4 sm:px-5 z-[90] flex justify-center transition-transform duration-300">
+        <button onclick="openPortalModal()" class="pointer-events-auto w-full max-w-sm bg-gradient-to-r from-brand-600 to-blue-600 text-white shadow-[0_10px_20px_-5px_rgba(79,70,229,0.5)] rounded-xl sm:rounded-2xl py-3.5 sm:py-4 font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all">
+            <i class="fas fa-cloud-upload-alt text-base sm:text-xl"></i> Portal Guru
+        </button>
+    </div>
 
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHOx5uxmX3ed-m0ECdpzAXM1jORYD7sBd4SFpJN745gs2XDWSZ6BJqMQU6UrxkWrE5sQ/exec';
@@ -583,16 +712,82 @@
         // Theme, Toasts & Transitions
         function toggleTheme() { document.documentElement.classList.toggle('dark'); localStorage.setItem('color-theme', document.documentElement.classList.contains('dark')?'dark':'light'); if(lembagaChartInstance)fetchDashboardOnly(); }
         let toastTimeout; function showToast(msg, type='success') { const t=document.getElementById('toastNotification'), i=document.getElementById('toastIcon'); clearTimeout(toastTimeout); i.className=`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg relative z-10 ${type==='success'?'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40':'bg-red-100 text-red-600 dark:bg-red-900/40'}`; i.innerHTML=`<i class="fas ${type==='success'?'fa-check':'fa-exclamation-triangle'}"></i>`; document.getElementById('toastMessage').innerText=msg; document.getElementById('toastProgress').className=`absolute bottom-0 left-0 h-1.5 transition-all ease-linear ${type==='success'?'bg-emerald-500':'bg-red-500'}`; document.getElementById('toastProgress').style.width='100%'; t.classList.remove('translate-x-[calc(100%+3rem)]'); setTimeout(()=>{document.getElementById('toastProgress').style.transitionDuration='3000ms'; document.getElementById('toastProgress').style.width='0%';},50); toastTimeout=setTimeout(()=>t.classList.add('translate-x-[calc(100%+3rem)]'),3000); }
-        const modalHelper = { open: (id, cid, fid) => { const m=document.getElementById(id), c=document.getElementById(cid); if(m){ m.classList.remove('hidden'); setTimeout(()=>{ m.classList.remove('opacity-0'); c?.classList.remove('scale-95'); document.getElementById(fid)?.focus(); },10); } }, close: (id, cid, cb) => { const m=document.getElementById(id), c=document.getElementById(cid); if(m){ m.classList.add('opacity-0'); c?.classList.add('scale-95'); setTimeout(()=>{ m.classList.add('hidden'); if(cb) cb(); },300); } } };
+        
+        // Perbaikan Helper Modal yang lebih robust (tahan banting)
+        const modalHelper = { 
+            open: (id, cid, fid) => { 
+                const m=document.getElementById(id), c=document.getElementById(cid); 
+                if(m){ 
+                    m.classList.remove('hidden'); 
+                    setTimeout(()=>{ m.classList.remove('opacity-0'); if(c) c.classList.remove('scale-95'); document.getElementById(fid)?.focus(); },10); 
+                } 
+            }, 
+            close: (id, cid, cb) => { 
+                const m=document.getElementById(id), c=document.getElementById(cid); 
+                if(m){ 
+                    m.classList.add('opacity-0'); 
+                    if(c) c.classList.add('scale-95'); 
+                    setTimeout(()=>{ m.classList.add('hidden'); if(cb) cb(); },300); 
+                } 
+            } 
+        };
 
         function handleAuthClick() { if (isAdminLoggedIn) toggleViewMode(document.getElementById('adminView').classList.contains('hidden') ? 'admin' : 'dashboard'); else modalHelper.open('loginModal', 'loginModalContent', 'adminPassword'); }
-        function toggleViewMode(mode) { const pub=document.getElementById('publicView'), ad=document.getElementById('adminView'), txt=document.getElementById('authText'), icn=document.getElementById('authIcon'); if(mode==='admin'){ pub.classList.add('hidden'); ad.classList.remove('hidden'); txt.innerText='Dashboard'; icn.className='fas fa-home'; document.getElementById('btnUploadHeader').style.display='none'; }else{ pub.classList.remove('hidden'); ad.classList.add('hidden'); txt.innerText='Akses Admin'; icn.className='fas fa-user-shield text-slate-400'; document.getElementById('btnUploadHeader').style.display=isDeadlinePassed?'none':'flex'; } }
+        function toggleViewMode(mode) { const pub=document.getElementById('publicView'), ad=document.getElementById('adminView'), txt=document.getElementById('authText'), icn=document.getElementById('authIcon'); if(mode==='admin'){ pub.classList.add('hidden'); ad.classList.remove('hidden'); txt.innerText='Dashboard'; icn.className='fas fa-home text-[10px] sm:text-sm text-slate-700 dark:text-slate-200'; document.getElementById('btnUploadHeader').style.display='none'; document.getElementById('mobileFab').style.display='none'; }else{ pub.classList.remove('hidden'); ad.classList.add('hidden'); txt.innerText='Akses Admin'; icn.className='fas fa-user-shield text-[10px] sm:text-sm text-slate-400'; document.getElementById('btnUploadHeader').style.display=isDeadlinePassed?'none':'flex'; document.getElementById('mobileFab').style.display=isDeadlinePassed?'none':'flex'; } }
         function logoutAdmin() { isAdminLoggedIn=false; toggleViewMode('dashboard'); showToast('Keluar'); }
-        function switchAdminTab(t) { document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.remove('admin-nav-active')); document.getElementById('btnMenu'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('admin-nav-active'); ['panelGuru','panelMapel','panelSetting','panelBuku'].forEach(p=>document.getElementById(p).classList.add('hidden')); const pnl=document.getElementById('panel'+t.charAt(0).toUpperCase()+t.slice(1)); pnl.classList.remove('hidden'); pnl.classList.add('animate-fade-in-up'); if(t==='buku'&&!isBukuLoaded)loadDataBukuAdmin(); }
+        function switchAdminTab(t) { document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.remove('admin-nav-active','bg-slate-50','dark:bg-slate-800')); const btn=document.getElementById('btnMenu'+t.charAt(0).toUpperCase()+t.slice(1)); if(btn) { btn.classList.add('admin-nav-active'); btn.classList.remove('hover:bg-slate-50', 'dark:hover:bg-slate-700/50'); } ['panelGuru','panelMapel','panelSetting','panelBuku'].forEach(p=>{const el=document.getElementById(p); if(el) el.classList.add('hidden');}); const pnl=document.getElementById('panel'+t.charAt(0).toUpperCase()+t.slice(1)); if(pnl){pnl.classList.remove('hidden'); pnl.classList.add('animate-fade-in-up');} if(t==='buku'&&!isBukuLoaded)loadDataBukuAdmin(); }
+
+        // Switch Tab Frontend
+        function switchTab(t) {
+            const aC = "w-1/2 py-2 px-1 sm:py-2.5 sm:px-2 text-center rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-400 shadow-sm transition-all duration-200 transform scale-100";
+            const iC = "w-1/2 py-2 px-1 sm:py-2.5 sm:px-2 text-center rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all duration-200 transform scale-95 hover:scale-100";
+            const cG = document.getElementById('contentGuru'); const cL = document.getElementById('contentLembaga');
+            if(t === 'guru') { document.getElementById('tabGuru').className=aC; document.getElementById('tabLembaga').className=iC; } 
+            else { document.getElementById('tabLembaga').className=aC; document.getElementById('tabGuru').className=iC; }
+
+            const activeContent = t === 'guru' ? cL : cG; const targetContent = t === 'guru' ? cG : cL;
+            activeContent.classList.add('opacity-0');
+            setTimeout(() => { activeContent.classList.add('hidden'); targetContent.classList.remove('hidden'); setTimeout(() => targetContent.classList.remove('opacity-0'), 50); }, 300);
+        }
+
+        // Deadline Timer
+        function startDeadlineTimer() {
+            clearInterval(deadlineInterval);
+            const wTimer = document.getElementById('countdownWidget'); const wExpired = document.getElementById('countdownExpired'); const disp = document.getElementById('timerDisplay'); const btnHead = document.getElementById('btnUploadHeader'); const btnFab = document.getElementById('mobileFab');
+            if(!masterDeadline) {
+                if (wTimer) wTimer.style.display = 'none'; if (wExpired) wExpired.style.display = 'none';
+                isDeadlinePassed = false; if (btnHead) btnHead.style.display = ''; if (btnFab) btnFab.style.display = ''; return;
+            }
+            let dl = new Date(masterDeadline).getTime();
+            if (isNaN(dl)) { let parts = String(masterDeadline).split(/[-T :]/); if (parts.length >= 5) { dl = new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5] || 0).getTime(); } }
+            deadlineInterval = setInterval(() => {
+                const now = new Date().getTime(); const dist = dl - now;
+                if (isNaN(dist)) { clearInterval(deadlineInterval); return; }
+                if (dist < 0) {
+                    clearInterval(deadlineInterval); isDeadlinePassed = true;
+                    if (wTimer) wTimer.style.display = 'none'; if (wExpired) wExpired.style.display = 'flex';
+                    if(!isAdminLoggedIn) { if (btnHead) btnHead.style.display = 'none'; if (btnFab) btnFab.style.display = 'none'; } return;
+                }
+                isDeadlinePassed = false;
+                if (wTimer) wTimer.style.display = 'flex'; if (wExpired) wExpired.style.display = 'none';
+                if(!isAdminLoggedIn) { if (btnHead) btnHead.style.display = ''; if (btnFab) btnFab.style.display = ''; }
+                let d = Math.floor(dist / (1000 * 60 * 60 * 24)); let h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); let m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60)); let s = Math.floor((dist % (1000 * 60)) / 1000);
+                if (disp) disp.innerHTML = `${d>0 ? d+'H ' : ''}${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            }, 1000);
+        }
+
+        // Export Laporan CSV
+        window.exportLaporan = () => {
+            if (!lastDashboardData?.guru) return showToast('Data belum siap', 'error');
+            let csv = "Nama Guru,Target Buku,Terkumpul,Persentase,Daftar Mapel (Kelas)\\n";
+            lastDashboardData.guru.forEach(g => { let pct=g.target>0?Math.min(100,Math.round((g.count/g.target)*100)):0; let m=g.mapels?.length?g.mapels.join('; '):"Belum ada"; csv+=`"${g.name.replace(/"/g,'""')}",${g.target},${g.count},${pct}%,"${m.replace(/"/g,'""')}"\\n`; });
+            let l=document.createElement("a"); l.href=window.URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'})); l.download=`Laporan_SiPAKU_${currentYearFilter}.csv`; document.body.appendChild(l); l.click(); document.body.removeChild(l); showToast('Laporan diunduh');
+        };
 
         // Feature 2: Portal Guru Logic
-        function openModal() { if(isDeadlinePassed) return showToast('Waktu Habis','error'); resetUploadFormUI(); modalHelper.open('uploadModal','uploadModalContent','inputCheckNiy'); }
+        function openPortalModal() { if(isDeadlinePassed) return showToast('Waktu Habis','error'); resetUploadFormUI(); modalHelper.open('uploadModal','uploadModalContent','inputCheckNiy'); }
         function closeModal() { modalHelper.close('uploadModal','uploadModalContent'); }
+        function closeLoginModal() { modalHelper.close('loginModal','loginModalContent'); }
         function resetUploadFormUI() { 
             loggedInGuru=null; document.getElementById('uploadForm').reset(); document.getElementById('inputCheckNiy').value=''; document.getElementById('inputCheckPin').value=''; 
             ['step2Dashboard','step3Form'].forEach(el=>document.getElementById(el).classList.add('hidden')); document.getElementById('step1Niy').classList.remove('hidden'); 
@@ -609,7 +804,6 @@
                 document.getElementById('dashInfoGuru').innerHTML = `<i class="fas fa-id-badge"></i> NIY: ${found.niy} &nbsp; <i class="fas fa-envelope ml-2"></i> ${found.email||'-'}`;
                 document.getElementById('step1Niy').classList.add('hidden'); document.getElementById('step2Dashboard').classList.remove('hidden'); document.getElementById('step2Dashboard').classList.add('flex');
                 
-                // Fetch History Guru (Fitur 2)
                 const tBody = document.getElementById('tableRiwayatGuru'); tBody.innerHTML='<tr><td colspan="4" class="text-center py-4"><i class="fas fa-spinner fa-spin"></i> Mengambil data...</td></tr>';
                 try {
                     let res = await runGoogleScriptPromise('getGuruHistory', found.nama, pin);
@@ -619,9 +813,7 @@
                                 <td class="px-4 py-3"><div class="font-bold">${d.tahun}</div><div class="text-[9px] text-slate-400">${d.timestamp.split(',')[0]}</div></td>
                                 <td class="px-4 py-3"><div class="font-bold">${d.mapel}</div><div class="text-[10px] text-slate-500">${d.kelas} • ${d.lembaga}</div></td>
                                 <td class="px-4 py-3">${getStatusBadge(d.status)}${d.catatan ? `<div class="text-[9px] text-red-500 mt-1 italic bg-red-50 dark:bg-red-500/10 p-1 rounded"><i class="fas fa-info-circle"></i> ${d.catatan}</div>` : ''}</td>
-                                <td class="px-4 py-3 text-center">
-                                    <button onclick="reprintReceipt('${encodeURIComponent(JSON.stringify(d))}')" class="text-brand-600 bg-brand-50 hover:bg-brand-100 dark:bg-slate-700 p-1.5 rounded" title="Cetak Ulang"><i class="fas fa-print"></i></button>
-                                </td>
+                                <td class="px-4 py-3 text-center"><button onclick="reprintReceipt('${encodeURIComponent(JSON.stringify(d))}')" class="text-brand-600 bg-brand-50 hover:bg-brand-100 dark:bg-slate-700 p-1.5 rounded" title="Cetak Ulang"><i class="fas fa-print"></i></button></td>
                             </tr>
                         `).join('');
                     } else tBody.innerHTML='<tr><td colspan="4" class="text-center py-6 text-slate-400 italic">Belum ada riwayat unggahan.</td></tr>';
@@ -638,13 +830,13 @@
         function goToUploadForm() {
             if(!loggedInGuru) return;
             document.getElementById('step2Dashboard').classList.add('hidden'); document.getElementById('step3Form').classList.remove('hidden'); document.getElementById('step3Form').classList.add('flex');
-            document.getElementById('guru').value = loggedInGuru.nama; document.getElementById('displayNamaGuru').innerText = loggedInGuru.nama;
+            document.getElementById('guru').value = loggedInGuru.nama;
             
             const pop = (id, arr, cons, def) => { const el=document.getElementById(id); el.innerHTML=`<option value="" disabled selected>${def}</option>`; let allowed=cons?cons.split(',').map(s=>s.trim().toLowerCase()):[]; let cnt=0, last=""; arr.forEach(i=>{let v=i.nama||i; if(!allowed.length || allowed.includes(v.toLowerCase())){el.add(new Option(v,v)); cnt++; last=v;}}); if(cnt===1)el.value=last; };
             pop('lembaga', masterLembaga, loggedInGuru.lembaga, '-- Lembaga --'); pop('kelasDropdown', masterKelas, loggedInGuru.kelas, '-- Kelas --'); pop('mapelDropdown', masterMapel, loggedInGuru.mapel, '-- Mapel --');
             const elT = document.getElementById('tahun'); elT.innerHTML='<option value="" disabled selected>-- Tahun --</option>'; masterTahun.forEach(t=>elT.add(new Option(t,t)));
         }
-        function backToDashboard() { document.getElementById('step3Form').classList.add('hidden'); document.getElementById('step2Dashboard').classList.remove('hidden'); document.getElementById('step2Dashboard').classList.add('flex'); verifyNiy(); /* refresh history */ }
+        function backToDashboard() { document.getElementById('step3Form').classList.add('hidden'); document.getElementById('step2Dashboard').classList.remove('hidden'); document.getElementById('step2Dashboard').classList.add('flex'); verifyNiy(); }
 
         // Fitur 3: Upload with Progress
         document.getElementById('file')?.addEventListener('change', function(e) { const f=e.target.files[0]; const d=document.getElementById('fileNameDisplay'); if(f){ if(f.size>500*1024*1024){d.innerHTML=`<span class="text-red-500 font-bold"><i class="fas fa-exclamation-triangle"></i> Terlalu besar!</span>`; this.value="";}else d.innerHTML=`<span class="text-brand-600 font-bold break-all"><i class="fas fa-check"></i> ${f.name}</span>`;}else d.innerHTML='Maksimal 500MB'; });
@@ -653,7 +845,6 @@
             const pCont=document.getElementById('uploadProgressContainer'), pBar=document.getElementById('uploadProgressBar');
             if(!file) return; btn.disabled=true; txt.innerText='Mengunggah...'; 
             
-            // Start Visual Progress
             pCont.classList.remove('hidden'); pBar.style.width='0%'; let prog=0;
             let simProg = setInterval(()=>{ prog+=Math.random()*10; if(prog>90)prog=90; pBar.style.width=prog+'%'; }, 300);
 
@@ -665,7 +856,7 @@
                     clearInterval(simProg); pBar.style.width='100%';
                     setTimeout(()=>{
                         btn.disabled=false; txt.innerHTML='<i class="fas fa-paper-plane"></i> Kirim Dokumen'; pCont.classList.add('hidden');
-                        if(res.success){ showToast(res.message); currentReceiptData={guru:dataObj.guru, lembaga:dataObj.lembaga, mapel:dataObj.mapel, kelas:dataObj.kelas, timestamp:res.timestamp}; document.getElementById('printReceiptBtnContainer').classList.remove('hidden'); fetchDashboardOnly(); backToDashboard(); } 
+                        if(res.success){ showToast(res.message); currentReceiptData={guru:dataObj.guru, lembaga:dataObj.lembaga, mapel:dataObj.mapel, kelas:dataObj.kelas, timestamp:res.timestamp}; document.getElementById('printReceiptBtnContainer')?.classList.remove('hidden'); fetchDashboardOnly(); backToDashboard(); } 
                         else showToast(res.message, 'error');
                     }, 500);
                 } catch(err) { clearInterval(simProg); pCont.classList.add('hidden'); btn.disabled=false; txt.innerHTML='Kirim Dokumen'; showToast('Error Jaringan','error'); }
@@ -677,14 +868,14 @@
         async function fetchDashboardOnly() { try { const res=await runGoogleScriptPromise('getDashboardStats', currentYearFilter, currentLembagaFilter); renderDashboard(res); }catch(e){} }
         function renderDashboard(data) {
             lastDashboardData=data; document.getElementById('statTotal').innerText=data.total; document.getElementById('statLembagaCount').innerText=data.totalRegisteredLembaga;
-            // (Chart rendering logic omitted for brevity, keeping simple logic)
+            // Chart rendering simplified for response constraints
             currentActiveGurus=data.guru; handleSearchGuru('');
         }
-        function handleSearchGuru(q) { const f=currentActiveGurus.filter(g=>g.name.toLowerCase().includes(q.toLowerCase())); document.getElementById('listGuru').innerHTML=f.map(i=>`<li class="bg-white dark:bg-slate-800 border rounded-xl p-3 shadow-sm hover:shadow transition-all"><div class="flex justify-between items-center"><span class="font-bold text-xs"><i class="fas fa-user-tie text-slate-400 mr-2"></i>${i.name}</span><span class="text-[10px] font-bold bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">${i.count}/${i.target}</span></div></li>`).join(''); }
+        function handleSearchGuru(q) { const f=currentActiveGurus.filter(g=>g.name.toLowerCase().includes(q.toLowerCase())); document.getElementById('listGuru').innerHTML=f.map(i=>`<li class="bg-white dark:bg-slate-800 border rounded-xl p-3 shadow-sm hover:shadow transition-all cursor-pointer" onclick="openGuruDetailModal('${i.name.replace(/'/g,"\\'")}')"><div class="flex justify-between items-center"><span class="font-bold text-xs"><i class="fas fa-user-tie text-slate-400 mr-2"></i>${i.name}</span><span class="text-[10px] font-bold bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">${i.count}/${i.target}</span></div></li>`).join(''); }
 
         function renderTableGuruAdminData() {
             const tb=document.getElementById('tableGuruBody'); if(!tb)return;
-            const s=sortConfigGuru, p=currentGuruPage; let d=[...filteredGuruData].sort((a,b)=>a[s.key]>b[s.key]?(s.asc?1:-1):-1);
+            const s=sortConfigGuru; let d=[...filteredGuruData].sort((a,b)=>a[s.key]>b[s.key]?(s.asc?1:-1):-1);
             const total=Math.ceil(d.length/rowsPerPage); if(currentGuruPage>total)currentGuruPage=total; const start=(currentGuruPage-1)*rowsPerPage;
             tb.innerHTML = d.slice(start, start+rowsPerPage).map((i,idx)=>`<tr class="border-b border-slate-100 dark:border-slate-700 text-xs"><td class="px-4 py-3 text-center">${start+idx+1}</td><td class="px-4 py-3 font-bold"><div>${i.nama}</div><div class="text-[9px] text-slate-400 font-normal mt-0.5"><i class="fas fa-envelope"></i> ${i.email||'-'}</div></td><td class="px-4 py-3 text-center">${i.niy||'-'}</td><td class="px-4 py-3 text-center">${i.pin||'-'}</td><td class="px-4 py-3 text-center">${i.target||1}</td><td class="px-4 py-3"><div class="text-[9px] font-medium leading-tight"><div class="truncate w-32" title="${i.lembaga||'Bebas'}">L: ${i.lembaga||'Bebas'}</div><div class="truncate w-32">K: ${i.kelas||'Bebas'}</div><div class="truncate w-32">M: ${i.mapel||'Bebas'}</div></div></td><td class="px-4 py-3 text-center"><button onclick="openEditGuruModal('${i.nama.replace(/'/g,"\\'")}',${i.target},'${i.pin}','${i.niy}','${i.lembaga}','${i.mapel}','${i.kelas}','${i.email}')" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Guru','${i.nama.replace(/'/g,"\\'")}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded"><i class="fas fa-trash"></i></button></td></tr>`).join('');
             document.getElementById('guruPagination').style.display='flex'; document.getElementById('guruPageInfo').innerText=`Hal ${currentGuruPage} dr ${total}`;
@@ -692,10 +883,51 @@
         function openEditGuruModal(n,t,p,ni,l,m,k,e) { document.getElementById('editGuruOldName').value=n; document.getElementById('editGuruName').value=n; document.getElementById('editGuruTarget').value=t; document.getElementById('editGuruPin').value=p; document.getElementById('editGuruNiy').value=ni; document.getElementById('editGuruEmail').value=e; renderMultiSelect('ms-edit-lembaga','label-ms-edit-lembaga','editGuruLembaga',masterLembaga,'-- Bebas --',l); renderMultiSelect('ms-edit-mapel','label-ms-edit-mapel','editGuruMapel',masterMapel,'-- Bebas --',m); renderMultiSelect('ms-edit-kelas','label-ms-edit-kelas','editGuruKelas',masterKelas,'-- Bebas --',k); modalHelper.open('editGuruModal','editGuruModalContent'); }
         function closeEditGuruModal() { modalHelper.close('editGuruModal','editGuruModalContent'); }
         
+        // Detail Guru Modal
+        function openGuruDetailModal(n) {
+            if (!lastDashboardData) return; const g = lastDashboardData.guru.find(x => x.name === n); if (!g) return;
+            const masterG = masterGuru.find(x => (x.nama || x) === n); const getAkses = (val) => val && val.trim() !== '' ? val : 'Bebas';
+            document.getElementById('detailGuruAksesLembaga').innerText = getAkses(masterG?.lembaga); document.getElementById('detailGuruAksesKelas').innerText = getAkses(masterG?.kelas); document.getElementById('detailGuruAksesMapel').innerText = getAkses(masterG?.mapel);
+            let pct = g.target > 0 ? Math.min(100, Math.round((g.count / g.target) * 100)) : 0;
+            document.getElementById('detailGuruName').innerText = g.name; document.getElementById('detailGuruCount').innerText = `${g.count} / ${g.target} Dok.`; document.getElementById('detailGuruPct').innerText = `${pct}%`;
+            document.getElementById('detailGuruBar').style.width = `${pct}%`; document.getElementById('detailGuruBar').className = `${pct === 100 ? 'bg-emerald-500' : (pct >= 50 ? 'bg-brand-500' : 'bg-amber-500')} h-2.5 sm:h-3 rounded-full transition-all duration-500 relative`;
+            document.getElementById('detailGuruMapels').innerHTML = g.mapels?.length ? g.mapels.map(m => `<li class="flex items-start gap-2 bg-slate-50 dark:bg-slate-800 p-2 sm:p-2.5 rounded-lg border border-slate-100 dark:border-slate-700"><i class="fas fa-check-circle text-emerald-500 mt-0.5"></i><span class="font-medium">${m}</span></li>`).join('') : '<li class="text-slate-400 italic text-center p-4">Belum ada file terunggah</li>';
+            modalHelper.open('guruDetailModal', 'guruDetailContent');
+        }
+        function closeGuruDetailModal() { modalHelper.close('guruDetailModal', 'guruDetailContent'); }
+
+        // General Modals
+        function openEditLembagaModal(name, target) { document.getElementById('editLembagaOldName').value = name; document.getElementById('editLembagaName').value = name; document.getElementById('editLembagaTarget').value = target; modalHelper.open('editLembagaModal', 'editLembagaModalContent'); }
+        function closeEditLembagaModal() { modalHelper.close('editLembagaModal', 'editLembagaModalContent'); }
+        function openEditDataModal(t, name) { document.getElementById('editDataType').value=t; document.getElementById('editDataOldName').value=name; document.getElementById('editDataName').value=name; document.getElementById('editDataModalTitle').innerText=`Edit ${t}`; modalHelper.open('editDataModal', 'editDataModalContent', 'editDataName'); }
+        function closeEditDataModal() { modalHelper.close('editDataModal', 'editDataModalContent'); }
+        function editDataAdmin(type, name, target, pin, niy, lembaga, mapel, kelas) { if (type === 'Guru') openEditGuruModal(name, target, pin, niy, lembaga, mapel, kelas); else if (type === 'Lembaga') openEditLembagaModal(name, target); else openEditDataModal(type, name); }
+        function openEditBukuModal(enc) { let d=JSON.parse(decodeURIComponent(enc)); document.getElementById('editBukuRowIndex').value=d.rowIndex; const pop=(id,arr,val)=>{const el=document.getElementById(id);if(el){el.innerHTML='<option value="" disabled>-- Pilih --</option>';arr.forEach(i=>{let v=typeof i==='object'?i.nama:i; let opt=new Option(v,v); if(v===val)opt.selected=true; el.add(opt);});}}; pop('editBukuTahun',masterTahun,d.tahun); pop('editBukuLembaga',masterLembaga,d.lembaga); pop('editBukuGuru',masterGuru,d.guru); pop('editBukuKelas',masterKelas,d.kelas); pop('editBukuMapel',masterMapel,d.mapel); modalHelper.open('editBukuModal', 'editBukuModalContent'); }
+        function closeEditBukuModal() { modalHelper.close('editBukuModal', 'editBukuModalContent'); }
+
         // Admin Forms Submit
         async function submitAdminForm(e, type, formId, btnId, dataObj) { e.preventDefault(); const b=document.getElementById(btnId), o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try{ let r=await runGoogleScriptPromise('addDataAdmin',type,dataObj); if(r.success){showToast('Berhasil');document.getElementById(formId).reset();initApp();}else showToast(r.message,'error');}catch(x){showToast('Error','error');} b.innerHTML=o; b.disabled=false; }
-        document.getElementById('formAddGuru').addEventListener('submit', e=>{ let p=document.getElementById('inputGuruPin').value; if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error'); submitAdminForm(e,'Guru','formAddGuru','btnSaveGuru',{nama:document.getElementById('inputGuruNama').value.trim(), target:parseInt(document.getElementById('inputGuruTarget').value)||1, pin:p, niy:document.getElementById('inputGuruNiy').value, lembaga:document.getElementById('inputGuruLembaga').value, mapel:document.getElementById('inputGuruMapel').value, kelas:document.getElementById('inputGuruKelas').value, email:document.getElementById('inputGuruEmail').value}); });
-        document.getElementById('editGuruForm').addEventListener('submit', async e=>{ e.preventDefault(); let p=document.getElementById('editGuruPin').value; if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error'); const b=document.getElementById('btnSubmitEditGuru'), o=b.innerHTML; b.innerHTML='Loading...'; b.disabled=true; try{ let r=await runGoogleScriptPromise('updateDataAdmin','Guru',document.getElementById('editGuruOldName').value, document.getElementById('editGuruName').value, {target:document.getElementById('editGuruTarget').value, pin:p, niy:document.getElementById('editGuruNiy').value, lembaga:document.getElementById('editGuruLembaga').value, mapel:document.getElementById('editGuruMapel').value, kelas:document.getElementById('editGuruKelas').value, email:document.getElementById('editGuruEmail').value}); if(r.success){showToast('Disimpan');initApp();closeEditGuruModal();}else showToast(r.message,'error');}catch(x){} b.innerHTML=o; b.disabled=false; });
+        
+        // DomContentLoaded Listeners
+        document.addEventListener('DOMContentLoaded', () => { 
+            document.getElementById('formAddGuru')?.addEventListener('submit', e=>{ let p=document.getElementById('inputGuruPin').value; if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error'); submitAdminForm(e,'Guru','formAddGuru','btnSaveGuru',{nama:document.getElementById('inputGuruNama').value.trim(), target:parseInt(document.getElementById('inputGuruTarget').value)||1, pin:p, niy:document.getElementById('inputGuruNiy').value, lembaga:document.getElementById('inputGuruLembaga').value, mapel:document.getElementById('inputGuruMapel').value, kelas:document.getElementById('inputGuruKelas').value, email:document.getElementById('inputGuruEmail').value}); });
+            document.getElementById('editGuruForm')?.addEventListener('submit', async e=>{ e.preventDefault(); let p=document.getElementById('editGuruPin').value; if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error'); const b=document.getElementById('btnSubmitEditGuru'), o=b.innerHTML; b.innerHTML='Loading...'; b.disabled=true; try{ let r=await runGoogleScriptPromise('updateDataAdmin','Guru',document.getElementById('editGuruOldName').value, document.getElementById('editGuruName').value, {target:document.getElementById('editGuruTarget').value, pin:p, niy:document.getElementById('editGuruNiy').value, lembaga:document.getElementById('editGuruLembaga').value, mapel:document.getElementById('editGuruMapel').value, kelas:document.getElementById('editGuruKelas').value, email:document.getElementById('editGuruEmail').value}); if(r.success){showToast('Disimpan');initApp();closeEditGuruModal();}else showToast(r.message,'error');}catch(x){} b.innerHTML=o; b.disabled=false; });
+            document.getElementById('formAddMapel')?.addEventListener('submit', e => submitAdminForm(e, 'Mapel', 'formAddMapel', 'btnSaveMapel', { nama: document.getElementById('inputMapelNama').value.trim() }));
+            document.getElementById('formAddLembaga')?.addEventListener('submit', e => submitAdminForm(e, 'Lembaga', 'formAddLembaga', 'btnSaveLembaga', { nama: document.getElementById('inputLembagaNama').value.trim(), target: parseInt(document.getElementById('inputLembagaTarget').value)||100 }));
+            document.getElementById('formAddTahun')?.addEventListener('submit', e => submitAdminForm(e, 'Tahun', 'formAddTahun', 'btnSaveTahun', { nama: document.getElementById('inputTahunNama').value.trim() }));
+            document.getElementById('formAddKelas')?.addEventListener('submit', e => submitAdminForm(e, 'Kelas', 'formAddKelas', 'btnSaveKelas', { nama: document.getElementById('inputKelasNama').value.trim() }));
+            
+            document.getElementById('formPengumuman')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSavePengumuman'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateDataAdmin','Settings','',null,{pengumuman: document.getElementById('inputPengumuman').value, deadline: masterDeadline}); if(r.success){showToast('Banner Diupdate'); initApp();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
+            document.getElementById('formDeadline')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSaveDeadline'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateDataAdmin','Settings','',null,{deadline: document.getElementById('inputDeadline').value, pengumuman: masterPengumuman}); if(r.success){showToast('Deadline Diupdate'); initApp();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
+            
+            document.getElementById('editLembagaForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditLembaga'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateDataAdmin','Lembaga',document.getElementById('editLembagaOldName').value,document.getElementById('editLembagaName').value.trim(), {target: parseInt(document.getElementById('editLembagaTarget').value)||100}); if(r.success){showToast('Berhasil'); initApp(); closeEditLembagaModal();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
+            document.getElementById('editDataForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditData'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; let t=document.getElementById('editDataType').value; let old=document.getElementById('editDataOldName').value; let nw=document.getElementById('editDataName').value.trim(); if(old===nw){closeEditDataModal(); b.innerHTML=o; b.disabled=false; return;} try { let r=await runGoogleScriptPromise('updateDataAdmin',t,old,nw,null); if(r.success){showToast('Berhasil'); initApp(); closeEditDataModal();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
+            document.getElementById('editBukuForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditBuku'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; let nd={tahun:document.getElementById('editBukuTahun').value, lembaga:document.getElementById('editBukuLembaga').value, guru:document.getElementById('editBukuGuru').value, kelas:document.getElementById('editBukuKelas').value, mapel:document.getElementById('editBukuMapel').value}; try { let r=await runGoogleScriptPromise('updateUploadedBook',parseInt(document.getElementById('editBukuRowIndex').value),nd); if(r.success){showToast('Berhasil'); closeEditBukuModal(); loadDataBukuAdmin(); fetchDashboardOnly();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
+            
+            document.getElementById('loginForm')?.addEventListener('submit', async function(e){ e.preventDefault(); const b=this.querySelector('button[type="submit"]'), o=b.innerText; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try{const r=await runGoogleScriptPromise('verifyAdminPassword', document.getElementById('adminPassword').value); b.innerText=o; b.disabled=false; if(r.success){isAdminLoggedIn=true; closeLoginModal(); toggleViewMode('admin');}else{showToast(r.message, 'error');}}catch(e){b.innerText=o; b.disabled=false; showToast('Error Koneksi', 'error')} });
+
+            initApp(); 
+        });
 
         // Admin Data Buku & Features (5 & 6)
         async function loadDataBukuAdmin() { try { let r=await runGoogleScriptPromise('getUploadedBooksList'); if(r.success){ masterBukuUploaded=r.data; applyAdminBukuFilters(); isBukuLoaded=true; } }catch(e){} }
@@ -784,11 +1016,6 @@
                 if(r.success) { showToast(r.message); closeDeleteModal(); if(currentDeleteType.includes('Buku')){loadDataBukuAdmin(); document.getElementById('btnBulkDelete').classList.add('hidden');} else initApp(); } else showToast(r.message,'error');
             } catch(e){} b.innerHTML=o; b.disabled=false;
         });
-
-        document.getElementById('loginForm')?.addEventListener('submit', async function(e){ e.preventDefault(); const b=this.querySelector('button[type="submit"]'), o=b.innerText; b.innerHTML='Loading...'; b.disabled=true; try{const r=await runGoogleScriptPromise('verifyAdminPassword', document.getElementById('adminPassword').value); b.innerText=o; b.disabled=false; if(r.success){isAdminLoggedIn=true; modalHelper.close('loginModal','loginModalContent'); toggleViewMode('admin');}else{alert(r.message);}}catch(e){} });
-        function startDeadlineTimer() { /*... (kept lightweight) ...*/ }
-        
-        document.addEventListener('DOMContentLoaded', () => { initApp(); });
     </script>
 </body>
 </html>
