@@ -649,6 +649,12 @@
         let currentBukuPage = 1; const rowsPerPage = 10; let sortConfigBuku = { key: 'timestamp', asc: false }; let filteredBukuData = [];
         let currentGuruPage = 1; let sortConfigGuru = { key: 'nama', asc: true }; let filteredGuruData = [];
 
+        // Fungsi Pagination dan Sorting yang dipulihkan
+        function changeGuruPage(dir) { currentGuruPage += dir; renderTableGuruAdminData(); }
+        function sortGuru(key) { if (sortConfigGuru.key === key) sortConfigGuru.asc = !sortConfigGuru.asc; else { sortConfigGuru.key = key; sortConfigGuru.asc = true; } renderTableGuruAdminData(); }
+        function changeBukuPage(dir) { currentBukuPage += dir; renderTableBukuAdminData(); }
+        function sortBuku(key) { if (sortConfigBuku.key === key) sortConfigBuku.asc = !sortConfigBuku.asc; else { sortConfigBuku.key = key; sortConfigBuku.asc = true; } renderTableBukuAdminData(); }
+
         // Utility: Status Badge Generator
         function getStatusBadge(status) {
             if(status === 'Diterima') return '<span class="bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold"><i class="fas fa-check mr-1"></i>Diterima</span>';
