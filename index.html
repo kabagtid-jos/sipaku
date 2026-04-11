@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Si PAKU - Sistem Pengumpulan Buku P2S Abu Zairi</title>
     <link rel="icon" href="https://i.ibb.co.com/fYJVLNLc/Chat-GPT-Image-Apr-9-2026-10-04-54-AM.png" type="image/png">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Si Paku P2S Abu Zairi">
+    <link rel="apple-touch-icon" href="https://i.ibb.co.com/fYJVLNLc/Chat-GPT-Image-Apr-9-2026-10-04-54-AM.png">
+    <link rel="manifest" id="pwa-manifest-link">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -1227,6 +1236,25 @@
                 if(r.success) { showToast(r.message); closeDeleteModal(); if(currentDeleteType.includes('Buku')){loadDataBukuAdmin(); document.getElementById('btnBulkDelete').classList.add('hidden');} else initApp(); } else showToast(r.message,'error');
             } catch(e){} b.innerHTML=o; b.disabled=false;
         });
+
+        // Inisialisasi PWA (Manifest & Service Worker)
+        const pwaManifest = {
+            "name": "Si Paku P2S Abu Zairi",
+            "short_name": "Si PAKU",
+            "description": "Sistem Pengumpulan Buku P2S Abu Zairi",
+            "start_url": window.location.pathname || "/",
+            "display": "standalone",
+            "background_color": "#f8fafc",
+            "theme_color": "#4f46e5",
+            "icons": [{"src": "https://i.ibb.co.com/fYJVLNLc/Chat-GPT-Image-Apr-9-2026-10-04-54-AM.png", "sizes": "512x512", "type": "image/png"}]
+        };
+        document.getElementById('pwa-manifest-link').setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(pwaManifest)));
+        
+        if ('serviceWorker' in navigator) {
+            const swCode = "self.addEventListener('install', e => self.skipWaiting()); self.addEventListener('activate', e => e.waitUntil(clients.claim())); self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));";
+            const swBlob = new Blob([swCode], { type: 'application/javascript' });
+            navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(err => console.log('PWA SW Gagal:', err));
+        }
     </script>
 </body>
 </html>
