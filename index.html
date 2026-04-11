@@ -849,21 +849,31 @@
             btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Masuk';
         }
 
-        function reprintReceipt(enc) {
-            let d = JSON.parse(decodeURIComponent(enc));
-            currentReceiptData = { guru: d.guru, lembaga: d.lembaga, mapel: d.mapel, kelas: d.kelas, timestamp: d.timestamp }; triggerPrintReceipt();
-        }
-
-        // FUNGSI INI SEBELUMNYA HILANG, SEKARANG DIKEMBALIKAN
-        function triggerPrintReceipt() {
-            if(!currentReceiptData) return;
+        // --- PEMBARUAN FUNGSI GLOBAL PRINT ---
+        window.triggerPrintReceipt = function() {
+            if(!currentReceiptData) {
+                showToast("Data cetak tidak ditemukan", "error");
+                return;
+            }
             document.getElementById('printWaktu').innerText = currentReceiptData.timestamp || new Date().toLocaleString();
             document.getElementById('printGuru').innerText = currentReceiptData.guru;
             document.getElementById('printLembaga').innerText = currentReceiptData.lembaga;
             document.getElementById('printMapel').innerText = currentReceiptData.mapel;
             document.getElementById('printKelas').innerText = currentReceiptData.kelas;
-            setTimeout(() => { window.print(); }, 250);
-        }
+            
+            showToast("Menyiapkan dokumen cetak...", "success");
+            setTimeout(() => { window.print(); }, 500);
+        };
+
+        window.reprintReceipt = function(enc) {
+            try {
+                let d = JSON.parse(decodeURIComponent(enc));
+                currentReceiptData = { guru: d.guru, lembaga: d.lembaga, mapel: d.mapel, kelas: d.kelas, timestamp: d.timestamp }; 
+                window.triggerPrintReceipt();
+            } catch(e) {
+                showToast("Gagal memuat data", "error");
+            }
+        };
 
         function goToUploadForm() {
             if(!loggedInGuru) return;
@@ -888,7 +898,6 @@
 
             const reader=new FileReader();
             reader.onload=async function(){
-                // PERBAIKAN: Menambahkan 'email: loggedInGuru.email' ke dalam payload
                 const dataObj={ tahun:document.getElementById('tahun').value, lembaga:document.getElementById('lembaga').value, guru:loggedInGuru.nama, kelas:document.getElementById('kelasDropdown').value, mapel:document.getElementById('mapelDropdown').value, fileName:file.name, base64Data:reader.result, pin:loggedInGuru.pin, email:loggedInGuru.email };
                 try {
                     const res = await runGoogleScriptPromise('uploadFileToDrive', dataObj);
