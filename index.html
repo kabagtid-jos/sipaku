@@ -6,6 +6,7 @@
     <title>Si PAKU - Sistem Pengumpulan Buku P2S Abu Zairi</title>
     <link rel="icon" href="https://i.ibb.co.com/fYJVLNLc/Chat-GPT-Image-Apr-9-2026-10-04-54-AM.png" type="image/png">
     
+    <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#4f46e5">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -60,12 +61,14 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col transition-colors duration-300 text-sm sm:text-base">
 
+    <!-- TOAST -->
     <div id="toastNotification" class="fixed top-4 right-4 sm:top-5 sm:right-5 z-[200] transform translate-x-[calc(100%+3rem)] transition-transform duration-300 flex items-center p-3 sm:p-4 mb-4 rounded-xl sm:rounded-2xl premium-shadow border glass border-white/50 dark:border-slate-700/50 max-w-[90vw] overflow-hidden">
         <div id="toastIcon" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 relative z-10"><i class="fas fa-check text-sm sm:text-base"></i></div>
         <div id="toastMessage" class="ml-3 text-xs sm:text-sm font-bold tracking-wide pr-2 sm:pr-4 text-slate-700 dark:text-slate-200 relative z-10">Aksi Berhasil!</div>
         <div id="toastProgress" class="absolute bottom-0 left-0 h-1.5 bg-emerald-500 transition-all ease-linear" style="width: 100%;"></div>
     </div>
 
+    <!-- HEADER -->
     <header class="glass border-b border-slate-200/60 dark:border-slate-800/60 sticky top-0 z-50 transition-colors duration-300 shadow-sm shadow-slate-200/20 dark:shadow-none">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-3.5 flex items-center justify-between">
             <div class="flex items-center gap-2.5 sm:gap-4 cursor-pointer hover:opacity-80 transition-opacity" onclick="toggleViewMode('dashboard')">
@@ -90,9 +93,9 @@
 
     <div id="mainContainer" class="flex-grow w-full max-w-7xl mx-auto flex flex-col relative transition-all duration-300">
         
+        <!-- PUBLIC DASHBOARD -->
         <main id="publicView" class="w-full max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 flex-grow animate-fade-in-up">
             <div class="space-y-4 sm:space-y-6">
-                
                 <div id="pengumumanBanner" class="hidden rounded-xl sm:rounded-2xl overflow-hidden relative bg-amber-50 dark:bg-amber-900/20 border border-amber-200/80 dark:border-amber-800/50 p-3 sm:p-4 shadow-inner marquee-container">
                     <div class="flex items-center text-amber-700 dark:text-amber-400 text-[10px] sm:text-xs font-bold w-full">
                         <div class="flex-shrink-0 z-10 mr-2 sm:mr-3 flex items-center justify-center"><i class="fas fa-bullhorn text-xs sm:text-sm animate-pulse"></i></div>
@@ -159,6 +162,7 @@
             </div>
         </main>
 
+        <!-- ADMIN DASHBOARD -->
         <main id="adminView" class="hidden w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 flex-grow flex flex-col md:flex-row gap-4 sm:gap-6 items-start">
             <aside class="fixed md:sticky bottom-0 left-0 w-full md:w-64 z-[60] md:z-10 bg-white dark:bg-slate-800 border-t md:border border-slate-200/60 dark:border-slate-700/60 rounded-t-3xl md:rounded-[2rem] premium-shadow md:top-24 transition-colors duration-300">
                 <div class="hidden md:block p-4 sm:p-6 bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200/60 dark:border-slate-700/60 rounded-t-[2rem] relative"><div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-50"></div><h3 class="text-[10px] sm:text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-2"><i class="fas fa-shield-check text-brand-500 text-xs sm:text-sm"></i> Panel Admin</h3></div>
@@ -175,8 +179,9 @@
             <section class="flex-grow w-full bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow border border-slate-200/60 dark:border-slate-700/60 min-h-[500px] sm:min-h-[600px] relative">
                 <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-50"></div>
                 
+                <!-- PANEL GURU -->
                 <div id="panelGuru" class="p-4 sm:p-6 md:p-10 transition-opacity duration-300">
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 gap-3 sm:gap-4">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-8 gap-3 sm:gap-4">
                         <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-users-cog text-sm sm:text-base"></i></div> Kelola Guru</h2>
                         <div class="flex gap-2">
                             <button onclick="triggerBlastEmail()" class="bg-amber-500 hover:bg-amber-600 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2"><i class="fas fa-bullhorn"></i> Pengingat</button>
@@ -233,8 +238,9 @@
                     </div>
                 </div>
 
+                <!-- PANEL MAPEL -->
                 <div id="panelMapel" class="hidden p-4 sm:p-6 md:p-10 transition-opacity duration-300 opacity-0">
-                    <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight mb-6 sm:mb-8"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-book-reader text-sm sm:text-base"></i></div> Referensi Mapel</h2>
+                    <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight mb-4 sm:mb-8"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-book-reader text-sm sm:text-base"></i></div> Referensi Mapel</h2>
                     <form id="formAddMapel" class="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-6 sm:mb-10 bg-slate-50/50 dark:bg-slate-900/30 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner max-w-3xl">
                         <div class="w-full sm:flex-grow"><input type="text" id="inputMapelNama" required placeholder="Nama Mata Pelajaran..." class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-500/30 outline-none text-xs sm:text-sm font-medium transition-all shadow-sm"></div>
                         <button type="submit" id="btnSaveMapel" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 sm:py-3.5 px-6 sm:px-8 rounded-xl sm:rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 text-sm"><i class="fas fa-plus"></i> Simpan</button>
@@ -244,8 +250,9 @@
                     </div>
                 </div>
 
+                <!-- PANEL SETTING -->
                 <div id="panelSetting" class="hidden p-4 sm:p-6 md:p-10 transition-opacity duration-300 opacity-0">
-                    <div class="flex justify-between items-center mb-6 sm:mb-8">
+                    <div class="flex justify-between items-center mb-4 sm:mb-8">
                         <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-sliders-h text-sm sm:text-base"></i></div> Konfigurasi Sistem</h2>
                         <button onclick="triggerArchive()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-md shadow-red-500/20 transition-all flex items-center gap-2"><i class="fas fa-archive"></i> Tutup Tahun Ajaran</button>
                     </div>
@@ -256,6 +263,7 @@
                             <div class="bg-rose-50/40 dark:bg-rose-900/10 border border-rose-200/60 dark:border-rose-700/30 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm"><h3 class="text-xs sm:text-sm font-black text-rose-800 dark:text-rose-500 uppercase tracking-widest mb-3 sm:mb-4 flex items-center gap-2"><i class="fas fa-stopwatch text-sm sm:text-lg"></i> Batas Waktu</h3><form id="formDeadline" class="flex flex-col gap-2 sm:gap-3"><input type="datetime-local" id="inputDeadline" class="w-full rounded-xl sm:rounded-2xl border border-rose-200/80 dark:border-rose-700/50 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-white dark:bg-slate-800 text-rose-700 dark:text-rose-400 focus:ring-2 focus:ring-rose-500/30 outline-none text-xs sm:text-sm font-bold transition-all shadow-inner cursor-pointer"><button type="submit" id="btnSaveDeadline" class="bg-gradient-to-r from-rose-500 to-red-500 hover:from-rose-600 text-white px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl font-bold shadow-md transition-all transform hover:-translate-y-0.5 text-sm"><i class="fas fa-lock mr-2"></i> Kunci Otomatis</button></form></div>
                         </div>
 
+                        <!-- Fitur 3: Pusat Template Admin -->
                         <div class="md:col-span-3 bg-indigo-50/40 dark:bg-indigo-900/10 border border-indigo-200/60 dark:border-indigo-700/30 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm flex flex-col md:flex-row gap-6">
                             <div class="w-full md:w-1/3">
                                 <h3 class="text-xs sm:text-sm font-black text-indigo-800 dark:text-indigo-400 uppercase tracking-widest mb-3 flex items-center gap-2"><i class="fas fa-file-word text-lg"></i> Template Guru</h3>
@@ -277,8 +285,9 @@
                     </div>
                 </div>
                 
+                <!-- PANEL BUKU (ADMIN) -->
                 <div id="panelBuku" class="hidden p-4 sm:p-6 md:p-10 flex-col h-full transition-opacity duration-300 opacity-0">
-                    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 sm:mb-8 gap-3 sm:gap-4">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 sm:mb-8 gap-3 sm:gap-4">
                         <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight whitespace-nowrap"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-file-signature text-sm sm:text-base"></i></div> Dokumen</h2>
                         
                         <div class="flex gap-2 w-full md:w-auto overflow-x-auto custom-scrollbar pb-1">
@@ -332,47 +341,51 @@
         </main>
     </div>
 
-    <div id="uploadModal" class="fixed inset-0 z-[100] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
+    <!-- MODAL PORTAL GURU -->
+    <div id="uploadModal" class="fixed inset-0 z-[100] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-5 sm:p-8 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-4xl overflow-hidden transform scale-95 transition-transform duration-300 relative flex flex-col max-h-[95vh] sm:max-h-[90vh] border border-white/20 dark:border-slate-700/50" id="uploadModalContent">
             
-            <div id="step1Niy" class="p-6 sm:p-10 flex flex-col justify-center animate-fade-in-up max-w-md mx-auto w-full relative">
+            <!-- STEP 1: LOGIN -->
+            <div id="step1Niy" class="p-5 sm:p-10 flex flex-col justify-center animate-fade-in-up max-w-md mx-auto w-full relative">
                 <button type="button" onclick="closeModal()" class="absolute top-0 right-0 sm:-right-4 z-30 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-white/50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-600 w-8 h-8 rounded-full flex items-center justify-center transition-all border border-slate-200 dark:border-slate-600 shadow-sm"><i class="fas fa-times text-xs"></i></button>
                 <div class="text-center mb-6 mt-4">
-                    <div class="w-16 h-16 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-full mx-auto flex items-center justify-center text-3xl mb-4 shadow-inner ring-1 ring-brand-500/20"><i class="fas fa-id-badge"></i></div>
-                    <h3 class="text-xl sm:text-2xl font-black text-slate-800 dark:text-white tracking-tight">Portal Guru</h3>
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-full mx-auto flex items-center justify-center text-2xl sm:text-3xl mb-4 shadow-inner ring-1 ring-brand-500/20"><i class="fas fa-id-badge"></i></div>
+                    <h3 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white tracking-tight">Portal Guru</h3>
                     <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 font-medium">Masukkan NIY dan PIN untuk masuk.</p>
                 </div>
                 <div class="space-y-3 mb-5">
-                    <input type="text" id="inputCheckNiy" placeholder="Nomor Induk Yayasan (NIY)" class="w-full rounded-2xl border border-slate-200/80 dark:border-slate-700 px-5 py-4 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-bold text-center focus:ring-2 focus:ring-brand-500/30 outline-none transition-all shadow-inner">
-                    <input type="password" id="inputCheckPin" placeholder="PIN Rahasia" maxlength="8" class="w-full rounded-2xl border border-slate-200/80 dark:border-slate-700 px-5 py-4 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-black tracking-widest text-center text-lg focus:ring-2 focus:ring-brand-500/30 outline-none transition-all shadow-inner placeholder:font-medium placeholder:tracking-normal placeholder:text-sm">
+                    <input type="text" id="inputCheckNiy" placeholder="Nomor Induk Yayasan (NIY)" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 py-3 sm:px-5 sm:py-4 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-bold text-center focus:ring-2 focus:ring-brand-500/30 outline-none transition-all shadow-inner text-sm sm:text-base">
+                    <input type="password" id="inputCheckPin" placeholder="PIN Rahasia" maxlength="8" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 py-3 sm:px-5 sm:py-4 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-black tracking-widest text-center text-base sm:text-lg focus:ring-2 focus:ring-brand-500/30 outline-none transition-all shadow-inner placeholder:font-medium placeholder:tracking-normal placeholder:text-sm">
                 </div>
-                <button type="button" onclick="verifyNiy()" id="btnVerifyNiy" class="w-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-brand-500/30 transition-all flex justify-center items-center gap-2 transform hover:-translate-y-1"><i class="fas fa-sign-in-alt"></i> Masuk</button>
+                <button type="button" onclick="verifyNiy()" id="btnVerifyNiy" class="w-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 text-white font-bold py-3 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg shadow-brand-500/30 transition-all flex justify-center items-center gap-2 transform hover:-translate-y-1 text-sm sm:text-base"><i class="fas fa-sign-in-alt"></i> Masuk</button>
             </div>
 
+            <!-- STEP 2: DASHBOARD GURU -->
             <div id="step2Dashboard" class="hidden flex-col w-full h-full animate-fade-in-up">
-                <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 shrink-0 flex justify-between items-center">
-                    <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2.5 sm:gap-3 tracking-tight"><div class="bg-gradient-to-br from-brand-500 to-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-chalkboard-teacher text-sm"></i></div> Dashboard Pribadi</h2>
+                <div class="p-3 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 shrink-0 flex justify-between items-center">
+                    <h2 class="text-sm sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2.5 sm:gap-3 tracking-tight"><div class="bg-gradient-to-br from-brand-500 to-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-chalkboard-teacher text-sm"></i></div> Dashboard Pribadi</h2>
                     <div class="flex gap-2">
                         <button onclick="resetUploadFormUI()" class="text-xs sm:text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition"><i class="fas fa-sign-out-alt sm:mr-1"></i> <span class="hidden sm:inline">Keluar</span></button>
                     </div>
                 </div>
-                <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar bg-slate-50/30 dark:bg-slate-900/20 flex-grow">
-                    <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 relative overflow-hidden">
+                <div class="p-3 sm:p-6 overflow-y-auto custom-scrollbar bg-slate-50/30 dark:bg-slate-900/20 flex-grow">
+                    <div class="bg-white dark:bg-slate-800 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 sm:mb-6 relative overflow-hidden">
                         <div class="relative z-10">
                             <p class="text-[10px] sm:text-xs font-black text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-1">Selamat Datang,</p>
-                            <h3 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white" id="dashNamaGuru">Nama Guru</h3>
+                            <h3 class="text-base sm:text-xl font-black text-slate-800 dark:text-white" id="dashNamaGuru">Nama Guru</h3>
                             <p class="text-xs text-slate-500 mt-1" id="dashInfoGuru"><i class="fas fa-id-badge mr-1"></i> NIY: -</p>
                         </div>
-                        <button onclick="goToUploadForm()" class="relative z-10 w-full sm:w-auto bg-brand-600 hover:bg-brand-700 text-white px-5 py-3 rounded-xl font-bold shadow-md shadow-brand-500/20 transition-all flex items-center justify-center gap-2 text-sm transform hover:-translate-y-0.5"><i class="fas fa-plus-circle"></i> Unggah Dokumen Baru</button>
+                        <button onclick="goToUploadForm()" class="relative z-10 w-full sm:w-auto bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 sm:py-3 rounded-xl font-bold shadow-md shadow-brand-500/20 transition-all flex items-center justify-center gap-2 text-sm transform hover:-translate-y-0.5"><i class="fas fa-plus-circle"></i> Unggah Dokumen Baru</button>
                     </div>
 
-                    <div id="guruTemplateArea" class="mb-6 hidden">
-                        <h4 class="text-sm font-black text-slate-700 dark:text-slate-300 mb-3"><i class="fas fa-download mr-1.5 text-indigo-500"></i> Unduh Templat Resmi</h4>
+                    <!-- Fitur 3: Pusat Template untuk Guru -->
+                    <div id="guruTemplateArea" class="mb-4 sm:mb-6 hidden">
+                        <h4 class="text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300 mb-2 sm:mb-3"><i class="fas fa-download mr-1.5 text-indigo-500"></i> Unduh Templat Resmi</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="guruTemplateList"></div>
                     </div>
 
-                    <h4 class="text-sm font-black text-slate-700 dark:text-slate-300 mb-3"><i class="fas fa-history mr-1.5 text-slate-400"></i> Riwayat Unggahan Anda</h4>
-                    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm">
+                    <h4 class="text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300 mb-2 sm:mb-3"><i class="fas fa-history mr-1.5 text-slate-400"></i> Riwayat Unggahan Anda</h4>
+                    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl sm:rounded-2xl overflow-hidden shadow-sm">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
                                 <thead class="bg-slate-50 dark:bg-slate-900/50 text-slate-500 uppercase text-[9px] sm:text-[10px] font-black border-b border-slate-200 dark:border-slate-700">
@@ -385,35 +398,36 @@
                 </div>
             </div>
 
+            <!-- STEP 3: FORM UPLOAD (Fitur 4: Multi-file) -->
             <div id="step3Form" class="hidden flex-col w-full h-full animate-fade-in-up">
-                <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 shrink-0 flex justify-between items-center">
-                    <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2.5 sm:gap-3 tracking-tight"><div class="bg-gradient-to-br from-brand-500 to-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-cloud-upload-alt text-sm"></i></div> Form Unggah</h2>
+                <div class="p-3 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 shrink-0 flex justify-between items-center">
+                    <h2 class="text-sm sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2.5 sm:gap-3 tracking-tight"><div class="bg-gradient-to-br from-brand-500 to-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-cloud-upload-alt text-sm"></i></div> Form Unggah</h2>
                     <div class="flex gap-2">
                         <button onclick="backToDashboard()" class="text-xs sm:text-sm font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg transition"><i class="fas fa-arrow-left sm:mr-1"></i> <span class="hidden sm:inline">Kembali</span></button>
                     </div>
                 </div>
-                <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar bg-slate-50/30 dark:bg-slate-900/20 flex-grow">
+                <div class="p-3 sm:p-6 overflow-y-auto custom-scrollbar bg-slate-50/30 dark:bg-slate-900/20 flex-grow">
                     <input type="hidden" id="guru" required>
                     <form id="uploadForm" class="max-w-2xl mx-auto space-y-4">
-                        <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Tahun Periode</label><select id="tahun" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-brand-500/30"></select></div>
-                        <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Lembaga</label><select id="lembaga" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-brand-500/30"></select></div>
+                        <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Tahun Periode</label><select id="tahun" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2 sm:py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-brand-500/30"></select></div>
+                        <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Lembaga</label><select id="lembaga" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2 sm:py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-brand-500/30"></select></div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Kelas Mengajar</label><select id="kelasDropdown" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-brand-500/30"></select></div>
-                            <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Mata Pelajaran</label><select id="mapelDropdown" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-brand-500/30"></select></div>
+                            <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Kelas Mengajar</label><select id="kelasDropdown" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2 sm:py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-brand-500/30"></select></div>
+                            <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Mata Pelajaran</label><select id="mapelDropdown" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2 sm:py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-brand-500/30"></select></div>
                         </div>
                         <div class="pt-2">
                             <label class="block text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest mb-2 ml-1">Dokumen Lampiran (Pilih maks 3 file sekaligus)</label>
-                            <div class="flex justify-center px-4 pt-6 pb-6 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-2xl hover:border-brand-500 dark:hover:border-brand-400 bg-white dark:bg-slate-800 cursor-pointer transition-all" onclick="document.getElementById('file').click()">
+                            <div class="flex justify-center px-4 pt-6 pb-6 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-xl sm:rounded-2xl hover:border-brand-500 dark:hover:border-brand-400 bg-white dark:bg-slate-800 cursor-pointer transition-all" onclick="document.getElementById('file').click()">
                                 <div class="text-center w-full">
-                                    <div class="w-12 h-12 bg-slate-50 dark:bg-slate-700 rounded-xl mx-auto flex items-center justify-center mb-3"><i class="fas fa-file-upload text-2xl text-brand-500"></i></div>
-                                    <div class="text-sm text-slate-600 dark:text-slate-300"><span class="font-bold text-slate-800 dark:text-white">Klik untuk memilih file</span><input id="file" name="file" type="file" multiple class="sr-only" required accept=".pdf,.doc,.docx,.xls,.xlsx"></div>
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-50 dark:bg-slate-700 rounded-xl mx-auto flex items-center justify-center mb-3"><i class="fas fa-file-upload text-xl sm:text-2xl text-brand-500"></i></div>
+                                    <div class="text-xs sm:text-sm text-slate-600 dark:text-slate-300"><span class="font-bold text-slate-800 dark:text-white">Klik untuk memilih file</span><input id="file" name="file" type="file" multiple class="sr-only" required accept=".pdf,.doc,.docx,.xls,.xlsx"></div>
                                     <div id="fileNameDisplay" class="mt-2 text-xs font-bold text-brand-600 dark:text-brand-400 space-y-1"></div>
-                                    <p class="text-[10px] text-slate-400 mt-2">Maks. 3 File sekaligus (Setiap file &lt; 50MB)</p>
+                                    <p class="text-[9px] sm:text-[10px] text-slate-400 mt-2">Maks. 3 File sekaligus (Setiap file &lt; 50MB)</p>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="submit" id="btnSubmit" class="relative w-full bg-slate-200 dark:bg-slate-700 text-slate-400 font-bold py-4 px-4 rounded-xl shadow-lg mt-6 text-sm sm:text-base overflow-hidden group border border-slate-300 dark:border-slate-600 transition-all">
+                        <button type="submit" id="btnSubmit" class="relative w-full bg-slate-200 dark:bg-slate-700 text-slate-400 font-bold py-3 sm:py-4 px-4 rounded-xl shadow-lg mt-4 sm:mt-6 text-sm sm:text-base overflow-hidden group border border-slate-300 dark:border-slate-600 transition-all">
                             <div id="btnSubmitBg" class="absolute inset-0 bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 transition-all duration-300 z-0"></div>
                             <div id="uploadProgressBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-emerald-500 to-teal-500 w-0 transition-all ease-out duration-300 z-10"></div>
                             <div id="btnText" class="relative z-20 flex items-center justify-center gap-2 text-white"><i class="fas fa-paper-plane"></i> Kirim Dokumen</div>
@@ -425,13 +439,14 @@
         </div>
     </div>
 
-    <div id="reuploadModal" class="fixed inset-0 z-[110] hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
+    <!-- MODAL REVISI DOKUMEN (Fitur 1) -->
+    <div id="reuploadModal" class="fixed inset-0 z-[110] hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-5 sm:p-8 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 transform scale-95 transition-transform duration-300" id="reuploadModalContent">
-            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+            <div class="p-3 sm:p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
                 <h2 class="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2"><i class="fas fa-redo-alt text-amber-500"></i> Revisi Dokumen</h2>
                 <button type="button" onclick="closeReuploadModal()" class="text-slate-400 hover:text-red-500"><i class="fas fa-times"></i></button>
             </div>
-            <div class="p-5">
+            <div class="p-4 sm:p-5">
                 <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Silakan unggah dokumen perbaikan. Status otomatis akan berubah menjadi <b>Menunggu Review</b> setelah berhasil terkirim.</p>
                 <form id="reuploadForm" class="space-y-4">
                     <input type="hidden" id="reuploadRowIndex">
@@ -450,6 +465,7 @@
         </div>
     </div>
 
+    <!-- AREA CETAK BUKTI REKAP PDF ADMIN (Fitur 6) -->
     <div id="printReportArea" class="bg-white text-black font-sans hidden">
         <div class="max-w-4xl mx-auto p-8">
             <div class="flex items-center justify-between border-b-4 border-black pb-4 mb-6">
@@ -478,31 +494,33 @@
         </div>
     </div>
     
-    <div id="loginModal" class="fixed inset-0 z-[100] hidden bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
+    <!-- MODAL OTENTIKASI ADMIN -->
+    <div id="loginModal" class="fixed inset-0 z-[100] hidden bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-5 sm:p-8 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2.5rem] premium-shadow w-full max-w-xs sm:max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="loginModalContent">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div>
-            <div class="p-6 sm:p-10 text-center">
-                <div class="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6"><div class="absolute inset-0 bg-brand-500/20 dark:bg-brand-500/30 rounded-2xl sm:rounded-3xl blur-xl transform rotate-6"></div><div class="relative w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-brand-100 to-indigo-200 dark:from-slate-700 dark:to-slate-800 text-brand-600 dark:text-brand-400 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto shadow-inner border border-white dark:border-slate-600 transform rotate-3 hover:rotate-0 transition-all duration-300"><i class="fas fa-fingerprint text-2xl sm:text-3xl"></i></div></div>
-                <h2 class="text-xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight mb-1 sm:mb-2">Otentikasi</h2>
-                <p class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 mb-6 sm:mb-8">Masuk sebagai Administrator.</p>
+            <div class="p-5 sm:p-10 text-center">
+                <div class="relative w-12 h-12 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6"><div class="absolute inset-0 bg-brand-500/20 dark:bg-brand-500/30 rounded-2xl sm:rounded-3xl blur-xl transform rotate-6"></div><div class="relative w-12 h-12 sm:w-20 sm:h-20 bg-gradient-to-br from-brand-100 to-indigo-200 dark:from-slate-700 dark:to-slate-800 text-brand-600 dark:text-brand-400 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto shadow-inner border border-white dark:border-slate-600 transform rotate-3 hover:rotate-0 transition-all duration-300"><i class="fas fa-fingerprint text-xl sm:text-3xl"></i></div></div>
+                <h2 class="text-lg sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight mb-1 sm:mb-2">Otentikasi</h2>
+                <p class="text-[10px] sm:text-sm font-medium text-slate-500 dark:text-slate-400 mb-6 sm:mb-8">Masuk sebagai Administrator.</p>
                 <form id="loginForm" class="space-y-4 sm:space-y-5">
-                    <div><input type="password" id="adminPassword" required placeholder="PIN" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-3 sm:py-4 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 outline-none transition-all text-center tracking-[0.4em] font-black text-base sm:text-lg shadow-inner"></div>
-                    <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 dark:bg-brand-600 dark:hover:bg-brand-500 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg shadow-slate-800/20 dark:shadow-brand-500/20 transition-all transform hover:-translate-y-1 text-sm sm:text-base">Berikan Akses</button>
+                    <div><input type="password" id="adminPassword" required placeholder="PIN" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 py-2.5 sm:px-5 sm:py-4 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 outline-none transition-all text-center tracking-[0.4em] font-black text-base sm:text-lg shadow-inner"></div>
+                    <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 dark:bg-brand-600 dark:hover:bg-brand-500 text-white font-bold py-2.5 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg shadow-slate-800/20 dark:shadow-brand-500/20 transition-all transform hover:-translate-y-1 text-xs sm:text-base">Berikan Akses</button>
                     <button type="button" onclick="closeLoginModal()" class="w-full text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300 font-bold py-2 mt-1 sm:mt-2 transition-colors text-xs sm:text-sm">Kembali</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <div id="guruDetailModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
+    <!-- MODAL LAPORAN GURU -->
+    <div id="guruDetailModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-5 sm:p-8 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-white/20 dark:border-slate-700/50 relative" id="guruDetailContent">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div>
-            <div class="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80">
+            <div class="flex justify-between items-center p-3 sm:p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80">
                 <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight"><div class="bg-brand-100 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 p-1.5 sm:p-2 rounded-lg sm:rounded-xl"><i class="fas fa-chart-pie text-sm"></i></div> Laporan</h2>
                 <button type="button" onclick="closeGuruDetailModal()" class="text-slate-400 hover:text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all border border-slate-200 dark:border-slate-600 shadow-sm"><i class="fas fa-times text-xs sm:text-sm"></i></button>
             </div>
             <div class="p-4 sm:p-6 md:p-8">
-                <div class="text-center mb-4 sm:mb-6"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-slate-100 dark:bg-slate-700 rounded-full mx-auto mb-2 sm:mb-3 flex items-center justify-center border-2 sm:border-4 border-white dark:border-slate-800 shadow-sm"><i class="fas fa-user-tie text-xl sm:text-2xl text-slate-400"></i></div><h3 id="detailGuruName" class="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-200 tracking-tight leading-tight"></h3></div>
+                <div class="text-center mb-4 sm:mb-6"><div class="w-10 h-10 sm:w-16 sm:h-16 bg-slate-100 dark:bg-slate-700 rounded-full mx-auto mb-2 sm:mb-3 flex items-center justify-center border-2 sm:border-4 border-white dark:border-slate-800 shadow-sm"><i class="fas fa-user-tie text-lg sm:text-2xl text-slate-400"></i></div><h3 id="detailGuruName" class="text-base sm:text-xl font-black text-slate-800 dark:text-slate-200 tracking-tight leading-tight"></h3></div>
                 <div class="bg-brand-50/50 dark:bg-brand-900/10 rounded-xl p-3 border border-brand-100 dark:border-brand-800/50 mb-4 sm:mb-5">
                     <h4 class="text-[9px] sm:text-[10px] font-black text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-2 flex items-center gap-1.5"><i class="fas fa-id-card-alt"></i> Hak Akses</h4>
                     <div class="grid grid-cols-3 gap-2 text-[10px] sm:text-xs">
@@ -522,11 +540,12 @@
         </div>
     </div>
 
-    <div id="editGuruModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
+    <!-- MODAL EDIT GURU ADMIN -->
+    <div id="editGuruModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-5 sm:p-8 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-2xl transform transition-transform duration-300 border border-white/20 dark:border-slate-700/50" id="editGuruModalContent">
-            <div class="p-6 sm:p-8">
+            <div class="p-4 sm:p-8">
                 <div class="flex justify-between items-center mb-4 sm:mb-6">
-                    <h2 class="text-lg sm:text-xl font-black text-slate-800 dark:text-white tracking-tight">Edit Data Guru</h2>
+                    <h2 class="text-base sm:text-xl font-black text-slate-800 dark:text-white tracking-tight">Edit Data Guru</h2>
                     <button type="button" onclick="closeEditGuruModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 w-8 h-8 rounded-full flex justify-center items-center transition"><i class="fas fa-times"></i></button>
                 </div>
                 <form id="editGuruForm" class="flex flex-col gap-4">
@@ -557,13 +576,14 @@
         </div>
     </div>
 
-    <div id="reviewBukuModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
+    <!-- MODAL REVIEW ADMIN (Fitur 1) -->
+    <div id="reviewBukuModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-5 sm:p-8 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 border border-slate-200 dark:border-slate-700 shadow-2xl" id="reviewBukuModalContent">
-            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+            <div class="p-3 sm:p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
                 <h2 class="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2"><i class="fas fa-clipboard-check text-brand-500"></i> Review Dokumen</h2>
                 <button type="button" onclick="closeReviewModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"><i class="fas fa-times"></i></button>
             </div>
-            <div class="p-5">
+            <div class="p-4 sm:p-5">
                 <form id="reviewBukuForm" class="space-y-4">
                     <input type="hidden" id="reviewRowIndex">
                     <div>
@@ -584,8 +604,9 @@
         </div>
     </div>
 
-    <div id="previewPdfModal" class="fixed inset-0 z-[120] hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-6 opacity-0 transition-opacity duration-300">
-        <div class="bg-slate-900 rounded-xl sm:rounded-2xl w-full max-w-5xl h-[90vh] flex flex-col shadow-2xl border border-slate-700 transform scale-95 transition-transform duration-300" id="previewPdfModalContent">
+    <!-- MODAL PREVIEW PDF (Fitur 6) -->
+    <div id="previewPdfModal" class="fixed inset-0 z-[120] hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-8 opacity-0 transition-opacity duration-300">
+        <div class="bg-slate-900 rounded-xl sm:rounded-2xl w-full max-w-5xl h-[80vh] sm:h-[90vh] flex flex-col shadow-2xl border border-slate-700 transform scale-95 transition-transform duration-300" id="previewPdfModalContent">
             <div class="p-3 border-b border-slate-800 flex justify-between items-center text-white shrink-0">
                 <h3 class="font-bold text-sm truncate flex-1 pr-4" id="previewPdfTitle"><i class="fas fa-file-pdf text-red-400 mr-2"></i> Pratinjau Dokumen</h3>
                 <div class="flex gap-2">
@@ -602,10 +623,11 @@
         </div>
     </div>
 
-    <div id="editLembagaModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
+    <!-- MODAL EDIT LEMBAGA ADMIN -->
+    <div id="editLembagaModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-5 sm:p-8 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl premium-shadow w-full max-w-xs transform border border-slate-200 dark:border-slate-700" id="editLembagaModalContent">
-            <div class="p-6">
-                <h2 class="text-lg font-black text-slate-800 dark:text-white mb-4">Edit Lembaga</h2>
+            <div class="p-4 sm:p-6">
+                <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white mb-4">Edit Lembaga</h2>
                 <form id="editLembagaForm" class="space-y-4">
                     <input type="hidden" id="editLembagaOldName">
                     <div><label class="block text-[9px] font-black text-slate-500 uppercase mb-1">Nama Lembaga</label><input type="text" id="editLembagaName" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 bg-slate-50 dark:bg-slate-900 text-sm"></div>
@@ -619,10 +641,11 @@
         </div>
     </div>
 
-    <div id="editDataModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
+    <!-- MODAL EDIT DATA (UMUM) ADMIN -->
+    <div id="editDataModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-5 sm:p-8 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl premium-shadow w-full max-w-xs transform border border-slate-200 dark:border-slate-700" id="editDataModalContent">
-            <div class="p-6">
-                <h2 class="text-lg font-black text-slate-800 dark:text-white mb-4" id="editDataModalTitle">Edit Data</h2>
+            <div class="p-4 sm:p-6">
+                <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white mb-4" id="editDataModalTitle">Edit Data</h2>
                 <form id="editDataForm" class="space-y-4">
                     <input type="hidden" id="editDataOldName"><input type="hidden" id="editDataType">
                     <div><input type="text" id="editDataName" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 bg-slate-50 dark:bg-slate-900 text-sm font-medium outline-none"></div>
@@ -635,13 +658,14 @@
         </div>
     </div>
 
-    <div id="editBukuModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
+    <!-- MODAL EDIT DATA BUKU (ADMIN) -->
+    <div id="editBukuModal" class="fixed inset-0 z-[110] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-5 sm:p-8 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl premium-shadow w-full max-w-md transform border border-slate-200 dark:border-slate-700" id="editBukuModalContent">
-            <div class="flex justify-between items-center p-4 border-b border-slate-100 dark:border-slate-700">
+            <div class="flex justify-between items-center p-3 sm:p-4 border-b border-slate-100 dark:border-slate-700">
                 <h2 class="text-sm font-black text-slate-800 dark:text-white"><i class="fas fa-edit text-amber-500 mr-2"></i>Edit Dokumen</h2>
                 <button type="button" onclick="closeEditBukuModal()" class="text-slate-400 hover:text-slate-700"><i class="fas fa-times"></i></button>
             </div>
-            <div class="p-4 sm:p-6 max-h-[75vh] overflow-y-auto custom-scrollbar">
+            <div class="p-3 sm:p-6 max-h-[75vh] overflow-y-auto custom-scrollbar">
                 <form id="editBukuForm" class="space-y-4">
                     <input type="hidden" id="editBukuRowIndex">
                     <div><label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Tahun</label><select id="editBukuTahun" required class="w-full rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 bg-slate-50 dark:bg-slate-900 text-sm outline-none"></select></div>
@@ -657,12 +681,13 @@
         </div>
     </div>
 
-    <div id="deleteConfirmModal" class="fixed inset-0 z-[120] hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
+    <!-- MODAL KONFIRMASI HAPUS -->
+    <div id="deleteConfirmModal" class="fixed inset-0 z-[120] hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-5 sm:p-8 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-xs text-center border border-slate-700 relative overflow-hidden transform scale-95 transition-transform duration-300" id="deleteConfirmModalContent">
             <div class="absolute inset-x-0 top-0 h-1 bg-red-500"></div>
-            <div class="p-6">
-                <div class="w-12 h-12 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center mx-auto mb-3"><i class="fas fa-trash-alt text-xl"></i></div>
-                <h2 class="text-lg font-black text-slate-800 dark:text-white mb-1.5">Konfirmasi Hapus</h2>
+            <div class="p-4 sm:p-6">
+                <div class="w-10 h-10 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center mx-auto mb-3"><i class="fas fa-trash-alt text-lg"></i></div>
+                <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white mb-1.5">Konfirmasi Hapus</h2>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mb-6"><span id="deleteDataTargetName" class="font-bold text-slate-700 dark:text-slate-300"></span></p>
                 <div class="flex gap-2">
                     <button type="button" onclick="closeDeleteModal()" class="w-full bg-slate-100 dark:bg-slate-700 font-bold py-2.5 rounded-xl text-xs">Batal</button>
@@ -672,6 +697,7 @@
         </div>
     </div>
 
+    <!-- AREA CETAK BUKTI TANDA TERIMA -->
     <div id="printArea" class="bg-white text-black font-sans hidden">
         <div class="border-2 border-dashed border-black p-8 max-w-lg mx-auto text-center">
             <h1 class="m-0 text-2xl font-bold">TANDA TERIMA Si PAKU</h1>
@@ -691,6 +717,7 @@
         </div>
     </div>
 
+    <!-- MOBILE FAB -->
     <div id="mobileFab" class="md:hidden fixed bottom-4 sm:bottom-6 left-0 right-0 px-4 sm:px-5 z-[90] flex justify-center transition-transform duration-300">
         <button onclick="openPortalModal()" class="pointer-events-auto w-full max-w-sm bg-gradient-to-r from-brand-600 to-blue-600 text-white shadow-[0_10px_20px_-5px_rgba(79,70,229,0.5)] rounded-xl sm:rounded-2xl py-3.5 sm:py-4 font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all">
             <i class="fas fa-cloud-upload-alt text-base sm:text-xl"></i> Portal Guru
@@ -759,7 +786,7 @@
                 else if (method === 'deleteDataAdmin') { payload.type = args[0]; payload.name = args[1]; }
                 else if (method === 'updateBookStatus') { payload.rowIndex = args[0]; payload.status = args[1]; payload.catatan = args[2]; }
                 else if (method === 'deleteMultipleUploadedBooks') { payload.rowIndexes = args[0]; }
-                else if (method === 'getGuruHistory') { payload.guru = args[0]; payload.pin = args[1]; } // INI BARIS YANG TADI HILANG!
+                else if (method === 'getGuruHistory') { payload.guru = args[0]; payload.pin = args[1]; } 
 
                 fetchOptions.body = JSON.stringify(payload);
                 const response = await fetch(SCRIPT_URL, fetchOptions);
@@ -973,9 +1000,9 @@
                         tBody.innerHTML='<tr><td colspan="4" class="text-center py-6 text-slate-400 italic">Belum ada riwayat unggahan.</td></tr>';
                     }
                 } else {
-                    tBody.innerHTML=`<tr><td colspan="4" class="text-center py-6 text-red-500 font-bold"><i class="fas fa-exclamation-triangle mb-2 text-2xl"></i><br>Error: ${res.message}</td></tr>`;
+                    tBody.innerHTML=`<tr><td colspan="4" class="text-center py-6 text-red-500 font-bold"><i class="fas fa-exclamation-triangle mb-2 text-2xl"></i><br>Error System: ${res.message}<br><span class="text-[10px] font-normal text-slate-500 mt-2 block">PENTING: Jika error ini muncul, Anda WAJIB melakukan Deploy "New Version" di Apps Script.</span></td></tr>`;
                 }
-            } catch(e) { tBody.innerHTML='<tr><td colspan="4" class="text-center py-4 text-red-500">Gagal memuat.</td></tr>'; }
+            } catch(e) { tBody.innerHTML='<tr><td colspan="4" class="text-center py-4 text-red-500">Gagal mengambil riwayat. Periksa koneksi Anda.</td></tr>'; }
         }
 
         async function verifyNiy() {
