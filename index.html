@@ -265,7 +265,6 @@
                     <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 sm:mb-8 gap-3 sm:gap-4">
                         <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight whitespace-nowrap"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-file-signature text-sm sm:text-base"></i></div> Dokumen</h2>
                         
-                        <!-- Fitur 5: Advanced Filters Admin -->
                         <div class="flex gap-2 w-full md:w-auto overflow-x-auto custom-scrollbar pb-1">
                             <select id="filterAdminTahun" onchange="applyAdminBukuFilters()" class="rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-medium py-2 px-3 outline-none focus:ring-2 focus:ring-brand-500/30"><option value="Semua">Semua Tahun</option></select>
                             <select id="filterAdminLembaga" onchange="applyAdminBukuFilters()" class="rounded-xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-medium py-2 px-3 outline-none focus:ring-2 focus:ring-brand-500/30"><option value="Semua">Semua Lembaga</option></select>
@@ -649,7 +648,7 @@
         let currentBukuPage = 1; const rowsPerPage = 10; let sortConfigBuku = { key: 'timestamp', asc: false }; let filteredBukuData = [];
         let currentGuruPage = 1; let sortConfigGuru = { key: 'nama', asc: true }; let filteredGuruData = [];
 
-        // Fungsi Pagination dan Sorting yang dipulihkan
+        // Fungsi Pagination dan Sorting
         function changeGuruPage(dir) { currentGuruPage += dir; renderTableGuruAdminData(); }
         function sortGuru(key) { if (sortConfigGuru.key === key) sortConfigGuru.asc = !sortConfigGuru.asc; else { sortConfigGuru.key = key; sortConfigGuru.asc = true; } renderTableGuruAdminData(); }
         function changeBukuPage(dir) { currentBukuPage += dir; renderTableBukuAdminData(); }
@@ -714,36 +713,34 @@
 
             filteredGuruData = [...masterGuru]; 
             renderTableGuruAdminData(); 
-            renderAdminLists(); // Memanggil render data Mapel dan Setting
+            renderAdminLists(); 
             startDeadlineTimer(); 
             renderDashboard(stats);
         }
 
-        // Fungsi Render Data Mapel dan Setting (Lembaga, Tahun, Kelas)
         function renderAdminLists() {
-            const rSet = (arr, type) => arr.length===0?'<li class="p-4 sm:p-6 text-center text-slate-400 text-xs sm:text-sm opacity-70">Kosong</li>':arr.map(i=>{ let sn=String(i).replace(/'/g,"\\'"); return `<li class="flex justify-between items-center px-4 sm:px-5 py-2.5 sm:py-3.5 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300"><span>${i}</span><div class="flex gap-1"><button onclick="editDataAdmin('${type}','${sn}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('${type}','${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></div></li>`}).join('');
+            const rSet = (arr, type) => arr.length===0?'<li class="p-4 sm:p-6 text-center text-slate-400 text-xs sm:text-sm opacity-70">Kosong</li>':arr.map(i=>{ let encName=encodeURIComponent(i).replace(/'/g,"%27"); return `<li class="flex justify-between items-center px-4 sm:px-5 py-2.5 sm:py-3.5 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300"><span>${i}</span><div class="flex gap-1"><button onclick="editDataAdmin('${type}',decodeURIComponent('${encName}'))" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('${type}',decodeURIComponent('${encName}'))" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></div></li>`}).join('');
             
             const rSetLembaga = (arr) => arr.length===0?'<li class="p-4 sm:p-6 text-center text-slate-400 text-xs sm:text-sm opacity-70">Kosong</li>':arr.map(i=>{ 
                 let n = typeof i === 'object' ? (i.nama || i) : i; 
                 let t = typeof i === 'object' ? (i.target || 100) : 100; 
-                let sn=String(n).replace(/'/g,"\\'"); 
+                let encName=encodeURIComponent(n).replace(/'/g,"%27"); 
                 return `<li class="flex justify-between items-center px-4 sm:px-5 py-2.5 sm:py-3.5 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition font-black text-slate-700 dark:text-slate-300">
                     <div class="flex flex-col"><span class="text-xs sm:text-sm">${n}</span><span class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5 font-bold">Target: ${t} Buku</span></div>
-                    <div class="flex gap-1"><button onclick="editDataAdmin('Lembaga','${sn}', ${t})" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Lembaga','${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></div></li>`}).join('');
+                    <div class="flex gap-1"><button onclick="editDataAdmin('Lembaga',decodeURIComponent('${encName}'), ${t})" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Lembaga',decodeURIComponent('${encName}'))" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2 rounded-md sm:rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></div></li>`}).join('');
             
             const lsL=document.getElementById('listSettingLembaga'); if(lsL) lsL.innerHTML=rSetLembaga(masterLembaga);
             const lsT=document.getElementById('listSettingTahun'); if(lsT) lsT.innerHTML=rSet(masterTahun, 'Tahun');
             const lsK=document.getElementById('listSettingKelas'); if(lsK) lsK.innerHTML=rSet(masterKelas, 'Kelas');
             
             const tbodyM=document.getElementById('tableMapelBody'); 
-            if(tbodyM) tbodyM.innerHTML=masterMapel.length === 0 ? `<tr><td colspan="3" class="text-center py-6 sm:py-8 text-slate-400"><i class="fas fa-folder-open text-2xl sm:text-3xl mb-2 opacity-50"></i><br>Kosong</td></tr>` : masterMapel.map((n, idx) => { let sn = String(n).replace(/'/g, "\\'"); return `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition border-b border-slate-100/50 dark:border-slate-800/50"><td class="px-4 sm:px-6 py-3 sm:py-5 text-center text-slate-500 font-bold text-xs sm:text-sm">${idx+1}</td><td class="px-4 sm:px-6 py-3 sm:py-5 font-black text-slate-700 dark:text-slate-200 text-xs sm:text-sm">${n}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><button onclick="editDataAdmin('Mapel', '${sn}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl mr-1 sm:mr-1.5 transition border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Mapel', '${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl transition border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></td></tr>`;}).join('');
+            if(tbodyM) tbodyM.innerHTML=masterMapel.length === 0 ? `<tr><td colspan="3" class="text-center py-6 sm:py-8 text-slate-400"><i class="fas fa-folder-open text-2xl sm:text-3xl mb-2 opacity-50"></i><br>Kosong</td></tr>` : masterMapel.map((n, idx) => { let encName=encodeURIComponent(n).replace(/'/g,"%27"); return `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition border-b border-slate-100/50 dark:border-slate-800/50"><td class="px-4 sm:px-6 py-3 sm:py-5 text-center text-slate-500 font-bold text-xs sm:text-sm">${idx+1}</td><td class="px-4 sm:px-6 py-3 sm:py-5 font-black text-slate-700 dark:text-slate-200 text-xs sm:text-sm">${n}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><button onclick="editDataAdmin('Mapel',decodeURIComponent('${encName}'))" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl mr-1 sm:mr-1.5 transition border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Mapel',decodeURIComponent('${encName}'))" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl transition border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash"></i></button></td></tr>`;}).join('');
         }
 
         // Theme, Toasts & Transitions
         function toggleTheme() { document.documentElement.classList.toggle('dark'); localStorage.setItem('color-theme', document.documentElement.classList.contains('dark')?'dark':'light'); if(lembagaChartInstance)fetchDashboardOnly(); }
         let toastTimeout; function showToast(msg, type='success') { const t=document.getElementById('toastNotification'), i=document.getElementById('toastIcon'); clearTimeout(toastTimeout); i.className=`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg relative z-10 ${type==='success'?'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40':'bg-red-100 text-red-600 dark:bg-red-900/40'}`; i.innerHTML=`<i class="fas ${type==='success'?'fa-check':'fa-exclamation-triangle'}"></i>`; document.getElementById('toastMessage').innerText=msg; document.getElementById('toastProgress').className=`absolute bottom-0 left-0 h-1.5 transition-all ease-linear ${type==='success'?'bg-emerald-500':'bg-red-500'}`; document.getElementById('toastProgress').style.width='100%'; t.classList.remove('translate-x-[calc(100%+3rem)]'); setTimeout(()=>{document.getElementById('toastProgress').style.transitionDuration='3000ms'; document.getElementById('toastProgress').style.width='0%';},50); toastTimeout=setTimeout(()=>t.classList.add('translate-x-[calc(100%+3rem)]'),3000); }
         
-        // Perbaikan Helper Modal yang lebih robust (tahan banting)
         const modalHelper = { 
             open: (id, cid, fid) => { 
                 const m=document.getElementById(id), c=document.getElementById(cid); 
@@ -767,7 +764,6 @@
         function logoutAdmin() { isAdminLoggedIn=false; toggleViewMode('dashboard'); showToast('Keluar'); }
         function switchAdminTab(t) { document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.remove('admin-nav-active','bg-slate-50','dark:bg-slate-800')); const btn=document.getElementById('btnMenu'+t.charAt(0).toUpperCase()+t.slice(1)); if(btn) { btn.classList.add('admin-nav-active'); btn.classList.remove('hover:bg-slate-50', 'dark:hover:bg-slate-700/50'); } ['panelGuru','panelMapel','panelSetting','panelBuku'].forEach(p=>{const el=document.getElementById(p); if(el) el.classList.add('hidden');}); const pnl=document.getElementById('panel'+t.charAt(0).toUpperCase()+t.slice(1)); if(pnl){pnl.classList.remove('hidden'); pnl.classList.add('animate-fade-in-up');} if(t==='buku'&&!isBukuLoaded)loadDataBukuAdmin(); }
 
-        // Switch Tab Frontend
         function switchTab(t) {
             const aC = "w-1/2 py-2 px-1 sm:py-2.5 sm:px-2 text-center rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-400 shadow-sm transition-all duration-200 transform scale-100";
             const iC = "w-1/2 py-2 px-1 sm:py-2.5 sm:px-2 text-center rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all duration-200 transform scale-95 hover:scale-100";
@@ -838,14 +834,15 @@
                 try {
                     let res = await runGoogleScriptPromise('getGuruHistory', found.nama, pin);
                     if(res.success && res.data.length > 0) {
-                        tBody.innerHTML = res.data.map(d => `
-                            <tr class="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-700/20">
+                        tBody.innerHTML = res.data.map(d => {
+                            let encObj = encodeURIComponent(JSON.stringify(d)).replace(/'/g,"%27");
+                            return `<tr class="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-700/20">
                                 <td class="px-4 py-3"><div class="font-bold">${d.tahun}</div><div class="text-[9px] text-slate-400">${d.timestamp.split(',')[0]}</div></td>
                                 <td class="px-4 py-3"><div class="font-bold">${d.mapel}</div><div class="text-[10px] text-slate-500">${d.kelas} • ${d.lembaga}</div></td>
                                 <td class="px-4 py-3">${getStatusBadge(d.status)}${d.catatan ? `<div class="text-[9px] text-red-500 mt-1 italic bg-red-50 dark:bg-red-500/10 p-1 rounded"><i class="fas fa-info-circle"></i> ${d.catatan}</div>` : ''}</td>
-                                <td class="px-4 py-3 text-center"><button onclick="reprintReceipt('${encodeURIComponent(JSON.stringify(d))}')" class="text-brand-600 bg-brand-50 hover:bg-brand-100 dark:bg-slate-700 p-1.5 rounded" title="Cetak Ulang"><i class="fas fa-print"></i></button></td>
-                            </tr>
-                        `).join('');
+                                <td class="px-4 py-3 text-center"><button onclick="reprintReceipt('${encObj}')" class="text-brand-600 bg-brand-50 hover:bg-brand-100 dark:bg-slate-700 p-1.5 rounded" title="Cetak Ulang"><i class="fas fa-print"></i></button></td>
+                            </tr>`;
+                        }).join('');
                     } else tBody.innerHTML='<tr><td colspan="4" class="text-center py-6 text-slate-400 italic">Belum ada riwayat unggahan.</td></tr>';
                 } catch(e) { tBody.innerHTML='<tr><td colspan="4" class="text-center py-4 text-red-500">Gagal mengambil riwayat.</td></tr>'; }
             } else { showToast('NIY atau PIN Salah!', 'error'); }
@@ -902,7 +899,6 @@
             document.getElementById('statTotal').innerText=data.total; 
             document.getElementById('statLembagaCount').innerText=data.totalRegisteredLembaga;
             
-            // 1. Grafik Distribusi Lembaga (Kosongkan jika tidak ada data)
             const chartContainer = document.getElementById('chartContainer');
             if (chartContainer) {
                 if (data.lembaga.length === 0) {
@@ -925,7 +921,6 @@
                 }
             }
 
-            // 2. Filter Guru & Lembaga yang belum terisi (count == 0 dihidden)
             currentActiveGurus = data.guru.filter(g => g.count > 0); 
             handleSearchGuru('');
 
@@ -952,27 +947,14 @@
                     }).join('');
                 }
             }
-        }
+        } 
 
         function handleSearchGuru(q) { 
-            const f = currentActiveGurus.filter(g => g.name.toLowerCase().includes(q.toLowerCase())); 
-            const lst = document.getElementById('listGuru');
-            if (f.length === 0) {
-                lst.innerHTML = '';
-            } else {
-                lst.innerHTML = f.map((i, idx) => {
-                    let pct = i.target > 0 ? Math.min(100, Math.round((i.count / i.target) * 100)) : 0;
-                    let col = pct === 100 ? 'from-emerald-400 to-emerald-500' : (pct >= 50 ? 'from-brand-400 to-brand-600' : 'from-amber-400 to-amber-500');
-                    return `<li onclick="openGuruDetailModal('${i.name.replace(/'/g, "\\'")}')" class="bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 rounded-xl p-3 sm:p-5 shadow-sm hover:shadow-md cursor-pointer transition-all relative overflow-hidden group">
-                        <div class="absolute left-0 top-0 bottom-0 w-1 ${pct === 100 ? 'bg-emerald-500' : 'bg-brand-500'}"></div>
-                        <div class="flex justify-between items-center mb-2.5">
-                            <span class="text-xs sm:text-sm font-black flex items-center"><div class="w-6 h-6 rounded-md bg-slate-50 dark:bg-slate-700 flex items-center justify-center mr-2 border border-slate-100 dark:border-slate-600"><i class="fas fa-user-tie text-slate-400 text-xs"></i></div> ${i.name}</span>
-                            <span class="text-[10px] sm:text-xs font-black px-2 py-1 bg-slate-50 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-md border border-slate-200 dark:border-slate-600 shadow-sm">${i.count} / ${i.target}</span>
-                        </div>
-                        <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 overflow-hidden shadow-inner"><div class="bg-gradient-to-r ${col} h-2 rounded-full" style="width: ${pct}%"></div></div>
-                    </li>`;
-                }).join('');
-            }
+            const f=currentActiveGurus.filter(g=>g.name.toLowerCase().includes(q.toLowerCase())); 
+            document.getElementById('listGuru').innerHTML=f.map(i=>{
+                let encName = encodeURIComponent(i.name).replace(/'/g,"%27");
+                return `<li class="bg-white dark:bg-slate-800 border rounded-xl p-3 shadow-sm hover:shadow transition-all cursor-pointer" onclick="openGuruDetailModal(decodeURIComponent('${encName}'))"><div class="flex justify-between items-center"><span class="font-bold text-xs"><i class="fas fa-user-tie text-slate-400 mr-2"></i>${i.name}</span><span class="text-[10px] font-bold bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">${i.count}/${i.target}</span></div></li>`;
+            }).join(''); 
         }
 
         function renderTableGuruAdminData() {
@@ -988,21 +970,43 @@
             
             if(d.length === 0){ tb.innerHTML='<tr><td colspan="7" class="text-center py-8 text-slate-400">Data Kosong</td></tr>'; document.getElementById('guruPagination').style.display='none'; return; }
             
-            tb.innerHTML = d.slice(start, start+rowsPerPage).map((i,idx)=>`<tr class="border-b border-slate-100 dark:border-slate-700 text-xs hover:bg-slate-50 dark:hover:bg-slate-800"><td class="px-4 py-3 text-center">${start+idx+1}</td><td class="px-4 py-3 font-bold"><div>${i.nama}</div><div class="text-[9px] text-slate-400 font-normal mt-0.5"><i class="fas fa-envelope"></i> ${i.email||'-'}</div></td><td class="px-4 py-3 text-center">${i.niy||'-'}</td><td class="px-4 py-3 text-center">${i.pin||'-'}</td><td class="px-4 py-3 text-center">${i.target||1}</td><td class="px-4 py-3"><div class="text-[9px] font-medium leading-tight"><div class="truncate w-32" title="${i.lembaga||'Bebas'}">L: ${i.lembaga||'Bebas'}</div><div class="truncate w-32">K: ${i.kelas||'Bebas'}</div><div class="truncate w-32">M: ${i.mapel||'Bebas'}</div></div></td><td class="px-4 py-3 text-center"><button onclick="openEditGuruModal('${i.nama.replace(/'/g,"\\'")}',${i.target},'${i.pin}','${i.niy}','${i.lembaga}','${i.mapel}','${i.kelas}','${i.email}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 p-1.5 rounded mr-1"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Guru','${i.nama.replace(/'/g,"\\'")}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 p-1.5 rounded"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+            tb.innerHTML = d.slice(start, start+rowsPerPage).map((i,idx)=>{
+                let realIndex = start + idx + 1; 
+                let encObj = encodeURIComponent(JSON.stringify(i)).replace(/'/g, "%27");
+                let encName = encodeURIComponent(i.nama).replace(/'/g, "%27");
+                let htmlAkses = `<div class="flex flex-col gap-0.5 text-[9px] sm:text-[10px] font-medium"><div class="truncate w-32 sm:w-48" title="${i.lembaga||'Bebas'}"><span class="font-bold text-slate-400 mr-0.5">L:</span> ${i.lembaga||'Bebas'}</div><div class="truncate w-32 sm:w-48" title="${i.kelas||'Bebas'}"><span class="font-bold text-slate-400 mr-0.5">K:</span> ${i.kelas||'Bebas'}</div><div class="truncate w-32 sm:w-48" title="${i.mapel||'Bebas'}"><span class="font-bold text-slate-400 mr-0.5">M:</span> ${i.mapel||'Bebas'}</div></div>`;
+                return `<tr class="border-b border-slate-100 dark:border-slate-700 text-xs hover:bg-slate-50 dark:hover:bg-slate-800"><td class="px-4 py-3 text-center">${realIndex}</td><td class="px-4 py-3 font-bold"><div>${i.nama}</div><div class="text-[9px] text-slate-400 font-normal mt-0.5"><i class="fas fa-envelope"></i> ${i.email||'-'}</div></td><td class="px-4 py-3 text-center">${i.niy||'-'}</td><td class="px-4 py-3 text-center">${i.pin||'-'}</td><td class="px-4 py-3 text-center">${i.target||1}</td><td class="px-4 py-3">${htmlAkses}</td><td class="px-4 py-3 text-center"><button onclick="openEditGuruModal('${encObj}')" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 p-1.5 rounded mr-1"><i class="fas fa-edit"></i></button><button onclick="deleteDataAdmin('Guru', decodeURIComponent('${encName}'))" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 p-1.5 rounded"><i class="fas fa-trash"></i></button></td></tr>`;
+            }).join('');
             
             const pg = document.getElementById('guruPagination'); pg.style.display='flex'; 
             document.getElementById('guruPageInfo').innerText=`Hal ${currentGuruPage} dr ${total}`;
             document.getElementById('btnPrevGuru').disabled = (currentGuruPage <= 1);
             document.getElementById('btnNextGuru').disabled = (currentGuruPage >= total);
         }
-        function openEditGuruModal(n,t,p,ni,l,m,k,e) { document.getElementById('editGuruOldName').value=n; document.getElementById('editGuruName').value=n; document.getElementById('editGuruTarget').value=t; document.getElementById('editGuruPin').value=p; document.getElementById('editGuruNiy').value=ni; document.getElementById('editGuruEmail').value=e; renderMultiSelect('ms-edit-lembaga','label-ms-edit-lembaga','editGuruLembaga',masterLembaga,'-- Bebas --',l); renderMultiSelect('ms-edit-mapel','label-ms-edit-mapel','editGuruMapel',masterMapel,'-- Bebas --',m); renderMultiSelect('ms-edit-kelas','label-ms-edit-kelas','editGuruKelas',masterKelas,'-- Bebas --',k); modalHelper.open('editGuruModal','editGuruModalContent'); }
+        
+        function openEditGuruModal(enc) { 
+            let g = JSON.parse(decodeURIComponent(enc));
+            document.getElementById('editGuruOldName').value = g.nama; 
+            document.getElementById('editGuruName').value = g.nama; 
+            document.getElementById('editGuruTarget').value = g.target || 1; 
+            document.getElementById('editGuruPin').value = g.pin || '12345678'; 
+            document.getElementById('editGuruNiy').value = g.niy || ''; 
+            document.getElementById('editGuruEmail').value = g.email || ''; 
+            renderMultiSelect('ms-edit-lembaga','label-ms-edit-lembaga','editGuruLembaga',masterLembaga,'-- Bebas --',g.lembaga); 
+            renderMultiSelect('ms-edit-mapel','label-ms-edit-mapel','editGuruMapel',masterMapel,'-- Bebas --',g.mapel); 
+            renderMultiSelect('ms-edit-kelas','label-ms-edit-kelas','editGuruKelas',masterKelas,'-- Bebas --',g.kelas); 
+            modalHelper.open('editGuruModal','editGuruModalContent'); 
+        }
         function closeEditGuruModal() { modalHelper.close('editGuruModal','editGuruModalContent'); }
         
         // Detail Guru Modal
         function openGuruDetailModal(n) {
             if (!lastDashboardData) return; const g = lastDashboardData.guru.find(x => x.name === n); if (!g) return;
             const masterG = masterGuru.find(x => (x.nama || x) === n); const getAkses = (val) => val && val.trim() !== '' ? val : 'Bebas';
-            document.getElementById('detailGuruAksesLembaga').innerText = getAkses(masterG?.lembaga); document.getElementById('detailGuruAksesKelas').innerText = getAkses(masterG?.kelas); document.getElementById('detailGuruAksesMapel').innerText = getAkses(masterG?.mapel);
+            document.getElementById('detailGuruAksesLembaga').innerText = getAkses(masterG?.lembaga); document.getElementById('detailGuruAksesLembaga').title = getAkses(masterG?.lembaga);
+            document.getElementById('detailGuruAksesKelas').innerText = getAkses(masterG?.kelas); document.getElementById('detailGuruAksesKelas').title = getAkses(masterG?.kelas);
+            document.getElementById('detailGuruAksesMapel').innerText = getAkses(masterG?.mapel); document.getElementById('detailGuruAksesMapel').title = getAkses(masterG?.mapel);
+
             let pct = g.target > 0 ? Math.min(100, Math.round((g.count / g.target) * 100)) : 0;
             document.getElementById('detailGuruName').innerText = g.name; document.getElementById('detailGuruCount').innerText = `${g.count} / ${g.target} Dok.`; document.getElementById('detailGuruPct').innerText = `${pct}%`;
             document.getElementById('detailGuruBar').style.width = `${pct}%`; document.getElementById('detailGuruBar').className = `${pct === 100 ? 'bg-emerald-500' : (pct >= 50 ? 'bg-brand-500' : 'bg-amber-500')} h-2.5 sm:h-3 rounded-full transition-all duration-500 relative`;
@@ -1016,10 +1020,8 @@
         function closeEditLembagaModal() { modalHelper.close('editLembagaModal', 'editLembagaModalContent'); }
         function openEditDataModal(t, name) { document.getElementById('editDataType').value=t; document.getElementById('editDataOldName').value=name; document.getElementById('editDataName').value=name; document.getElementById('editDataModalTitle').innerText=`Edit ${t}`; modalHelper.open('editDataModal', 'editDataModalContent', 'editDataName'); }
         function closeEditDataModal() { modalHelper.close('editDataModal', 'editDataModalContent'); }
-        function editDataAdmin(type, name, target, pin, niy, lembaga, mapel, kelas) { if (type === 'Guru') openEditGuruModal(name, target, pin, niy, lembaga, mapel, kelas); else if (type === 'Lembaga') openEditLembagaModal(name, target); else openEditDataModal(type, name); }
-        function openEditBukuModal(enc) { let d=JSON.parse(decodeURIComponent(enc)); document.getElementById('editBukuRowIndex').value=d.rowIndex; const pop=(id,arr,val)=>{const el=document.getElementById(id);if(el){el.innerHTML='<option value="" disabled>-- Pilih --</option>';arr.forEach(i=>{let v=typeof i==='object'?i.nama:i; let opt=new Option(v,v); if(v===val)opt.selected=true; el.add(opt);});}}; pop('editBukuTahun',masterTahun,d.tahun); pop('editBukuLembaga',masterLembaga,d.lembaga); pop('editBukuGuru',masterGuru,d.guru); pop('editBukuKelas',masterKelas,d.kelas); pop('editBukuMapel',masterMapel,d.mapel); modalHelper.open('editBukuModal', 'editBukuModalContent'); }
-        function closeEditBukuModal() { modalHelper.close('editBukuModal', 'editBukuModalContent'); }
-
+        function editDataAdmin(type, name, target) { if (type === 'Lembaga') openEditLembagaModal(name, target); else openEditDataModal(type, name); }
+        
         // Admin Forms Submit
         async function submitAdminForm(e, type, formId, btnId, dataObj) { e.preventDefault(); const b=document.getElementById(btnId), o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try{ let r=await runGoogleScriptPromise('addDataAdmin',type,dataObj); if(r.success){showToast('Berhasil');document.getElementById(formId).reset();initApp();}else showToast(r.message,'error');}catch(x){showToast('Error','error');} b.innerHTML=o; b.disabled=false; }
         
@@ -1037,7 +1039,6 @@
             
             document.getElementById('editLembagaForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditLembaga'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateDataAdmin','Lembaga',document.getElementById('editLembagaOldName').value,document.getElementById('editLembagaName').value.trim(), {target: parseInt(document.getElementById('editLembagaTarget').value)||100}); if(r.success){showToast('Berhasil'); initApp(); closeEditLembagaModal();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
             document.getElementById('editDataForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditData'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; let t=document.getElementById('editDataType').value; let old=document.getElementById('editDataOldName').value; let nw=document.getElementById('editDataName').value.trim(); if(old===nw){closeEditDataModal(); b.innerHTML=o; b.disabled=false; return;} try { let r=await runGoogleScriptPromise('updateDataAdmin',t,old,nw,null); if(r.success){showToast('Berhasil'); initApp(); closeEditDataModal();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
-            document.getElementById('editBukuForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditBuku'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; let nd={tahun:document.getElementById('editBukuTahun').value, lembaga:document.getElementById('editBukuLembaga').value, guru:document.getElementById('editBukuGuru').value, kelas:document.getElementById('editBukuKelas').value, mapel:document.getElementById('editBukuMapel').value}; try { let r=await runGoogleScriptPromise('updateUploadedBook',parseInt(document.getElementById('editBukuRowIndex').value),nd); if(r.success){showToast('Berhasil'); closeEditBukuModal(); loadDataBukuAdmin(); fetchDashboardOnly();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
             
             document.getElementById('loginForm')?.addEventListener('submit', async function(e){ e.preventDefault(); const b=this.querySelector('button[type="submit"]'), o=b.innerText; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try{const r=await runGoogleScriptPromise('verifyAdminPassword', document.getElementById('adminPassword').value); b.innerText=o; b.disabled=false; if(r.success){isAdminLoggedIn=true; closeLoginModal(); toggleViewMode('admin');}else{showToast(r.message, 'error');}}catch(e){b.innerText=o; b.disabled=false; showToast('Error Koneksi', 'error')} });
 
@@ -1093,6 +1094,8 @@
             
             if(d.length===0){ tb.innerHTML='<tr><td colspan="6" class="text-center py-8 text-slate-400">Data Kosong</td></tr>'; document.getElementById('bukuPagination').style.display='none'; return; }
             tb.innerHTML = d.slice(start, start+rowsPerPage).map((b,i)=>{
+                let encCatatan = encodeURIComponent(b.catatan || '').replace(/'/g, "%27");
+                let encFileName = encodeURIComponent(b.fileName || '').replace(/'/g, "%27");
                 return `<tr class="border-b border-slate-100 dark:border-slate-700 text-xs hover:bg-slate-50 dark:hover:bg-slate-800">
                     <td class="px-4 py-3 text-center"><input type="checkbox" value="${b.rowIndex}" class="buku-checkbox rounded text-brand-500 w-4 h-4 cursor-pointer" onchange="updateBulkDeleteBtn()"></td>
                     <td class="px-4 py-3 font-bold">${b.tahun}</td>
@@ -1100,8 +1103,8 @@
                     <td class="px-4 py-3"><div class="font-bold">${b.mapel}</div><div class="text-[9px] text-slate-400">${b.kelas}</div></td>
                     <td class="px-4 py-3 text-center">${getStatusBadge(b.status)}</td>
                     <td class="px-4 py-3 text-center flex justify-center gap-1">
-                        <button onclick="openPreviewPdf('${b.url}', '${b.fileName}')" class="text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 p-1.5 rounded" title="Preview File"><i class="fas fa-eye"></i></button>
-                        <button onclick="openReviewModal(${b.rowIndex}, '${b.status}', '${b.catatan.replace(/'/g,"\\'")}')" class="text-brand-600 bg-brand-50 dark:bg-brand-900/30 hover:bg-brand-100 p-1.5 rounded" title="Review & Status"><i class="fas fa-clipboard-check"></i></button>
+                        <button onclick="openPreviewPdf('${b.url}', decodeURIComponent('${encFileName}'))" class="text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 p-1.5 rounded" title="Preview File"><i class="fas fa-eye"></i></button>
+                        <button onclick="openReviewModal(${b.rowIndex}, '${b.status}', '${encCatatan}')" class="text-brand-600 bg-brand-50 dark:bg-brand-900/30 hover:bg-brand-100 p-1.5 rounded" title="Review & Status"><i class="fas fa-clipboard-check"></i></button>
                         <button onclick="deleteDataAdmin('BukuUploaded', ${b.rowIndex})" class="text-red-500 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 p-1.5 rounded"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>`;
@@ -1114,13 +1117,18 @@
         }
 
         // Fitur 1: Review Workflow Modal
-        function openReviewModal(rIndex, st, cat) { document.getElementById('reviewRowIndex').value=rIndex; document.getElementById('reviewStatus').value=st; document.getElementById('reviewCatatan').value=cat; modalHelper.open('reviewBukuModal','reviewBukuModalContent'); }
+        function openReviewModal(rIndex, st, catEnc) { 
+            document.getElementById('reviewRowIndex').value=rIndex; 
+            document.getElementById('reviewStatus').value=st; 
+            document.getElementById('reviewCatatan').value=decodeURIComponent(catEnc); 
+            modalHelper.open('reviewBukuModal','reviewBukuModalContent'); 
+        }
         function closeReviewModal() { modalHelper.close('reviewBukuModal','reviewBukuModalContent'); }
         document.getElementById('reviewBukuForm').addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitReview'), o=b.innerHTML; b.innerHTML='Menyimpan...'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateBookStatus', document.getElementById('reviewRowIndex').value, document.getElementById('reviewStatus').value, document.getElementById('reviewCatatan').value); if(r.success){showToast('Status Diperbarui'); closeReviewModal(); loadDataBukuAdmin();} }catch(x){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
 
         // Fitur 6: In-App PDF Preview Modal
         function openPreviewPdf(url, title) {
-            const safeUrl = url.replace(/\/view.*$/, '/preview'); // Konversi link Drive ke Mode Preview
+            const safeUrl = url.replace(/\/view.*$/, '/preview'); 
             document.getElementById('previewPdfTitle').innerHTML = `<i class="fas fa-file-pdf text-red-400 mr-2"></i> ${title}`;
             document.getElementById('previewPdfLink').href = url;
             document.getElementById('previewPdfIframe').src = safeUrl;
