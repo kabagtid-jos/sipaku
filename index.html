@@ -450,6 +450,11 @@
         </main>
     </div>
 
+    <!-- FOOTER -->
+    <footer class="w-full text-center py-4 text-[10px] sm:text-xs font-bold text-slate-400 dark:text-slate-500 transition-opacity duration-300 mt-auto z-10 relative pb-24 md:pb-6 opacity-70 hover:opacity-100">
+        Made with <i class="fas fa-heart text-red-500 animate-pulse mx-1 drop-shadow-md"></i> Kabag IT P2S Abu Zairi
+    </footer>
+
     <div id="uploadModal" class="fixed inset-0 z-[100] hidden bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 relative flex flex-col max-h-[95vh] sm:max-h-[90vh] border border-white/20 dark:border-slate-700/50" id="uploadModalContent">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-80 z-20"></div>
@@ -462,7 +467,7 @@
                 <div class="text-center mb-6">
                     <div class="w-16 h-16 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-full mx-auto flex items-center justify-center text-3xl mb-4 shadow-inner ring-1 ring-brand-500/20"><i class="fas fa-id-badge"></i></div>
                     <h3 class="text-xl sm:text-2xl font-black text-slate-800 dark:text-white tracking-tight">Identifikasi Guru</h3>
-                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 font-medium">Masukkan Nomor Induk (NIY) Anda.</p>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 font-medium">Masukkan Nomor Induk Yayasan (NIY) Anda.</p>
                 </div>
                 <input type="text" id="inputCheckNiy" placeholder="Contoh: 123456" class="w-full rounded-2xl border border-slate-200/80 dark:border-slate-700 px-5 py-4 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-black tracking-widest text-center text-lg sm:text-xl focus:ring-2 focus:ring-brand-500/30 outline-none transition-all shadow-inner mb-5 placeholder:font-medium placeholder:tracking-normal">
                 <button type="button" onclick="verifyNiy()" id="btnVerifyNiy" class="w-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-brand-500/30 transition-all flex justify-center items-center gap-2 transform hover:-translate-y-1"><i class="fas fa-search"></i> Cek Identitas</button>
