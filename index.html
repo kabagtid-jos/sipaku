@@ -896,12 +896,84 @@
         // Admin Dashboards & Stats
         function applyDashboardFilters() { currentYearFilter=document.getElementById('filterTahun').value; currentLembagaFilter=document.getElementById('filterLembaga').value; fetchDashboardOnly(); }
         async function fetchDashboardOnly() { try { const res=await runGoogleScriptPromise('getDashboardStats', currentYearFilter, currentLembagaFilter); renderDashboard(res); }catch(e){} }
+        
         function renderDashboard(data) {
-            lastDashboardData=data; document.getElementById('statTotal').innerText=data.total; document.getElementById('statLembagaCount').innerText=data.totalRegisteredLembaga;
-            // Chart rendering simplified for response constraints
-            currentActiveGurus=data.guru; handleSearchGuru('');
+            lastDashboardData=data; 
+            document.getElementById('statTotal').innerText=data.total; 
+            document.getElementById('statLembagaCount').innerText=data.totalRegisteredLembaga;
+            
+            // 1. Grafik Distribusi Lembaga (Kosongkan jika tidak ada data)
+            const chartContainer = document.getElementById('chartContainer');
+            if (chartContainer) {
+                if (data.lembaga.length === 0) {
+                    chartContainer.innerHTML = ''; 
+                } else {
+                    chartContainer.innerHTML = '<canvas id="lembagaChart" class="w-full h-full"></canvas>';
+                    const canvasEl = document.getElementById('lembagaChart');
+                    if (canvasEl) {
+                        const isDark = document.documentElement.classList.contains('dark');
+                        const textColor = isDark ? '#94a3b8' : '#64748b'; const gridColor = isDark ? '#334155' : '#f1f5f9';
+                        const chartCtx = canvasEl.getContext('2d');
+                        const bgColors = ['rgba(99, 102, 241, 0.9)', 'rgba(16, 185, 129, 0.9)', 'rgba(245, 158, 11, 0.9)', 'rgba(236, 72, 153, 0.9)', 'rgba(14, 165, 233, 0.9)', 'rgba(139, 92, 246, 0.9)'];
+                        if (lembagaChartInstance) lembagaChartInstance.destroy();
+                        lembagaChartInstance = new Chart(chartCtx, {
+                            type: 'bar',
+                            data: { labels: data.lembaga.map(i => i.name), datasets: [{ data: data.lembaga.map(i => i.count), backgroundColor: bgColors, borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 }, barPercentage: 0.6 }] },
+                            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1, color: textColor, font:{family: "'Inter', sans-serif", weight: '600', size: 10} }, grid: { color: gridColor, borderDash: [5, 5] } }, x: { ticks: { color: textColor, font:{family: "'Inter', sans-serif", weight: '700', size: 10} }, grid: { display: false } } } }
+                        });
+                    }
+                }
+            }
+
+            // 2. Filter Guru & Lembaga yang belum terisi (count == 0 dihidden)
+            currentActiveGurus = data.guru.filter(g => g.count > 0); 
+            handleSearchGuru('');
+
+            const lstL = document.getElementById('listLembaga');
+            if (lstL) {
+                const activeLembaga = data.lembaga.filter(l => l.count > 0);
+                if (activeLembaga.length === 0) {
+                    lstL.innerHTML = '';
+                } else {
+                    lstL.innerHTML = activeLembaga.map((i, idx) => {
+                        let target = 100; 
+                        let foundLembaga = masterLembaga.find(m => (m.nama || m) === i.name);
+                        if (foundLembaga && foundLembaga.target) target = foundLembaga.target;
+                        let pct = target > 0 ? Math.min(100, Math.round((i.count / target) * 100)) : 0;
+                        let col = pct === 100 ? 'from-emerald-400 to-emerald-500' : (pct >= 50 ? 'from-brand-400 to-brand-600' : 'from-amber-400 to-amber-500');
+                        return `<li class="bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 rounded-xl p-3 sm:p-5 shadow-sm hover:shadow-md transition-all relative overflow-hidden group">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 ${pct === 100 ? 'bg-emerald-500' : 'bg-brand-500'}"></div>
+                            <div class="flex justify-between items-center mb-2.5">
+                                <span class="text-xs sm:text-sm font-black flex items-center"><div class="w-6 h-6 rounded-md bg-slate-50 dark:bg-slate-700 flex items-center justify-center mr-2 border border-slate-100 dark:border-slate-600"><i class="fas fa-school text-slate-400 text-xs"></i></div> ${i.name}</span>
+                                <span class="text-[10px] sm:text-xs font-black px-2 py-1 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-md border border-brand-100 dark:border-brand-500/20">${i.count} / ${target}</span>
+                            </div>
+                            <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 overflow-hidden shadow-inner"><div class="bg-gradient-to-r ${col} h-2 rounded-full" style="width: ${pct}%"></div></div>
+                        </li>`;
+                    }).join('');
+                }
+            }
         }
-        function handleSearchGuru(q) { const f=currentActiveGurus.filter(g=>g.name.toLowerCase().includes(q.toLowerCase())); document.getElementById('listGuru').innerHTML=f.map(i=>`<li class="bg-white dark:bg-slate-800 border rounded-xl p-3 shadow-sm hover:shadow transition-all cursor-pointer" onclick="openGuruDetailModal('${i.name.replace(/'/g,"\\'")}')"><div class="flex justify-between items-center"><span class="font-bold text-xs"><i class="fas fa-user-tie text-slate-400 mr-2"></i>${i.name}</span><span class="text-[10px] font-bold bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">${i.count}/${i.target}</span></div></li>`).join(''); }
+
+        function handleSearchGuru(q) { 
+            const f = currentActiveGurus.filter(g => g.name.toLowerCase().includes(q.toLowerCase())); 
+            const lst = document.getElementById('listGuru');
+            if (f.length === 0) {
+                lst.innerHTML = '';
+            } else {
+                lst.innerHTML = f.map((i, idx) => {
+                    let pct = i.target > 0 ? Math.min(100, Math.round((i.count / i.target) * 100)) : 0;
+                    let col = pct === 100 ? 'from-emerald-400 to-emerald-500' : (pct >= 50 ? 'from-brand-400 to-brand-600' : 'from-amber-400 to-amber-500');
+                    return `<li onclick="openGuruDetailModal('${i.name.replace(/'/g, "\\'")}')" class="bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 rounded-xl p-3 sm:p-5 shadow-sm hover:shadow-md cursor-pointer transition-all relative overflow-hidden group">
+                        <div class="absolute left-0 top-0 bottom-0 w-1 ${pct === 100 ? 'bg-emerald-500' : 'bg-brand-500'}"></div>
+                        <div class="flex justify-between items-center mb-2.5">
+                            <span class="text-xs sm:text-sm font-black flex items-center"><div class="w-6 h-6 rounded-md bg-slate-50 dark:bg-slate-700 flex items-center justify-center mr-2 border border-slate-100 dark:border-slate-600"><i class="fas fa-user-tie text-slate-400 text-xs"></i></div> ${i.name}</span>
+                            <span class="text-[10px] sm:text-xs font-black px-2 py-1 bg-slate-50 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-md border border-slate-200 dark:border-slate-600 shadow-sm">${i.count} / ${i.target}</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 overflow-hidden shadow-inner"><div class="bg-gradient-to-r ${col} h-2 rounded-full" style="width: ${pct}%"></div></div>
+                    </li>`;
+                }).join('');
+            }
+        }
 
         function renderTableGuruAdminData() {
             const tb=document.getElementById('tableGuruBody'); if(!tb)return;
