@@ -854,6 +854,17 @@
             currentReceiptData = { guru: d.guru, lembaga: d.lembaga, mapel: d.mapel, kelas: d.kelas, timestamp: d.timestamp }; triggerPrintReceipt();
         }
 
+        // FUNGSI INI SEBELUMNYA HILANG, SEKARANG DIKEMBALIKAN
+        function triggerPrintReceipt() {
+            if(!currentReceiptData) return;
+            document.getElementById('printWaktu').innerText = currentReceiptData.timestamp || new Date().toLocaleString();
+            document.getElementById('printGuru').innerText = currentReceiptData.guru;
+            document.getElementById('printLembaga').innerText = currentReceiptData.lembaga;
+            document.getElementById('printMapel').innerText = currentReceiptData.mapel;
+            document.getElementById('printKelas').innerText = currentReceiptData.kelas;
+            setTimeout(() => { window.print(); }, 250);
+        }
+
         function goToUploadForm() {
             if(!loggedInGuru) return;
             document.getElementById('step2Dashboard').classList.add('hidden'); document.getElementById('step3Form').classList.remove('hidden'); document.getElementById('step3Form').classList.add('flex');
@@ -877,7 +888,8 @@
 
             const reader=new FileReader();
             reader.onload=async function(){
-                const dataObj={ tahun:document.getElementById('tahun').value, lembaga:document.getElementById('lembaga').value, guru:loggedInGuru.nama, kelas:document.getElementById('kelasDropdown').value, mapel:document.getElementById('mapelDropdown').value, fileName:file.name, base64Data:reader.result, pin:loggedInGuru.pin };
+                // PERBAIKAN: Menambahkan 'email: loggedInGuru.email' ke dalam payload
+                const dataObj={ tahun:document.getElementById('tahun').value, lembaga:document.getElementById('lembaga').value, guru:loggedInGuru.nama, kelas:document.getElementById('kelasDropdown').value, mapel:document.getElementById('mapelDropdown').value, fileName:file.name, base64Data:reader.result, pin:loggedInGuru.pin, email:loggedInGuru.email };
                 try {
                     const res = await runGoogleScriptPromise('uploadFileToDrive', dataObj);
                     clearInterval(simProg); pBar.style.width='100%';
