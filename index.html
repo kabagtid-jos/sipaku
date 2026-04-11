@@ -61,7 +61,7 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col transition-colors duration-300 text-sm sm:text-base">
 
-    <!-- TOAST -->
+    <!-- TOAST NOTIFICATION -->
     <div id="toastNotification" class="fixed top-4 right-4 sm:top-5 sm:right-5 z-[200] transform translate-x-[calc(100%+3rem)] transition-transform duration-300 flex items-center p-3 sm:p-4 mb-4 rounded-xl sm:rounded-2xl premium-shadow border glass border-white/50 dark:border-slate-700/50 max-w-[90vw] overflow-hidden">
         <div id="toastIcon" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 relative z-10"><i class="fas fa-check text-sm sm:text-base"></i></div>
         <div id="toastMessage" class="ml-3 text-xs sm:text-sm font-bold tracking-wide pr-2 sm:pr-4 text-slate-700 dark:text-slate-200 relative z-10">Aksi Berhasil!</div>
@@ -91,11 +91,13 @@
         </div>
     </header>
 
+    <!-- MAIN CONTAINER -->
     <div id="mainContainer" class="flex-grow w-full max-w-7xl mx-auto flex flex-col relative transition-all duration-300">
         
         <!-- PUBLIC DASHBOARD -->
         <main id="publicView" class="w-full max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 flex-grow animate-fade-in-up">
             <div class="space-y-4 sm:space-y-6">
+                
                 <div id="pengumumanBanner" class="hidden rounded-xl sm:rounded-2xl overflow-hidden relative bg-amber-50 dark:bg-amber-900/20 border border-amber-200/80 dark:border-amber-800/50 p-3 sm:p-4 shadow-inner marquee-container">
                     <div class="flex items-center text-amber-700 dark:text-amber-400 text-[10px] sm:text-xs font-bold w-full">
                         <div class="flex-shrink-0 z-10 mr-2 sm:mr-3 flex items-center justify-center"><i class="fas fa-bullhorn text-xs sm:text-sm animate-pulse"></i></div>
@@ -179,6 +181,7 @@
             <section class="flex-grow w-full bg-white dark:bg-slate-800 rounded-2xl sm:rounded-[2rem] premium-shadow border border-slate-200/60 dark:border-slate-700/60 min-h-[500px] sm:min-h-[600px] relative">
                 <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white dark:via-slate-600 to-transparent opacity-50"></div>
                 
+                <!-- PANEL GURU -->
                 <div id="panelGuru" class="p-4 sm:p-6 md:p-10 transition-opacity duration-300">
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 gap-3 sm:gap-4">
                         <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-users-cog text-sm sm:text-base"></i></div> Kelola Guru</h2>
@@ -237,6 +240,7 @@
                     </div>
                 </div>
 
+                <!-- PANEL MAPEL -->
                 <div id="panelMapel" class="hidden p-4 sm:p-6 md:p-10 transition-opacity duration-300 opacity-0">
                     <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight mb-6 sm:mb-8"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-book-reader text-sm sm:text-base"></i></div> Referensi Mapel</h2>
                     <form id="formAddMapel" class="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-6 sm:mb-10 bg-slate-50/50 dark:bg-slate-900/30 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner max-w-3xl">
@@ -248,10 +252,10 @@
                     </div>
                 </div>
 
+                <!-- PANEL SETTING -->
                 <div id="panelSetting" class="hidden p-4 sm:p-6 md:p-10 transition-opacity duration-300 opacity-0">
                     <div class="flex justify-between items-center mb-6 sm:mb-8">
                         <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-sliders-h text-sm sm:text-base"></i></div> Konfigurasi Sistem</h2>
-                        <!-- Fitur 5: Tombol Tutup Tahun / Arsip -->
                         <button onclick="triggerArchive()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-md shadow-red-500/20 transition-all flex items-center gap-2"><i class="fas fa-archive"></i> Tutup Tahun Ajaran</button>
                     </div>
 
@@ -283,6 +287,7 @@
                     </div>
                 </div>
                 
+                <!-- PANEL BUKU (ADMIN) -->
                 <div id="panelBuku" class="hidden p-4 sm:p-6 md:p-10 flex-col h-full transition-opacity duration-300 opacity-0">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 sm:mb-8 gap-3 sm:gap-4">
                         <h2 class="text-lg sm:text-2xl font-black text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3 tracking-tight whitespace-nowrap"><div class="p-2 sm:p-2.5 bg-brand-50 dark:bg-brand-500/10 rounded-lg sm:rounded-xl text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-500/20"><i class="fas fa-file-signature text-sm sm:text-base"></i></div> Dokumen</h2>
@@ -395,7 +400,7 @@
                 </div>
             </div>
 
-            <!-- STEP 3: FORM UPLOAD (Fitur 4: Multi-file) -->
+            <!-- STEP 3: FORM UPLOAD -->
             <div id="step3Form" class="hidden flex-col w-full h-full animate-fade-in-up">
                 <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 shrink-0 flex justify-between items-center">
                     <h2 class="text-base sm:text-lg font-black text-slate-800 dark:text-white flex items-center gap-2.5 sm:gap-3 tracking-tight"><div class="bg-gradient-to-br from-brand-500 to-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-cloud-upload-alt text-sm"></i></div> Form Unggah</h2>
@@ -436,7 +441,7 @@
         </div>
     </div>
 
-    <!-- MODAL REVISI DOKUMEN (Fitur 1) -->
+    <!-- MODAL REVISI DOKUMEN -->
     <div id="reuploadModal" class="fixed inset-0 z-[110] hidden bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-3 opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 transform scale-95 transition-transform duration-300" id="reuploadModalContent">
             <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
@@ -462,7 +467,7 @@
         </div>
     </div>
 
-    <!-- AREA CETAK BUKTI REKAP PDF ADMIN (Fitur 6) -->
+    <!-- AREA CETAK BUKTI REKAP PDF ADMIN -->
     <div id="printReportArea" class="bg-white text-black font-sans hidden">
         <div class="max-w-4xl mx-auto p-8">
             <div class="flex items-center justify-between border-b-4 border-black pb-4 mb-6">
@@ -955,10 +960,24 @@
         function openPortalModal() { if(isDeadlinePassed) return showToast('Waktu Habis','error'); resetUploadFormUI(); modalHelper.open('uploadModal','uploadModalContent','inputCheckNiy'); }
         function closeModal() { modalHelper.close('uploadModal','uploadModalContent'); }
         function closeLoginModal() { modalHelper.close('loginModal','loginModalContent'); }
+        
         function resetUploadFormUI() { 
-            loggedInGuru=null; document.getElementById('uploadForm').reset(); document.getElementById('inputCheckNiy').value=''; document.getElementById('inputCheckPin').value=''; 
-            ['step2Dashboard','step3Form'].forEach(el=>document.getElementById(el).classList.add('hidden')); document.getElementById('step1Niy').classList.remove('hidden'); 
+            loggedInGuru = null; 
+            const form = document.getElementById('uploadForm');
+            if (form) form.reset(); 
+            const inputNiy = document.getElementById('inputCheckNiy');
+            if (inputNiy) inputNiy.value = ''; 
+            const inputPin = document.getElementById('inputCheckPin');
+            if (inputPin) inputPin.value = ''; 
+            
+            ['step2Dashboard','step3Form'].forEach(el => {
+                const element = document.getElementById(el);
+                if (element) element.classList.add('hidden');
+            }); 
+            const step1 = document.getElementById('step1Niy');
+            if (step1) step1.classList.remove('hidden'); 
         }
+
         async function verifyNiy() {
             const niy=document.getElementById('inputCheckNiy').value.trim(), pin=document.getElementById('inputCheckPin').value; const btn=document.getElementById('btnVerifyNiy');
             if(!niy || !pin){ showToast('NIY dan PIN wajib diisi','error'); return; }
@@ -1149,6 +1168,7 @@
                     }).join('');
                 }
             }
+            triggerProgressAnimations();
         } 
 
         function handleSearchGuru(q) { 
@@ -1179,61 +1199,6 @@
                 document.querySelectorAll('[data-width]').forEach(el => el.style.width = el.getAttribute('data-width'));
                 document.querySelectorAll('.anim-pct').forEach(el => animateValueElement(el, 0, parseInt(el.getAttribute('data-pct')), 1000));
             }, 50);
-        }
-
-        // Admin Data Buku & Features
-        async function loadDataBukuAdmin() { 
-            try { 
-                let r=await runGoogleScriptPromise('getUploadedBooksList'); 
-                if(r.success){ 
-                    masterBukuUploaded=r.data; 
-                    applyAdminBukuFilters(); 
-                    isBukuLoaded=true; 
-                } 
-            }catch(e){} 
-        }
-
-        function applyAdminBukuFilters() {
-            const q = document.getElementById('searchBukuAdmin').value.toLowerCase();
-            const fT = document.getElementById('filterAdminTahun').value;
-            const fL = document.getElementById('filterAdminLembaga').value;
-            const fS = document.getElementById('filterAdminStatus').value;
-            
-            filteredBukuData = masterBukuUploaded.filter(b => {
-                return (b.guru.toLowerCase().includes(q) || b.mapel.toLowerCase().includes(q)) &&
-                       (fT === 'Semua' || String(b.tahun) === fT) &&
-                       (fL === 'Semua' || b.lembaga === fL) &&
-                       (fS === 'Semua' || b.status === fS);
-            });
-            currentBukuPage=1; 
-            const chkAll = document.getElementById('checkAllBuku');
-            if(chkAll) chkAll.checked=false; 
-            toggleSelectAllBuku(); 
-            renderTableBukuAdminData();
-        }
-
-        function toggleSelectAllBuku() {
-            const chkAll = document.getElementById('checkAllBuku')?.checked || false;
-            document.querySelectorAll('.buku-checkbox').forEach(cb => cb.checked = chkAll);
-            updateBulkDeleteBtn();
-        }
-
-        function updateBulkDeleteBtn() {
-            const cnt = document.querySelectorAll('.buku-checkbox:checked').length;
-            const btn = document.getElementById('btnBulkDelete');
-            if(btn) {
-                document.getElementById('bulkDeleteCount').innerText = cnt;
-                if(cnt > 0) btn.classList.remove('hidden'); else btn.classList.add('hidden');
-            }
-        }
-
-        function confirmBulkDelete() {
-            const cnt = document.querySelectorAll('.buku-checkbox:checked').length;
-            currentDeleteType = 'BulkBuku'; 
-            currentDeleteName = cnt + ' Dokumen terpilih'; 
-            currentDeleteRows = Array.from(document.querySelectorAll('.buku-checkbox:checked')).map(c=>c.value);
-            document.getElementById('deleteDataTargetName').innerText = currentDeleteName; 
-            modalHelper.open('deleteConfirmModal', 'deleteConfirmModalContent');
         }
 
         function renderTableGuruAdminData() {
@@ -1299,6 +1264,79 @@
         function closeEditDataModal() { modalHelper.close('editDataModal', 'editDataModalContent'); }
         function editDataAdmin(type, name, target) { if (type === 'Lembaga') openEditLembagaModal(name, target); else openEditDataModal(type, name); }
 
+        async function submitAdminForm(e, type, formId, btnId, dataObj) { 
+            e.preventDefault(); const b=document.getElementById(btnId), o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; 
+            try{ 
+                let r=await runGoogleScriptPromise('addDataAdmin',type,dataObj); 
+                if(r.success){
+                    showToast('Berhasil');
+                    document.getElementById(formId).reset();
+                    if(type === 'Mapel') masterMapel.push(dataObj.nama);
+                    if(type === 'Tahun') masterTahun.push(dataObj.nama);
+                    if(type === 'Kelas') masterKelas.push(dataObj.nama);
+                    if(type === 'Lembaga') masterLembaga.push({nama: dataObj.nama, target: dataObj.target});
+                    if(type === 'Template') masterTemplate.push({nama: dataObj.nama, link: dataObj.link});
+                    renderAdminLists();
+                    initApp();
+                }else showToast(r.message,'error');
+            }catch(x){showToast('Error','error');} 
+            b.innerHTML=o; b.disabled=false; 
+        }
+
+        async function loadDataBukuAdmin() { 
+            try { 
+                let r=await runGoogleScriptPromise('getUploadedBooksList'); 
+                if(r.success){ 
+                    masterBukuUploaded=r.data; 
+                    applyAdminBukuFilters(); 
+                    isBukuLoaded=true; 
+                } 
+            }catch(e){} 
+        }
+
+        function applyAdminBukuFilters() {
+            const q = document.getElementById('searchBukuAdmin').value.toLowerCase();
+            const fT = document.getElementById('filterAdminTahun').value;
+            const fL = document.getElementById('filterAdminLembaga').value;
+            const fS = document.getElementById('filterAdminStatus').value;
+            
+            filteredBukuData = masterBukuUploaded.filter(b => {
+                return (b.guru.toLowerCase().includes(q) || b.mapel.toLowerCase().includes(q)) &&
+                       (fT === 'Semua' || String(b.tahun) === fT) &&
+                       (fL === 'Semua' || b.lembaga === fL) &&
+                       (fS === 'Semua' || b.status === fS);
+            });
+            currentBukuPage=1; 
+            const chkAll = document.getElementById('checkAllBuku');
+            if(chkAll) chkAll.checked=false; 
+            toggleSelectAllBuku(); 
+            renderTableBukuAdminData();
+        }
+
+        function toggleSelectAllBuku() {
+            const chkAll = document.getElementById('checkAllBuku')?.checked || false;
+            document.querySelectorAll('.buku-checkbox').forEach(cb => cb.checked = chkAll);
+            updateBulkDeleteBtn();
+        }
+
+        function updateBulkDeleteBtn() {
+            const cnt = document.querySelectorAll('.buku-checkbox:checked').length;
+            const btn = document.getElementById('btnBulkDelete');
+            if(btn) {
+                document.getElementById('bulkDeleteCount').innerText = cnt;
+                if(cnt > 0) btn.classList.remove('hidden'); else btn.classList.add('hidden');
+            }
+        }
+
+        function confirmBulkDelete() {
+            const cnt = document.querySelectorAll('.buku-checkbox:checked').length;
+            currentDeleteType = 'BulkBuku'; 
+            currentDeleteName = cnt + ' Dokumen terpilih'; 
+            currentDeleteRows = Array.from(document.querySelectorAll('.buku-checkbox:checked')).map(c=>c.value);
+            document.getElementById('deleteDataTargetName').innerText = currentDeleteName; 
+            modalHelper.open('deleteConfirmModal', 'deleteConfirmModalContent');
+        }
+
         function renderTableBukuAdminData() {
             const tb=document.getElementById('tableBukuBody'); if(!tb)return;
             const s=sortConfigBuku;
@@ -1309,6 +1347,7 @@
             
             tb.innerHTML = d.slice(start, start+rowsPerPage).map((b,i)=>{
                 let encCatatan = encodeURIComponent(b.catatan || '').replace(/'/g, "%27");
+                let encObj = encodeURIComponent(JSON.stringify(b)).replace(/'/g, "%27");
                 let arrUrls = b.url ? b.url.split(" | ") : [];
                 let previewBtns = arrUrls.map((u, j) => `<button onclick="openPreviewPdf('${u}', 'File ${j+1}')" class="text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 p-1 rounded font-bold text-[10px]" title="Preview">P${j+1}</button>`).join(' ');
                 
@@ -1320,6 +1359,7 @@
                     <td class="px-4 py-3 text-center">${getStatusBadge(b.status)}</td>
                     <td class="px-4 py-3 text-center flex justify-center gap-1 flex-wrap">
                         ${previewBtns}
+                        <button onclick="openEditBukuModal('${encObj}')" class="text-amber-500 bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 p-1.5 rounded" title="Edit Dokumen"><i class="fas fa-edit"></i></button>
                         <button onclick="openReviewModal(${b.rowIndex}, '${b.status}', '${encCatatan}')" class="text-brand-600 bg-brand-50 dark:bg-brand-900/30 hover:bg-brand-100 p-1.5 rounded" title="Review & Status"><i class="fas fa-clipboard-check"></i></button>
                         <button onclick="deleteDataAdmin('BukuUploaded', ${b.rowIndex})" class="text-red-500 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 p-1.5 rounded"><i class="fas fa-trash"></i></button>
                     </td>
@@ -1328,6 +1368,15 @@
             const pg = document.getElementById('bukuPagination'); pg.style.display='flex'; 
             document.getElementById('bukuPageInfo').innerText=`Hal ${currentBukuPage} dr ${total}`; document.getElementById('btnPrevBuku').disabled = (currentBukuPage <= 1); document.getElementById('btnNextBuku').disabled = (currentBukuPage >= total);
         }
+
+        function openEditBukuModal(enc) {
+            let d=JSON.parse(decodeURIComponent(enc)); 
+            document.getElementById('editBukuRowIndex').value=d.rowIndex; 
+            const pop=(id,arr,val)=>{const el=document.getElementById(id);if(el){el.innerHTML='<option value="" disabled>-- Pilih --</option>';arr.forEach(i=>{let v=typeof i==='object'?i.nama:i; let opt=new Option(v,v); if(v===val)opt.selected=true; el.add(opt);});}}; 
+            pop('editBukuTahun',masterTahun,d.tahun); pop('editBukuLembaga',masterLembaga,d.lembaga); pop('editBukuGuru',masterGuru,d.guru); pop('editBukuKelas',masterKelas,d.kelas); pop('editBukuMapel',masterMapel,d.mapel); 
+            modalHelper.open('editBukuModal', 'editBukuModalContent'); 
+        }
+        function closeEditBukuModal() { modalHelper.close('editBukuModal', 'editBukuModalContent'); }
 
         function openReviewModal(rIndex, st, catEnc) { 
             document.getElementById('reviewRowIndex').value=rIndex; 
@@ -1352,24 +1401,43 @@
 
         // DOM Content Loaded Listener - Attach All Forms Event Listeners Here
         document.addEventListener('DOMContentLoaded', () => { 
+            // Initialize Application Data
             initApp();
             
+            // Delete Confirm Listener
             document.getElementById('btnConfirmDelete')?.addEventListener('click', async function(){
                 const b=this, o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true;
                 try { let r;
                     if(currentDeleteType==='BukuUploaded') r=await runGoogleScriptPromise('deleteUploadedBook', currentDeleteName);
                     else if(currentDeleteType==='BulkBuku') r=await runGoogleScriptPromise('deleteMultipleUploadedBooks', currentDeleteRows);
                     else r=await runGoogleScriptPromise('deleteDataAdmin', currentDeleteType, currentDeleteName);
-                    if(r.success) { showToast(r.message); closeDeleteModal(); if(currentDeleteType.includes('Buku')){loadDataBukuAdmin(); document.getElementById('btnBulkDelete').classList.add('hidden');} else initApp(); } else showToast(r.message,'error');
+                    
+                    if(r.success) { 
+                        showToast(r.message); closeDeleteModal(); 
+                        if(currentDeleteType.includes('Buku')){loadDataBukuAdmin(); document.getElementById('btnBulkDelete').classList.add('hidden');} 
+                        else {
+                            if(currentDeleteType === 'Mapel') masterMapel = masterMapel.filter(x => x !== currentDeleteName);
+                            if(currentDeleteType === 'Tahun') masterTahun = masterTahun.filter(x => x !== currentDeleteName);
+                            if(currentDeleteType === 'Kelas') masterKelas = masterKelas.filter(x => x !== currentDeleteName);
+                            if(currentDeleteType === 'Lembaga') masterLembaga = masterLembaga.filter(x => (x.nama||x) !== currentDeleteName);
+                            if(currentDeleteType === 'Template') masterTemplate = masterTemplate.filter(x => x.nama !== currentDeleteName);
+                            renderAdminLists();
+                            initApp();
+                        } 
+                    } else showToast(r.message,'error');
                 } catch(e){} b.innerHTML=o; b.disabled=false;
             });
 
+            // Review Buku Form
             document.getElementById('reviewBukuForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitReview'), o=b.innerHTML; b.innerHTML='Menyimpan...'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateBookStatus', document.getElementById('reviewRowIndex').value, document.getElementById('reviewStatus').value, document.getElementById('reviewCatatan').value); if(r.success){showToast('Status Diperbarui'); closeReviewModal(); loadDataBukuAdmin();} }catch(x){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
 
+            // Add Guru Form
             document.getElementById('formAddGuru')?.addEventListener('submit', e=>{ let p=document.getElementById('inputGuruPin').value; if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error'); submitAdminForm(e,'Guru','formAddGuru','btnSaveGuru',{nama:document.getElementById('inputGuruNama').value.trim(), target:parseInt(document.getElementById('inputGuruTarget').value)||1, pin:p, niy:document.getElementById('inputGuruNiy').value, lembaga:document.getElementById('inputGuruLembaga').value, mapel:document.getElementById('inputGuruMapel').value, kelas:document.getElementById('inputGuruKelas').value, email:document.getElementById('inputGuruEmail').value}); });
             
+            // Edit Guru Form
             document.getElementById('editGuruForm')?.addEventListener('submit', async e=>{ e.preventDefault(); let p=document.getElementById('editGuruPin').value; if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error'); const b=document.getElementById('btnSubmitEditGuru'), o=b.innerHTML; b.innerHTML='Loading...'; b.disabled=true; try{ let r=await runGoogleScriptPromise('updateDataAdmin','Guru',document.getElementById('editGuruOldName').value, document.getElementById('editGuruName').value, {target:document.getElementById('editGuruTarget').value, pin:p, niy:document.getElementById('editGuruNiy').value, lembaga:document.getElementById('editGuruLembaga').value, mapel:document.getElementById('editGuruMapel').value, kelas:document.getElementById('editGuruKelas').value, email:document.getElementById('editGuruEmail').value}); if(r.success){showToast('Disimpan');initApp();closeEditGuruModal();}else showToast(r.message,'error');}catch(x){} b.innerHTML=o; b.disabled=false; });
             
+            // Setting Forms
             document.getElementById('formAddMapel')?.addEventListener('submit', e => submitAdminForm(e, 'Mapel', 'formAddMapel', 'btnSaveMapel', { nama: document.getElementById('inputMapelNama').value.trim() }));
             document.getElementById('formAddLembaga')?.addEventListener('submit', e => submitAdminForm(e, 'Lembaga', 'formAddLembaga', 'btnSaveLembaga', { nama: document.getElementById('inputLembagaNama').value.trim(), target: parseInt(document.getElementById('inputLembagaTarget').value)||100 }));
             document.getElementById('formAddTahun')?.addEventListener('submit', e => submitAdminForm(e, 'Tahun', 'formAddTahun', 'btnSaveTahun', { nama: document.getElementById('inputTahunNama').value.trim() }));
@@ -1384,6 +1452,7 @@
             
             document.getElementById('editBukuForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitEditBuku'); const o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; let nd={tahun:document.getElementById('editBukuTahun').value, lembaga:document.getElementById('editBukuLembaga').value, guru:document.getElementById('editBukuGuru').value, kelas:document.getElementById('editBukuKelas').value, mapel:document.getElementById('editBukuMapel').value}; try { let r=await runGoogleScriptPromise('updateUploadedBook',parseInt(document.getElementById('editBukuRowIndex').value),nd); if(r.success){showToast('Berhasil'); closeEditBukuModal(); loadDataBukuAdmin(); fetchDashboardOnly();} else showToast(r.message,'error'); }catch(e){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
             
+            // Login Admin Submit
             document.getElementById('loginForm')?.addEventListener('submit', async function(e){ e.preventDefault(); const b=this.querySelector('button[type="submit"]'), o=b.innerText; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; try{const r=await runGoogleScriptPromise('verifyAdminPassword', document.getElementById('adminPassword').value); b.innerText=o; b.disabled=false; if(r.success){isAdminLoggedIn=true; closeLoginModal(); toggleViewMode('admin');}else{showToast(r.message, 'error');}}catch(e){b.innerText=o; b.disabled=false; showToast('Error Koneksi', 'error')} });
         });
 
