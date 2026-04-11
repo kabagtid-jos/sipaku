@@ -490,7 +490,7 @@
                         <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Tahun Periode</label><select id="tahun" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-medium focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
                             <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Lembaga</label><select id="lembaga" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-bold focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div>
-                            <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">PIN Rahasia <span class="text-red-500">*</span></label><input type="password" id="pinGuru" required placeholder="••••••" maxlength="6" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-bold tracking-widest focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none transition-all text-xs sm:text-sm shadow-inner text-center placeholder:font-medium placeholder:tracking-normal"></div>
+                            <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">PIN Rahasia <span class="text-red-500">*</span></label><input type="password" id="pinGuru" required placeholder="••••••••" maxlength="8" minlength="8" pattern="\d{8}" title="PIN harus terdiri dari 8 digit angka" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-bold tracking-widest focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none transition-all text-xs sm:text-sm shadow-inner text-center placeholder:font-medium placeholder:tracking-normal"></div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
                             <div><label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Kelas Mengajar</label><select id="kelasDropdown" required class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 font-bold focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-brand-500/30 outline-none transition-all text-xs sm:text-sm shadow-inner cursor-pointer"></select></div>
@@ -500,10 +500,10 @@
                             <label class="block text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 sm:mb-2 ml-1">Dokumen Lampiran</label>
                             <div class="flex justify-center px-4 sm:px-6 pt-5 sm:pt-8 pb-5 sm:pb-8 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-2xl sm:rounded-3xl hover:border-brand-500 dark:hover:border-brand-400 hover:bg-brand-50/50 dark:hover:bg-brand-500/5 transition-all duration-300 relative bg-slate-50/50 dark:bg-slate-900/30 group cursor-pointer" onclick="document.getElementById('file').click()">
                                 <div class="space-y-2 sm:space-y-3 text-center">
-                                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl mx-auto flex items-center justify-center shadow-sm border border-slate-200 dark:border-slate-700 group-hover:scale-110 group-hover:shadow-md transition-all duration-300"><i class="fas fa-file-upload text-2xl sm:text-3xl text-brand-500 dark:text-brand-400"></i></div>
-                                    <div class="flex flex-col text-xs sm:text-sm text-slate-600 dark:text-slate-300 justify-center"><span class="font-bold text-slate-800 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Klik untuk memilih file</span><input id="file" name="file" type="file" class="sr-only" required accept=".pdf,.doc,.docx"></div>
-                                    <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium bg-slate-100 dark:bg-slate-800 inline-block px-2 sm:px-3 py-1 rounded-full" id="fileNameDisplay">Maks 500MB</p>
-                                </div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <input type="text" id="inputGuruNiy" required placeholder="NIY..." class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-500/30 outline-none text-xs sm:text-sm font-medium transition-all shadow-sm">
+                                <input type="text" id="inputGuruPin" required placeholder="PIN 8 Digit" maxlength="8" minlength="8" pattern="\d{8}" title="PIN harus terdiri dari 8 digit angka" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-500/30 outline-none text-xs sm:text-sm font-medium transition-all shadow-sm text-center tracking-widest">
+                                <input type="number" id="inputGuruTarget" required min="1" placeholder="Target" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-500/30 outline-none text-xs sm:text-sm font-medium transition-all shadow-sm">
                             </div>
                         </div>
                         <button type="submit" id="btnSubmit" class="w-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 hover:to-blue-700 text-white font-bold py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl shadow-lg shadow-brand-500/30 transition-all duration-300 flex items-center justify-center transform hover:-translate-y-1 mt-4 sm:mt-6 text-sm sm:text-base"><span id="btnText"><i class="fas fa-paper-plane mr-2"></i> Proses Unggah</span></button>
@@ -575,7 +575,7 @@
                             </div>
                             <div>
                                 <label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">PIN</label>
-                                <input type="text" id="editGuruPin" required maxlength="6" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 outline-none text-xs sm:text-sm transition-all shadow-inner font-medium">
+                                <input type="text" id="editGuruPin" required maxlength="8" minlength="8" pattern="\d{8}" title="PIN harus terdiri dari 8 digit angka" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="w-full rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 outline-none text-xs sm:text-sm transition-all shadow-inner font-medium text-center tracking-widest">
                             </div>
                             <div>
                                 <label class="block text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5 ml-1">Target</label>
@@ -747,7 +747,7 @@
                     setTimeout(() => {
                         if (method === 'getInitialData') {
                             resolve({
-                                options: { guru: [{nama:'Ahmad Muzakki, S.Pd', target:2, pin:'123456', niy:'112233'}], lembaga:[{nama:'MI', target: 50},{nama:'MTs', target: 100}], tahun:['2026','2025'], mapel:['Matematika', 'IPA'], kelas:['Kelas X', 'Kelas XI'], pengumuman:'Batas: 30 Juli', deadline:'' },
+                                options: { guru: [{nama:'Ahmad Muzakki, S.Pd', target:2, pin:'12345678', niy:'112233'}], lembaga:[{nama:'MI', target: 50},{nama:'MTs', target: 100}], tahun:['2026','2025'], mapel:['Matematika', 'IPA'], kelas:['Kelas X', 'Kelas XI'], pengumuman:'Batas: 30 Juli', deadline:'' },
                                 stats: { total: 45, lembaga: [{name:'MTs', count:15}, {name:'MI', count:12}], guru: [{name:'Ahmad Muzakki, S.Pd', count:2, target:2, mapels:['Matematika (Kelas X)']}], totalRegisteredLembaga: 2 }
                             });
                         } else if (method === 'getDashboardStats') {
@@ -1244,9 +1244,9 @@
 
             tb.innerHTML = paginatedData.map((i, idx) => {
                 let realIndex = startIndex + idx + 1; let sn = String(i.nama).replace(/'/g, "\\'"); 
-                let extParams = `, ${i.target||1}, '${i.pin||'123456'}', '${i.niy||''}', '${i.lembaga||''}', '${i.mapel||''}', '${i.kelas||''}'`;
+                let extParams = `, ${i.target||1}, '${i.pin||'12345678'}', '${i.niy||''}', '${i.lembaga||''}', '${i.mapel||''}', '${i.kelas||''}'`;
                 let htmlAkses = `<div class="flex flex-col gap-0.5 text-[9px] sm:text-[10px] font-medium"><div class="truncate w-32 sm:w-48" title="${i.lembaga||'Bebas'}"><span class="font-bold text-slate-400 mr-0.5">L:</span> ${i.lembaga||'Bebas'}</div><div class="truncate w-32 sm:w-48" title="${i.kelas||'Bebas'}"><span class="font-bold text-slate-400 mr-0.5">K:</span> ${i.kelas||'Bebas'}</div><div class="truncate w-32 sm:w-48" title="${i.mapel||'Bebas'}"><span class="font-bold text-slate-400 mr-0.5">M:</span> ${i.mapel||'Bebas'}</div></div>`;
-                return `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition border-b border-slate-100/50 dark:border-slate-800/50"><td class="px-4 sm:px-6 py-3 sm:py-5 text-center text-slate-500 font-bold text-xs sm:text-sm">${realIndex}</td><td class="px-4 sm:px-6 py-3 sm:py-5 font-black text-slate-700 dark:text-slate-200 text-xs sm:text-sm">${i.nama}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center font-mono text-brand-600 font-bold text-xs sm:text-sm">${i.niy||'-'}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center font-mono text-slate-500 font-bold text-xs sm:text-sm">${i.pin||'123456'}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><span class="bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg font-black border border-brand-100 dark:border-brand-500/20 text-xs sm:text-sm">${i.target||1}</span></td><td class="px-4 sm:px-6 py-3 sm:py-5">${htmlAkses}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><button onclick="editDataAdmin('Guru', '${sn}'${extParams})" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl mr-1 sm:mr-1.5 transition border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit text-sm"></i></button><button onclick="deleteDataAdmin('Guru', '${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl transition border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash text-sm"></i></button></td></tr>`;
+                return `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition border-b border-slate-100/50 dark:border-slate-800/50"><td class="px-4 sm:px-6 py-3 sm:py-5 text-center text-slate-500 font-bold text-xs sm:text-sm">${realIndex}</td><td class="px-4 sm:px-6 py-3 sm:py-5 font-black text-slate-700 dark:text-slate-200 text-xs sm:text-sm">${i.nama}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center font-mono text-brand-600 font-bold text-xs sm:text-sm">${i.niy||'-'}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center font-mono text-slate-500 font-bold text-xs sm:text-sm">${i.pin||'12345678'}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><span class="bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg font-black border border-brand-100 dark:border-brand-500/20 text-xs sm:text-sm">${i.target||1}</span></td><td class="px-4 sm:px-6 py-3 sm:py-5">${htmlAkses}</td><td class="px-4 sm:px-6 py-3 sm:py-5 text-center"><button onclick="editDataAdmin('Guru', '${sn}'${extParams})" class="text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl mr-1 sm:mr-1.5 transition border border-transparent hover:border-blue-200 dark:hover:border-blue-800"><i class="fas fa-edit text-sm"></i></button><button onclick="deleteDataAdmin('Guru', '${sn}')" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl transition border border-transparent hover:border-red-200 dark:hover:border-red-800"><i class="fas fa-trash text-sm"></i></button></td></tr>`;
             }).join('');
 
             if(paginationCtrl) {
@@ -1334,7 +1334,15 @@
 
             document.getElementById('uploadForm')?.addEventListener('submit', function(e) {
                 e.preventDefault(); const btn = document.getElementById('btnSubmit'); const txt = document.getElementById('btnText'); const box = document.getElementById('alertBox'); const file = document.getElementById('file').files[0];
-                if (!file) return; btn.disabled = true; txt.innerHTML = '<div class="loader" style="border-top-color:#fff"></div>'; box.classList.add('hidden'); document.getElementById('printReceiptBtnContainer').classList.add('hidden');
+                if (!file) return; 
+
+                const pinVal = document.getElementById('pinGuru').value;
+                if (!/^\d{8}$/.test(pinVal)) {
+                    showToast('PIN Guru harus tepat 8 digit angka!', 'error');
+                    return;
+                }
+
+                btn.disabled = true; txt.innerHTML = '<div class="loader" style="border-top-color:#fff"></div>'; box.classList.add('hidden'); document.getElementById('printReceiptBtnContainer').classList.add('hidden');
                 
                 const reader = new FileReader();
                 reader.onload = async function() {
@@ -1363,7 +1371,11 @@
 
             async function submitAdminForm(e, type, formId, btnId, dataObj) { e.preventDefault(); const btn = document.getElementById(btnId); const ori = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true; try { let res = await runGoogleScriptPromise('addDataAdmin', type, dataObj); if(res.success){ showToast('Berhasil'); document.getElementById(formId).reset(); initApp(); } else showToast(res.message, 'error'); } catch(err){ showToast('Error', 'error'); } btn.innerHTML = ori; btn.disabled = false; }
             
-            document.getElementById('formAddGuru')?.addEventListener('submit', e => submitAdminForm(e, 'Guru', 'formAddGuru', 'btnSaveGuru', { nama: document.getElementById('inputGuruNama').value.trim(), target: parseInt(document.getElementById('inputGuruTarget').value)||1, pin: document.getElementById('inputGuruPin').value, niy: document.getElementById('inputGuruNiy').value, lembaga: document.getElementById('inputGuruLembaga').value, mapel: document.getElementById('inputGuruMapel').value, kelas: document.getElementById('inputGuruKelas').value }));
+            document.getElementById('formAddGuru')?.addEventListener('submit', e => {
+                const pinVal = document.getElementById('inputGuruPin').value;
+                if (!/^\d{8}$/.test(pinVal)) { e.preventDefault(); showToast('PIN harus tepat 8 digit angka!', 'error'); return; }
+                submitAdminForm(e, 'Guru', 'formAddGuru', 'btnSaveGuru', { nama: document.getElementById('inputGuruNama').value.trim(), target: parseInt(document.getElementById('inputGuruTarget').value)||1, pin: pinVal, niy: document.getElementById('inputGuruNiy').value, lembaga: document.getElementById('inputGuruLembaga').value, mapel: document.getElementById('inputGuruMapel').value, kelas: document.getElementById('inputGuruKelas').value })
+            });
             document.getElementById('formAddMapel')?.addEventListener('submit', e => submitAdminForm(e, 'Mapel', 'formAddMapel', 'btnSaveMapel', { nama: document.getElementById('inputMapelNama').value.trim() }));
             document.getElementById('formAddLembaga')?.addEventListener('submit', e => submitAdminForm(e, 'Lembaga', 'formAddLembaga', 'btnSaveLembaga', { nama: document.getElementById('inputLembagaNama').value.trim(), target: parseInt(document.getElementById('inputLembagaTarget').value)||100 }));
             document.getElementById('formAddTahun')?.addEventListener('submit', e => submitAdminForm(e, 'Tahun', 'formAddTahun', 'btnSaveTahun', { nama: document.getElementById('inputTahunNama').value.trim() }));
@@ -1374,6 +1386,9 @@
 
             document.getElementById('editGuruForm')?.addEventListener('submit', async e => { 
                 e.preventDefault(); 
+                const pinVal = document.getElementById('editGuruPin').value;
+                if (!/^\d{8}$/.test(pinVal)) { showToast('PIN harus tepat 8 digit angka!', 'error'); return; }
+
                 const b=document.getElementById('btnSubmitEditGuru'); 
                 const o=b.innerHTML; 
                 b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; 
@@ -1381,7 +1396,7 @@
                 try { 
                     let r=await runGoogleScriptPromise('updateDataAdmin','Guru',document.getElementById('editGuruOldName').value,document.getElementById('editGuruName').value.trim(), {
                         target: parseInt(document.getElementById('editGuruTarget').value)||1, 
-                        pin: document.getElementById('editGuruPin').value, 
+                        pin: pinVal, 
                         niy: document.getElementById('editGuruNiy').value, 
                         lembaga: document.getElementById('editGuruLembaga').value, 
                         mapel: document.getElementById('editGuruMapel').value, 
