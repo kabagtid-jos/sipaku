@@ -438,7 +438,7 @@
                                     <div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-50 dark:bg-slate-700 rounded-xl mx-auto flex items-center justify-center mb-3"><i class="fas fa-file-upload text-xl sm:text-2xl text-brand-500"></i></div>
                                     <div class="text-xs sm:text-sm text-slate-600 dark:text-slate-300"><span class="font-bold text-slate-800 dark:text-white">Klik untuk memilih file</span><input id="file" name="file" type="file" multiple class="sr-only" required accept=".pdf,.doc,.docx,.xls,.xlsx"></div>
                                     <div id="fileNameDisplay" class="mt-2 text-xs font-bold text-brand-600 dark:text-brand-400 space-y-1"></div>
-                                    <p class="text-[9px] sm:text-[10px] text-slate-400 mt-2">Maks. 3 File sekaligus (Setiap file &lt; 50MB)</p>
+                                    <p class="text-[9px] sm:text-[10px] text-slate-400 mt-2">Maks. 3 File sekaligus (Setiap file &lt; 500MB)</p>
                                 </div>
                             </div>
                         </div>
@@ -470,6 +470,7 @@
                         <div class="text-center w-full">
                             <input id="fileReupload" type="file" multiple class="sr-only" required accept=".pdf,.doc,.docx,.xls,.xlsx">
                             <div id="reuploadFileNameDisplay" class="text-xs font-bold text-amber-600 dark:text-amber-400 space-y-1"><i class="fas fa-file-upload text-xl mb-2"></i><br>Pilih Maks 3 File Revisi</div>
+                            <p class="text-[9px] sm:text-[10px] text-slate-400 mt-2">Maks. 3 File sekaligus (Setiap file &lt; 500MB)</p>
                         </div>
                     </div>
                     <button type="submit" id="btnSubmitReupload" class="relative w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl shadow-md text-sm overflow-hidden">
@@ -792,9 +793,10 @@
                 if (method === 'getInitialData') { fetchOptions.method='GET'; return fetch(`${SCRIPT_URL}?action=getInitialData&year=${args[0]}&lembaga=${args[1]}`).then(r=>r.json()); }
                 if (method === 'getDashboardStats') { fetchOptions.method='GET'; return fetch(`${SCRIPT_URL}?action=getDashboardStats&year=${args[0]}&lembaga=${args[1]}`).then(r=>r.json()); }
                 if (method === 'getUploadedBooksList') { fetchOptions.method='GET'; return fetch(`${SCRIPT_URL}?action=getUploadedBooksList`).then(r=>r.json()); }
+                
                 if (method === 'verifyAdminPassword') payload.password = args[0];
-                else if (method === 'uploadFileToDrive') payload.payload = args[0];
-                else if (method === 'reuploadFile') payload.payload = args[0];
+                else if (method === 'initMultipleUploads') payload.payload = args[0];
+                else if (method === 'confirmUpload') payload.payload = args[0];
                 else if (method === 'sendBlastReminders') payload.payload = args[0];
                 else if (method === 'archiveData') { /* no args */ }
                 else if (method === 'addDataAdmin') { payload.type = args[0]; payload.payload = args[1]; }
@@ -1016,7 +1018,7 @@
                             let btnRevisi = d.status === 'Ditolak' ? `<button onclick="openReuploadModal(${d.rowIndex})" class="text-white bg-amber-500 hover:bg-amber-600 px-2 py-1 rounded text-[10px] font-bold shadow-sm ml-1" title="Revisi"><i class="fas fa-redo"></i></button>` : '';
                             return `<tr class="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-700/20">
                                 <td class="px-4 py-3"><div class="font-bold">${d.tahun}</div><div class="text-[9px] text-slate-400">${d.timestamp.split(',')[0]}</div></td>
-                                <td class="px-4 py-3"><div class="font-bold">${d.mapel}</div><div class="text-[10px] text-slate-500">${d.kelas} • ${d.lembaga}</div><div class="text-[8px] text-slate-400 truncate w-32 mt-1" title="${d.fileName}">${d.fileName}</div></td>
+                                <td class="px-4 py-3"><div class="font-bold">${d.mapel}</div><div class="text-[10px] text-slate-500">${d.kelas}</div><div class="text-[8px] text-slate-400 truncate w-32 mt-1" title="${d.fileName}">${d.fileName}</div></td>
                                 <td class="px-4 py-3">${getStatusBadge(d.status)}${d.catatan ? `<div class="text-[9px] text-red-500 mt-1 italic bg-red-50 dark:bg-red-500/10 p-1 rounded"><i class="fas fa-info-circle"></i> ${d.catatan}</div>` : ''}</td>
                                 <td class="px-4 py-3 text-center flex justify-center gap-1"><button onclick="reprintReceipt('${encObj}')" class="text-brand-600 bg-brand-50 hover:bg-brand-100 dark:bg-slate-700 p-1.5 rounded" title="Cetak Ulang"><i class="fas fa-print"></i></button>${btnRevisi}</td>
                             </tr>`;
@@ -1103,13 +1105,13 @@
             if(loggedInGuru) loadGuruHistory(); 
         }
 
-        // Multi-File Input Helper
+        // Multi-File Input Helper (Validasi 500MB)
         function handleFileInput(e, displayId) {
             const files = e.target.files; const d = document.getElementById(displayId);
             if(files.length > 3) { d.innerHTML=`<span class="text-red-500 font-bold"><i class="fas fa-exclamation-triangle"></i> Maksimal 3 File!</span>`; e.target.value=""; return; }
             if(files.length > 0) {
                 let html = "<ul>"; for(let i=0; i<files.length; i++) {
-                    if(files[i].size > 500*1024*1024) { d.innerHTML=`<span class="text-red-500 font-bold"><i class="fas fa-times"></i> ${files[i].name} Terlalu Besar!</span>`; e.target.value=""; return; }
+                    if(files[i].size > 524288000) { d.innerHTML=`<span class="text-red-500 font-bold"><i class="fas fa-times"></i> ${files[i].name} Terlalu Besar (> 500MB)!</span>`; e.target.value=""; return; }
                     html += `<li class="truncate"><i class="fas fa-check text-emerald-500 mr-1"></i> ${files[i].name}</li>`;
                 } d.innerHTML = html + "</ul>";
             } else d.innerHTML='Maksimal 500MB / File';
@@ -1117,30 +1119,104 @@
         document.getElementById('file')?.addEventListener('change', e => handleFileInput(e, 'fileNameDisplay'));
         document.getElementById('fileReupload')?.addEventListener('change', e => handleFileInput(e, 'reuploadFileNameDisplay'));
 
-        const fileToBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
-
-        // Submit Form Utama
+        // Submit Form Utama (Dokumen Baru)
         document.getElementById('uploadForm')?.addEventListener('submit', async function(e) {
-            e.preventDefault(); const btn=document.getElementById('btnSubmit'), txt=document.getElementById('btnText'), files=document.getElementById('file').files;
+            e.preventDefault(); const btn=document.getElementById('btnSubmit'), txt=document.getElementById('btnText'), fileInput=document.getElementById('file');
             const pBar=document.getElementById('uploadProgressBar'), btnBg=document.getElementById('btnSubmitBg');
-            if(files.length === 0) return; btn.disabled=true; 
-            btnBg.classList.add('opacity-0'); btn.classList.replace('text-slate-400', 'text-white'); pBar.style.width='0%'; let prog=0; txt.innerHTML=`<i class="fas fa-spinner fa-spin"></i> Menyiapkan... 0%`;
+            if(fileInput.files.length === 0) return; btn.disabled=true; 
+            btnBg.classList.add('opacity-0'); btn.classList.replace('text-slate-400', 'text-white'); pBar.style.width='0%'; txt.innerHTML=`<i class="fas fa-spinner fa-spin"></i> Menghubungkan ke Drive...`;
             
-            let simProg = setInterval(()=>{ prog+=Math.random()*15; if(prog>90)prog=90; pBar.style.width=prog+'%'; txt.innerHTML=`<i class="fas fa-spinner fa-spin"></i> Mengunggah... ${Math.floor(prog)}%`; }, 400);
-
             try {
-                let fileDataArray = [];
-                for (let i = 0; i < files.length; i++) { fileDataArray.push({ name: files[i].name, base64: await fileToBase64(files[i]) }); }
-                const dataObj={ tahun:document.getElementById('tahun').value, lembaga:document.getElementById('lembaga').value, guru:loggedInGuru.nama, kelas:document.getElementById('kelasDropdown').value, mapel:document.getElementById('mapelDropdown').value, files:fileDataArray, pin:loggedInGuru.pin, email:loggedInGuru.email };
-                const res = await runGoogleScriptPromise('uploadFileToDrive', dataObj);
-                
-                clearInterval(simProg); pBar.style.width='100%'; txt.innerHTML=`<i class="fas fa-check-circle"></i> Selesai!`;
+                let filesArr = Array.from(fileInput.files);
+                let fileDataArray = filesArr.map(f => ({ name: f.name, mimeType: f.type, size: f.size }));
+
+                const initData = {
+                    tahun: document.getElementById('tahun').value,
+                    lembaga: document.getElementById('lembaga').value,
+                    guru: loggedInGuru.nama,
+                    kelas: document.getElementById('kelasDropdown').value,
+                    mapel: document.getElementById('mapelDropdown').value,
+                    files: fileDataArray,
+                    pin: loggedInGuru.pin,
+                    email: loggedInGuru.email,
+                    isReupload: false
+                };
+
+                // 1. Minta URL Upload dari Apps Script
+                const initRes = await runGoogleScriptPromise('initMultipleUploads', initData);
+                if(!initRes.success) throw new Error(initRes.message);
+
+                let uploadedFiles = [];
+                let totalSize = filesArr.reduce((acc, f) => acc + f.size, 0);
+                let totalUploaded = 0;
+
+                // 2. Upload file satu per satu langsung ke Google Drive API
+                for(let i=0; i<filesArr.length; i++) {
+                    let file = filesArr[i];
+                    let uploadUrl = initRes.uploadUrls[i].uploadUrl;
+
+                    await new Promise((resolve, reject) => {
+                        let xhr = new XMLHttpRequest();
+                        xhr.open('PUT', uploadUrl, true);
+                        xhr.upload.onprogress = function(e) {
+                            if (e.lengthComputable) {
+                                let currentTotal = totalUploaded + e.loaded;
+                                let pct = Math.floor((currentTotal / totalSize) * 100);
+                                if(pct > 99) pct = 99;
+                                pBar.style.width = pct + '%';
+                                txt.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Mengunggah... ${pct}%`;
+                            }
+                        };
+                        xhr.onload = function() {
+                            if (xhr.status === 200 || xhr.status === 201) {
+                                totalUploaded += file.size;
+                                // Ambil file ID dari response untuk bikin URL view
+                                let responseData = JSON.parse(xhr.responseText);
+                                let fileId = responseData.id;
+                                uploadedFiles.push({ name: file.name, url: `https://drive.google.com/file/d/${fileId}/view` });
+                                resolve();
+                            } else {
+                                reject(new Error("Gagal mengunggah file " + file.name));
+                            }
+                        };
+                        xhr.onerror = function() { reject(new Error("Network Error saat unggah " + file.name)); };
+                        xhr.send(file);
+                    });
+                }
+
+                // 3. Konfirmasi ke Apps Script untuk dicatat di Excel
+                txt.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menyimpan data...`;
+                const confirmData = {
+                    tahun: initData.tahun,
+                    lembaga: initData.lembaga,
+                    guru: initData.guru,
+                    kelas: initData.kelas,
+                    mapel: initData.mapel,
+                    files: uploadedFiles,
+                    email: initRes.email,
+                    isReupload: false
+                };
+
+                const finalRes = await runGoogleScriptPromise('confirmUpload', confirmData);
+
+                pBar.style.width='100%'; txt.innerHTML=`<i class="fas fa-check-circle"></i> Selesai!`;
                 setTimeout(()=>{
                     btn.disabled=false; btnBg.classList.remove('opacity-0'); pBar.style.width='0%'; txt.innerHTML='<i class="fas fa-paper-plane"></i> Kirim Dokumen'; document.getElementById('fileNameDisplay').innerHTML = "";
-                    if(res.success){ showToast(res.message); currentReceiptData={guru:dataObj.guru, lembaga:dataObj.lembaga, mapel:dataObj.mapel, kelas:dataObj.kelas, timestamp:res.timestamp, status: "Menunggu Review"}; window.triggerPrintReceipt(); fetchDashboardOnly(); backToDashboard(); } 
-                    else showToast(res.message, 'error');
+                    if(finalRes.success){ 
+                        showToast(finalRes.message); 
+                        currentReceiptData={guru:confirmData.guru, lembaga:confirmData.lembaga, mapel:confirmData.mapel, kelas:confirmData.kelas, timestamp:finalRes.timestamp, status: "Menunggu Review"}; 
+                        window.triggerPrintReceipt(); 
+                        fetchDashboardOnly(); 
+                        backToDashboard(); 
+                    } 
+                    else showToast(finalRes.message, 'error');
                 }, 1000);
-            } catch(err) { clearInterval(simProg); btn.disabled=false; btnBg.classList.remove('opacity-0'); pBar.style.width='0%'; txt.innerHTML='<i class="fas fa-paper-plane"></i> Kirim Dokumen'; showToast('Error Jaringan','error'); }
+
+            } catch(err) { 
+                console.error(err);
+                btn.disabled=false; btnBg.classList.remove('opacity-0'); pBar.style.width='0%'; txt.innerHTML='<i class="fas fa-paper-plane"></i> Kirim Dokumen'; 
+                showToast(err.message || 'Error saat mengunggah','error'); 
+            }
         });
 
         // Fitur 1: Re-upload Modal & Submit
@@ -1148,25 +1224,72 @@
         function closeReuploadModal() { modalHelper.close('reuploadModal', 'reuploadModalContent'); }
         
         document.getElementById('reuploadForm')?.addEventListener('submit', async function(e) {
-            e.preventDefault(); const btn=document.getElementById('btnSubmitReupload'), txt=document.getElementById('btnTextReupload'), files=document.getElementById('fileReupload').files;
+            e.preventDefault(); const btn=document.getElementById('btnSubmitReupload'), txt=document.getElementById('btnTextReupload'), fileInput=document.getElementById('fileReupload');
             const pBar=document.getElementById('reuploadProgressBar');
-            if(files.length === 0) return; btn.disabled=true; pBar.style.width='0%'; let prog=0; txt.innerHTML=`<i class="fas fa-spinner fa-spin"></i> Menyiapkan... 0%`;
-            let simProg = setInterval(()=>{ prog+=Math.random()*15; if(prog>90)prog=90; pBar.style.width=prog+'%'; txt.innerHTML=`<i class="fas fa-spinner fa-spin"></i> Mengunggah... ${Math.floor(prog)}%`; }, 400);
+            if(fileInput.files.length === 0) return; btn.disabled=true; pBar.style.width='0%'; txt.innerHTML=`<i class="fas fa-spinner fa-spin"></i> Menghubungkan...`;
 
             try {
-                let fileDataArray = []; for (let i = 0; i < files.length; i++) { fileDataArray.push({ name: files[i].name, base64: await fileToBase64(files[i]) }); }
-                const dataObj={ rowIndex: document.getElementById('reuploadRowIndex').value, guru: loggedInGuru.nama, files: fileDataArray };
-                const res = await runGoogleScriptPromise('reuploadFile', dataObj);
-                
-                clearInterval(simProg); pBar.style.width='100%'; txt.innerHTML=`<i class="fas fa-check-circle"></i> Selesai!`;
+                let filesArr = Array.from(fileInput.files);
+                let fileDataArray = filesArr.map(f => ({ name: f.name, mimeType: f.type, size: f.size }));
+
+                const initData = { rowIndex: document.getElementById('reuploadRowIndex').value, guru: loggedInGuru.nama, files: fileDataArray, pin: loggedInGuru.pin, isReupload: true };
+
+                // 1. Minta URL
+                const initRes = await runGoogleScriptPromise('initMultipleUploads', initData);
+                if(!initRes.success) throw new Error(initRes.message);
+
+                let uploadedFiles = [];
+                let totalSize = filesArr.reduce((acc, f) => acc + f.size, 0);
+                let totalUploaded = 0;
+
+                // 2. Upload file
+                for(let i=0; i<filesArr.length; i++) {
+                    let file = filesArr[i];
+                    let uploadUrl = initRes.uploadUrls[i].uploadUrl;
+
+                    await new Promise((resolve, reject) => {
+                        let xhr = new XMLHttpRequest();
+                        xhr.open('PUT', uploadUrl, true);
+                        xhr.upload.onprogress = function(e) {
+                            if (e.lengthComputable) {
+                                let currentTotal = totalUploaded + e.loaded;
+                                let pct = Math.floor((currentTotal / totalSize) * 100);
+                                if(pct > 99) pct = 99;
+                                pBar.style.width = pct + '%';
+                                txt.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Mengunggah... ${pct}%`;
+                            }
+                        };
+                        xhr.onload = function() {
+                            if (xhr.status === 200 || xhr.status === 201) {
+                                totalUploaded += file.size;
+                                let responseData = JSON.parse(xhr.responseText);
+                                uploadedFiles.push({ name: file.name, url: `https://drive.google.com/file/d/${responseData.id}/view` });
+                                resolve();
+                            } else reject(new Error("Gagal mengunggah " + file.name));
+                        };
+                        xhr.onerror = function() { reject(new Error("Network Error")); };
+                        xhr.send(file);
+                    });
+                }
+
+                // 3. Confirm
+                txt.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menyimpan...`;
+                const confirmData = { rowIndex: initData.rowIndex, files: uploadedFiles, isReupload: true };
+                const finalRes = await runGoogleScriptPromise('confirmUpload', confirmData);
+
+                pBar.style.width='100%'; txt.innerHTML=`<i class="fas fa-check-circle"></i> Selesai!`;
                 setTimeout(()=>{
                     btn.disabled=false; pBar.style.width='0%'; txt.innerHTML='Kirim Revisi';
-                    if(res.success){ showToast(res.message); closeReuploadModal(); fetchDashboardOnly(); loadGuruHistory(); } else showToast(res.message, 'error');
+                    if(finalRes.success){ showToast(finalRes.message); closeReuploadModal(); fetchDashboardOnly(); loadGuruHistory(); } else showToast(finalRes.message, 'error');
                 }, 1000);
-            } catch(err) { clearInterval(simProg); btn.disabled=false; pBar.style.width='0%'; txt.innerHTML='Kirim Revisi'; showToast('Error Jaringan','error'); }
+            } catch(err) { 
+                console.error(err);
+                btn.disabled=false; pBar.style.width='0%'; txt.innerHTML='Kirim Revisi'; 
+                showToast(err.message || 'Error Jaringan','error'); 
+            }
         });
 
-        // Admin Dashboards & Stats
+        // Event Listeners Dasar Dashboard & Tabel
         function applyDashboardFilters() { currentYearFilter=document.getElementById('filterTahun').value; currentLembagaFilter=document.getElementById('filterLembaga').value; fetchDashboardOnly(); }
         async function fetchDashboardOnly() { try { const res=await runGoogleScriptPromise('getDashboardStats', currentYearFilter, currentLembagaFilter); renderDashboard(res); }catch(e){} }
         
@@ -1337,42 +1460,6 @@
             document.getElementById('btnNextGuru').disabled = (currentGuruPage >= total);
         }
 
-        function openEditGuruModal(enc) { 
-            let g = JSON.parse(decodeURIComponent(enc));
-            document.getElementById('editGuruOldName').value = g.nama; 
-            document.getElementById('editGuruName').value = g.nama; 
-            document.getElementById('editGuruTarget').value = g.target || 1; 
-            document.getElementById('editGuruPin').value = g.pin || '12345678'; 
-            document.getElementById('editGuruNiy').value = g.niy || ''; 
-            document.getElementById('editGuruEmail').value = g.email || ''; 
-            renderMultiSelect('ms-edit-lembaga','label-ms-edit-lembaga','editGuruLembaga',masterLembaga,'-- Bebas --',g.lembaga); 
-            renderMultiSelect('ms-edit-mapel','label-ms-edit-mapel','editGuruMapel',masterMapel,'-- Bebas --',g.mapel); 
-            renderMultiSelect('ms-edit-kelas','label-ms-edit-kelas','editGuruKelas',masterKelas,'-- Bebas --',g.kelas); 
-            modalHelper.open('editGuruModal','editGuruModalContent', 'editGuruName'); 
-        }
-        function closeEditGuruModal() { modalHelper.close('editGuruModal','editGuruModalContent'); }
-
-        function openGuruDetailModal(n) {
-            if (!lastDashboardData) return; const g = lastDashboardData.guru.find(x => x.name === n); if (!g) return;
-            const masterG = masterGuru.find(x => (x.nama || x) === n); const getAkses = (val) => val && val.trim() !== '' ? val : 'Bebas';
-            document.getElementById('detailGuruAksesLembaga').innerText = getAkses(masterG?.lembaga); document.getElementById('detailGuruAksesLembaga').title = getAkses(masterG?.lembaga);
-            document.getElementById('detailGuruAksesKelas').innerText = getAkses(masterG?.kelas); document.getElementById('detailGuruAksesKelas').title = getAkses(masterG?.kelas);
-            document.getElementById('detailGuruAksesMapel').innerText = getAkses(masterG?.mapel); document.getElementById('detailGuruAksesMapel').title = getAkses(masterG?.mapel);
-
-            let pct = g.target > 0 ? Math.min(100, Math.round((g.count / g.target) * 100)) : 0;
-            document.getElementById('detailGuruName').innerText = g.name; document.getElementById('detailGuruCount').innerText = `${g.count} / ${g.target} Dok.`; document.getElementById('detailGuruPct').innerText = `${pct}%`;
-            document.getElementById('detailGuruBar').style.width = `${pct}%`; document.getElementById('detailGuruBar').className = `${pct === 100 ? 'bg-emerald-500' : (pct >= 50 ? 'bg-brand-500' : 'bg-amber-500')} h-2.5 sm:h-3 rounded-full transition-all duration-500 relative`;
-            document.getElementById('detailGuruMapels').innerHTML = g.mapels?.length ? g.mapels.map(m => `<li class="flex items-start gap-2 bg-slate-50 dark:bg-slate-800 p-2 sm:p-2.5 rounded-lg border border-slate-100 dark:border-slate-700"><i class="fas fa-check-circle text-emerald-500 mt-0.5"></i><span class="font-medium">${m}</span></li>`).join('') : '<li class="text-slate-400 italic text-center p-4">Belum ada file terunggah</li>';
-            modalHelper.open('guruDetailModal', 'guruDetailContent');
-        }
-        function closeGuruDetailModal() { modalHelper.close('guruDetailModal', 'guruDetailContent'); }
-
-        function openEditLembagaModal(name, target) { document.getElementById('editLembagaOldName').value = name; document.getElementById('editLembagaName').value = name; document.getElementById('editLembagaTarget').value = target; modalHelper.open('editLembagaModal', 'editLembagaModalContent', 'editLembagaName'); }
-        function closeEditLembagaModal() { modalHelper.close('editLembagaModal', 'editLembagaModalContent'); }
-        function openEditDataModal(t, name) { document.getElementById('editDataType').value=t; document.getElementById('editDataOldName').value=name; document.getElementById('editDataName').value=name; document.getElementById('editDataModalTitle').innerText=`Edit ${t}`; modalHelper.open('editDataModal', 'editDataModalContent', 'editDataName'); }
-        function closeEditDataModal() { modalHelper.close('editDataModal', 'editDataModalContent'); }
-        function editDataAdmin(type, name, target) { if (type === 'Lembaga') openEditLembagaModal(name, target); else openEditDataModal(type, name); }
-
         function renderTableBukuAdminData() {
             const tb=document.getElementById('tableBukuBody'); if(!tb)return;
             const s=sortConfigBuku;
@@ -1405,6 +1492,62 @@
             document.getElementById('bukuPageInfo').innerText=`Hal ${currentBukuPage} dr ${total}`; document.getElementById('btnPrevBuku').disabled = (currentBukuPage <= 1); document.getElementById('btnNextBuku').disabled = (currentBukuPage >= total);
         }
 
+        // Open Modal functions
+        function openEditGuruModal(enc) { 
+            let g = JSON.parse(decodeURIComponent(enc));
+            document.getElementById('editGuruOldName').value = g.nama; 
+            document.getElementById('editGuruName').value = g.nama; 
+            document.getElementById('editGuruTarget').value = g.target || 1; 
+            document.getElementById('editGuruPin').value = g.pin || '12345678'; 
+            document.getElementById('editGuruNiy').value = g.niy || ''; 
+            document.getElementById('editGuruEmail').value = g.email || ''; 
+            renderMultiSelect('ms-edit-lembaga','label-ms-edit-lembaga','editGuruLembaga',masterLembaga,'-- Bebas --',g.lembaga); 
+            renderMultiSelect('ms-edit-mapel','label-ms-edit-mapel','editGuruMapel',masterMapel,'-- Bebas --',g.mapel); 
+            renderMultiSelect('ms-edit-kelas','label-ms-edit-kelas','editGuruKelas',masterKelas,'-- Bebas --',g.kelas); 
+            modalHelper.open('editGuruModal','editGuruModalContent', 'editGuruName'); 
+        }
+        function closeEditGuruModal() { modalHelper.close('editGuruModal','editGuruModalContent'); }
+
+        function openGuruDetailModal(n) {
+            if (!lastDashboardData) return; 
+            const g = lastDashboardData.guru.find(x => x.name === n); 
+            if (!g) return;
+            
+            const masterG = masterGuru.find(x => (x.nama || x) === n); 
+            const getAkses = (val) => val && val.trim() !== '' ? val : 'Bebas';
+            
+            document.getElementById('detailGuruAksesLembaga').innerText = getAkses(masterG?.lembaga); 
+            document.getElementById('detailGuruAksesLembaga').title = getAkses(masterG?.lembaga);
+            document.getElementById('detailGuruAksesKelas').innerText = getAkses(masterG?.kelas); 
+            document.getElementById('detailGuruAksesKelas').title = getAkses(masterG?.kelas);
+            document.getElementById('detailGuruAksesMapel').innerText = getAkses(masterG?.mapel); 
+            document.getElementById('detailGuruAksesMapel').title = getAkses(masterG?.mapel);
+
+            let pct = g.target > 0 ? Math.min(100, Math.round((g.count / g.target) * 100)) : 0;
+            document.getElementById('detailGuruName').innerText = g.name; 
+            document.getElementById('detailGuruCount').innerText = `${g.count} / ${g.target} Dok.`; 
+            document.getElementById('detailGuruPct').innerText = `${pct}%`;
+            
+            let bar = document.getElementById('detailGuruBar');
+            bar.style.width = `${pct}%`; 
+            bar.className = `${pct === 100 ? 'bg-emerald-500' : (pct >= 50 ? 'bg-brand-500' : 'bg-amber-500')} h-2.5 sm:h-3 rounded-full transition-all duration-700 relative`;
+            
+            document.getElementById('detailGuruMapels').innerHTML = g.mapels?.length ? 
+                g.mapels.map(m => `<li class="flex items-start gap-2 bg-slate-50 dark:bg-slate-800 p-2 sm:p-2.5 rounded-lg border border-slate-100 dark:border-slate-700"><i class="fas fa-check-circle text-emerald-500 mt-0.5"></i><span class="font-medium">${m}</span></li>`).join('') : 
+                '<li class="text-slate-400 italic text-center p-4">Belum ada file terunggah</li>';
+                
+            modalHelper.open('guruDetailModal', 'guruDetailContent');
+        }
+        function closeGuruDetailModal() { modalHelper.close('guruDetailModal', 'guruDetailContent'); }
+
+        function openEditLembagaModal(name, target) { document.getElementById('editLembagaOldName').value = name; document.getElementById('editLembagaName').value = name; document.getElementById('editLembagaTarget').value = target; modalHelper.open('editLembagaModal', 'editLembagaModalContent', 'editLembagaName'); }
+        function closeEditLembagaModal() { modalHelper.close('editLembagaModal', 'editLembagaModalContent'); }
+        
+        function openEditDataModal(t, name) { document.getElementById('editDataType').value=t; document.getElementById('editDataOldName').value=name; document.getElementById('editDataName').value=name; document.getElementById('editDataModalTitle').innerText=`Edit ${t}`; modalHelper.open('editDataModal', 'editDataModalContent', 'editDataName'); }
+        function closeEditDataModal() { modalHelper.close('editDataModal', 'editDataModalContent'); }
+        
+        function editDataAdmin(type, name, target) { if (type === 'Lembaga') openEditLembagaModal(name, target); else openEditDataModal(type, name); }
+
         function openEditBukuModal(enc) {
             let d=JSON.parse(decodeURIComponent(enc)); 
             document.getElementById('editBukuRowIndex').value=d.rowIndex; 
@@ -1435,12 +1578,10 @@
         function deleteDataAdmin(t, n) { currentDeleteType=t; currentDeleteName=n; document.getElementById('deleteDataTargetName').innerText=`Hapus: ${n}`; modalHelper.open('deleteConfirmModal', 'deleteConfirmModalContent'); }
         function closeDeleteModal() { modalHelper.close('deleteConfirmModal','deleteConfirmModalContent'); }
 
-        // DOM Content Loaded Listener - Attach All Forms Event Listeners Here
+        // DOM Content Loaded Listener - Memastikan script terhubung dengan form saat dirender
         document.addEventListener('DOMContentLoaded', () => { 
-            // Initialize Application Data
             initApp();
             
-            // Delete Confirm Listener
             document.getElementById('btnConfirmDelete')?.addEventListener('click', async function(){
                 const b=this, o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true;
                 try { let r;
@@ -1457,23 +1598,24 @@
                             if(currentDeleteType === 'Kelas') masterKelas = masterKelas.filter(x => x !== currentDeleteName);
                             if(currentDeleteType === 'Lembaga') masterLembaga = masterLembaga.filter(x => (x.nama||x) !== currentDeleteName);
                             if(currentDeleteType === 'Template') masterTemplate = masterTemplate.filter(x => x.nama !== currentDeleteName);
-                            renderAdminLists();
-                            initApp();
+                            renderAdminLists(); initApp();
                         } 
                     } else showToast(r.message,'error');
                 } catch(e){} b.innerHTML=o; b.disabled=false;
             });
 
-            // Review Buku Form
             document.getElementById('reviewBukuForm')?.addEventListener('submit', async e => { e.preventDefault(); const b=document.getElementById('btnSubmitReview'), o=b.innerHTML; b.innerHTML='Menyimpan...'; b.disabled=true; try { let r=await runGoogleScriptPromise('updateBookStatus', document.getElementById('reviewRowIndex').value, document.getElementById('reviewStatus').value, document.getElementById('reviewCatatan').value); if(r.success){showToast('Status Diperbarui'); closeReviewModal(); loadDataBukuAdmin();} }catch(x){showToast('Error','error');} b.innerHTML=o; b.disabled=false; });
 
-            // Add Guru Form
-            document.getElementById('formAddGuru')?.addEventListener('submit', e=>{ let p=document.getElementById('inputGuruPin').value; if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error'); submitAdminForm(e,'Guru','formAddGuru','btnSaveGuru',{nama:document.getElementById('inputGuruNama').value.trim(), target:parseInt(document.getElementById('inputGuruTarget').value)||1, pin:p, niy:document.getElementById('inputGuruNiy').value, lembaga:document.getElementById('inputGuruLembaga').value, mapel:document.getElementById('inputGuruMapel').value, kelas:document.getElementById('inputGuruKelas').value, email:document.getElementById('inputGuruEmail').value}); });
+            document.getElementById('formAddGuru')?.addEventListener('submit', e=>{ e.preventDefault(); let p=document.getElementById('inputGuruPin').value; if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error'); 
+                const b=document.getElementById('btnSaveGuru'), o=b.innerHTML; b.innerHTML='Loading...'; b.disabled=true; 
+                runGoogleScriptPromise('addDataAdmin', 'Guru', {nama:document.getElementById('inputGuruNama').value.trim(), target:parseInt(document.getElementById('inputGuruTarget').value)||1, pin:p, niy:document.getElementById('inputGuruNiy').value, lembaga:document.getElementById('inputGuruLembaga').value, mapel:document.getElementById('inputGuruMapel').value, kelas:document.getElementById('inputGuruKelas').value, email:document.getElementById('inputGuruEmail').value})
+                .then(r=>{ if(r.success){showToast('Guru Ditambah'); document.getElementById('formAddGuru').reset(); updateMSLabel('ms-add-lembaga','label-ms-add-lembaga','-- Bebas --'); updateMSLabel('ms-add-mapel','label-ms-add-mapel','-- Bebas --'); updateMSLabel('ms-add-kelas','label-ms-add-kelas','-- Bebas --'); initApp();}else showToast(r.message,'error'); b.innerHTML=o; b.disabled=false; }).catch(()=>{showToast('Error','error'); b.innerHTML=o; b.disabled=false;});
+            });
             
-            // Edit Guru Form
             document.getElementById('editGuruForm')?.addEventListener('submit', async e=>{ e.preventDefault(); let p=document.getElementById('editGuruPin').value; if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error'); const b=document.getElementById('btnSubmitEditGuru'), o=b.innerHTML; b.innerHTML='Loading...'; b.disabled=true; try{ let r=await runGoogleScriptPromise('updateDataAdmin','Guru',document.getElementById('editGuruOldName').value, document.getElementById('editGuruName').value, {target:document.getElementById('editGuruTarget').value, pin:p, niy:document.getElementById('editGuruNiy').value, lembaga:document.getElementById('editGuruLembaga').value, mapel:document.getElementById('editGuruMapel').value, kelas:document.getElementById('editGuruKelas').value, email:document.getElementById('editGuruEmail').value}); if(r.success){showToast('Disimpan');initApp();closeEditGuruModal();}else showToast(r.message,'error');}catch(x){} b.innerHTML=o; b.disabled=false; });
             
-            // Setting Forms
+            const submitAdminForm = (e, t, fid, bid, payload) => { e.preventDefault(); const b=document.getElementById(bid), o=b.innerHTML; b.innerHTML='<i class="fas fa-spinner fa-spin"></i>'; b.disabled=true; runGoogleScriptPromise('addDataAdmin', t, payload).then(r=>{if(r.success){showToast('Berhasil Ditambah'); document.getElementById(fid).reset(); initApp();}else showToast(r.message,'error'); b.innerHTML=o; b.disabled=false;}).catch(()=>{showToast('Error','error'); b.innerHTML=o; b.disabled=false;}); }
+            
             document.getElementById('formAddMapel')?.addEventListener('submit', e => submitAdminForm(e, 'Mapel', 'formAddMapel', 'btnSaveMapel', { nama: document.getElementById('inputMapelNama').value.trim() }));
             document.getElementById('formAddLembaga')?.addEventListener('submit', e => submitAdminForm(e, 'Lembaga', 'formAddLembaga', 'btnSaveLembaga', { nama: document.getElementById('inputLembagaNama').value.trim(), target: parseInt(document.getElementById('inputLembagaTarget').value)||100 }));
             document.getElementById('formAddTahun')?.addEventListener('submit', e => submitAdminForm(e, 'Tahun', 'formAddTahun', 'btnSaveTahun', { nama: document.getElementById('inputTahunNama').value.trim() }));
