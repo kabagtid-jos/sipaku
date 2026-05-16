@@ -93,6 +93,9 @@ const ban=document.getElementById('pengumumanBanner');if(ban){if(masterPengumuma
 const fFilter=(id,arr,def)=>{const el=document.getElementById(id);if(el){let h=def?`<option value="Semua">${def}</option>`:'';arr.forEach(i=>{let v=i.nama||i;h+=`<option value="${v}">${v}</option>`});el.innerHTML=h;}};
 fFilter('filterTahun',masterTahun.sort((a,b)=>b-a),null);fFilter('filterLembaga',masterLembaga,'Semua Lembaga');
 fFilter('filterAdminTahun',masterTahun.sort((a,b)=>b-a),'Semua Tahun');fFilter('filterAdminLembaga',masterLembaga,'Semua Lembaga');
+renderMultiSelect('ms-add-lembaga','label-ms-add-lembaga','inputGuruLembaga',masterLembaga,'-- Bebas Lembaga --','');
+renderMultiSelect('ms-add-mapel','label-ms-add-mapel','inputGuruMapel',masterMapel,'-- Bebas Mapel --','');
+renderMultiSelect('ms-add-kelas','label-ms-add-kelas','inputGuruKelas',masterKelas,'-- Bebas Kelas --','');
 filteredGuruData=[...masterGuru];renderTableGuruAdminData();renderAdminLists();startDeadlineTimer();renderDashboard(stats);
 }
 function renderAdminLists(){
