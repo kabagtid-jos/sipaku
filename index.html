@@ -312,7 +312,7 @@ function goToUploadForm(){
 if(!loggedInGuru)return;
 document.getElementById('step2Dashboard').classList.add('hidden');document.getElementById('step3Form').classList.remove('hidden');document.getElementById('step3Form').classList.add('flex');
 document.getElementById('guru').value=loggedInGuru.nama;
-const pop=(id,arr,cons,def)=>{const el=document.getElementById(id);el.innerHTML=`<option value="" disabled selected>${def}</option>`;let sc=cons?String(cons).trim():"";let alwd=(sc===""||sc.toLowerCase()==="bebas"||sc.toLowerCase()==="semua"||sc==="-")?[]:sc.split(',').map(s=>s.trim().toLowerCase());let cnt=0,last="";arr.forEach(i=>{let v=i.nama||i;let sv=String(v).trim().toLowerCase();if(alwd.length===0||alwd.includes(sv)){let cleanV=String(v).trim();el.add(new Option(cleanV,cleanV));cnt++;last=cleanV;}});if(cnt===1)el.value=last;};
+const pop=(id,arr,cons,def)=>{const el=document.getElementById(id);el.innerHTML=`<option value="" disabled selected>${def}</option>`;let sc=cons?String(cons).trim():"";let alwd=(sc===""||sc.toLowerCase()==="bebas"||sc.toLowerCase()==="semua"||sc==="-")?[]:sc.split(',').map(s=>s.trim().toLowerCase());let cnt=0,last="";arr.forEach(i=>{let v=String(i.nama||i).trim();if(!v)return;let sv=v.toLowerCase();if(alwd.length===0||alwd.includes(sv)){el.add(new Option(v,v));cnt++;last=v;}});if(cnt===1)el.value=last;};
 pop('lembaga',masterLembaga,loggedInGuru.lembaga,'-- Lembaga --');pop('kelasDropdown',masterKelas,loggedInGuru.kelas,'-- Kelas --');pop('mapelDropdown',masterMapel,loggedInGuru.mapel,'-- Mapel --');
 const elT=document.getElementById('tahun');elT.innerHTML='<option value="" disabled selected>-- Tahun --</option>';masterTahun.forEach(t=>elT.add(new Option(t,t)));
 }
@@ -716,7 +716,7 @@ function editDataAdmin(type,name,target){if(type==='Lembaga')openEditLembagaModa
 function openEditBukuModal(enc){
 let d=JSON.parse(decodeURIComponent(enc));
 document.getElementById('editBukuRowIndex').value=d.rowIndex;
-const pop=(id,arr,val)=>{const el=document.getElementById(id);if(el){el.innerHTML='<option value="" disabled>-- Pilih --</option>';arr.forEach(i=>{let v=typeof i==='object'?i.nama:i;let opt=new Option(v,v);if(v===val)opt.selected=true;el.add(opt);});}};
+const pop=(id,arr,val)=>{const el=document.getElementById(id);if(el){el.innerHTML='<option value="" disabled>-- Pilih --</option>';arr.forEach(i=>{let v=String(typeof i==='object'?i.nama:i).trim();if(!v)return;let opt=new Option(v,v);if(v===String(val).trim())opt.selected=true;el.add(opt);});}};
 pop('editBukuTahun',masterTahun,d.tahun);pop('editBukuLembaga',masterLembaga,d.lembaga);pop('editBukuGuru',masterGuru,d.guru);pop('editBukuKelas',masterKelas,d.kelas);pop('editBukuMapel',masterMapel,d.mapel);
 modalHelper.open('editBukuModal','editBukuModalContent');
 }
