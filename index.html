@@ -211,7 +211,10 @@ const fL=document.getElementById('filterAdminLembaga')?.value||'Semua';
 const norm=v=>String(v||'').trim().toLowerCase();
 const selectedBooks=masterBukuUploaded.filter(b=>(fT==='Semua'||String(b.tahun)===fT)&&(fL==='Semua'||b.lembaga===fL));
 const bookTeacherNames=[...new Set(selectedBooks.map(b=>String(b.guru||'').trim()).filter(Boolean))];
-let reportGurus=(fL==='Semua')?masterGuru:bookTeacherNames.map(n=>masterGuru.find(g=>norm(g.nama)===norm(n))||{nama:n,target:0});
+const uploadedTeacherSet=new Set(bookTeacherNames.map(norm));
+const hasSelectedLembaga=g=>{let raw=String(g.lembaga||'').trim();if(!raw||['bebas','semua','-'].includes(raw.toLowerCase()))return false;return raw.split(',').map(norm).includes(norm(fL));};
+let reportGurus=(fL==='Semua')?masterGuru:masterGuru.filter(g=>hasSelectedLembaga(g)||uploadedTeacherSet.has(norm(g.nama)));
+if(fL!=='Semua')bookTeacherNames.forEach(n=>{if(!reportGurus.some(g=>norm(g.nama)===norm(n)))reportGurus.push({nama:n,target:0});});
 const countGuru=name=>{
 let rows=selectedBooks.filter(b=>norm(b.guru)===norm(name));
 let keys=new Set();
