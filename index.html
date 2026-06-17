@@ -309,6 +309,57 @@ btn.innerHTML='<i class="fas fa-plus-circle"></i> Unggah Dokumen Baru';
 if(notice){notice.className='hidden';notice.innerHTML='';}
 }
 }
+function getAllowedUploadValues(arr,constraint){
+let raw=constraint?String(constraint).trim():"";
+let all=(raw===""||raw.toLowerCase()==="bebas"||raw.toLowerCase()==="semua"||raw==="-");
+let allowed=all?[]:raw.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+return (arr||[]).map(i=>String(i.nama||i).trim()).filter(v=>v&&(all||allowed.includes(v.toLowerCase())));
+}
+function ensureGuruUploadStatusPanel(){
+const wrapper=document.querySelector('#step2Dashboard .overflow-y-auto');
+if(!wrapper)return null;
+let panel=document.getElementById('guruUploadStatusPanel');
+if(!panel){
+panel=document.createElement('div');
+panel.id='guruUploadStatusPanel';
+const anchor=document.getElementById('guruTemplateArea');
+if(anchor)wrapper.insertBefore(panel,anchor);
+else wrapper.appendChild(panel);
+}
+return panel;
+}
+function getCurrentUploadPeriod(){
+const selected=document.getElementById('filterTahun')?.value;
+if(selected&&selected!=='Semua')return selected;
+if(masterTahun.map(String).includes(String(currentYearFilter)))return String(currentYearFilter);
+return masterTahun.length?String(masterTahun[0]):String(currentYearFilter||new Date().getFullYear());
+}
+function renderGuruUploadStatus(history){
+const panel=ensureGuruUploadStatusPanel();
+if(!panel||!loggedInGuru)return;
+const periode=getCurrentUploadPeriod();
+const allowedMapel=getAllowedUploadValues(masterMapel,loggedInGuru.mapel);
+const allowedKelas=getAllowedUploadValues(masterKelas,loggedInGuru.kelas);
+if(allowedMapel.length===0||allowedKelas.length===0){
+panel.className='mb-4 sm:mb-6 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl sm:rounded-2xl p-4 text-amber-700 dark:text-amber-300 text-xs sm:text-sm font-bold';
+panel.innerHTML='<i class="fas fa-info-circle mr-1.5"></i> Data mapel atau kelas belum tersedia, sehingga daftar status upload belum bisa dibuat.';
+return;
+}
+const expected=[];
+allowedKelas.forEach(k=>allowedMapel.forEach(m=>expected.push({kelas:k,mapel:m,key:`${m.toLowerCase()}||${k.toLowerCase()}`})));
+const uploadedMap=new Map();
+(history||[]).forEach(d=>{
+if(String(d.tahun||'')!==String(periode))return;
+if(d.status==='File Tidak Ditemukan')return;
+const key=`${String(d.mapel||'').trim().toLowerCase()}||${String(d.kelas||'').trim().toLowerCase()}`;
+if(key!=='||')uploadedMap.set(key,d);
+});
+const uploaded=expected.filter(i=>uploadedMap.has(i.key)).map(i=>({...i,status:uploadedMap.get(i.key).status||'Menunggu Review'}));
+const missing=expected.filter(i=>!uploadedMap.has(i.key));
+const renderItem=(i,type)=>`<li class="flex items-start gap-2 p-2 rounded-lg ${type==='done'?'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300':'bg-slate-50 dark:bg-slate-900/40 text-slate-600 dark:text-slate-300'} border ${type==='done'?'border-emerald-100 dark:border-emerald-500/20':'border-slate-100 dark:border-slate-700'}"><i class="fas ${type==='done'?'fa-check-circle text-emerald-500':'fa-circle text-slate-300 dark:text-slate-600'} mt-0.5 text-xs"></i><span class="min-w-0"><span class="font-black">${i.mapel}</span><span class="block text-[10px] opacity-70">${i.kelas}${i.status?` - ${i.status}`:''}</span></span></li>`;
+panel.className='mb-4 sm:mb-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl sm:rounded-2xl shadow-sm overflow-hidden';
+panel.innerHTML=`<div class="p-3 sm:p-4 border-b border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"><div><h4 class="text-xs sm:text-sm font-black text-slate-800 dark:text-white"><i class="fas fa-clipboard-list mr-1.5 text-brand-500"></i>Status Upload Mapel</h4><p class="text-[10px] sm:text-xs text-slate-500 font-semibold mt-0.5">Periode ${periode}. Cek mapel dan kelas yang sudah/belum diunggah.</p></div><div class="flex gap-2 text-[10px] font-black"><span class="px-2 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100">Sudah ${uploaded.length}</span><span class="px-2 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-100">Belum ${missing.length}</span></div></div><div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 sm:p-4"><div><h5 class="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-2">Sudah Terupload</h5><ul class="space-y-1.5 max-h-44 overflow-y-auto custom-scrollbar">${uploaded.length?uploaded.map(i=>renderItem(i,'done')).join(''):'<li class="text-xs text-slate-400 italic p-3 text-center">Belum ada yang terupload.</li>'}</ul></div><div><h5 class="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-2">Belum Terupload</h5><ul class="space-y-1.5 max-h-44 overflow-y-auto custom-scrollbar">${missing.length?missing.map(i=>renderItem(i,'missing')).join(''):'<li class="text-xs text-emerald-600 font-bold p-3 text-center bg-emerald-50 rounded-lg border border-emerald-100"><i class="fas fa-check-circle mr-1"></i>Semua sudah terupload.</li>'}</ul></div></div>`;
+}
 async function loadGuruHistory(){
 const tBody=document.getElementById('tableRiwayatGuru');
 if(!tBody||!loggedInGuru)return;
@@ -316,6 +367,7 @@ tBody.innerHTML='<tr><td colspan="4" class="text-center py-4"><i class="fas fa-s
 try{
 let res=await runGoogleScriptPromise('getGuruHistory',loggedInGuru.nama,loggedInGuru.pin);
 if(res.success){
+renderGuruUploadStatus(res.data||[]);
 if(res.data.length>0){
 tBody.innerHTML=res.data.map(d=>{
 let encObj=encodeURIComponent(JSON.stringify(d)).replace(/'/g,"%27");
@@ -328,7 +380,7 @@ tBody.innerHTML='<tr><td colspan="4" class="text-center py-6 text-slate-400 ital
 }else{
 tBody.innerHTML=`<tr><td colspan="4" class="text-center py-6 text-red-500 font-bold"><i class="fas fa-exclamation-triangle mb-2 text-2xl"></i><br>Error System: ${res.message}<br><span class="text-[10px] font-normal text-slate-500 mt-2 block">PENTING: Jika error ini muncul, Anda WAJIB melakukan Deploy "New Version" di Apps Script.</span></td></tr>`;
 }
-}catch(e){tBody.innerHTML='<tr><td colspan="4" class="text-center py-4 text-red-500">Gagal mengambil riwayat. Periksa koneksi Anda.</td></tr>';}
+}catch(e){renderGuruUploadStatus([]);tBody.innerHTML='<tr><td colspan="4" class="text-center py-4 text-red-500">Gagal mengambil riwayat. Periksa koneksi Anda.</td></tr>';}
 }
 async function verifyNiy(){
 const niy=document.getElementById('inputCheckNiy').value.trim(),pin=document.getElementById('inputCheckPin').value;const btn=document.getElementById('btnVerifyNiy');
@@ -657,14 +709,22 @@ document.querySelectorAll('.anim-pct').forEach(el=>animateValueElement(el,0,pars
 },50);
 }
 async function loadDataBukuAdmin(){
+const tb=document.getElementById('tableBukuBody');
+if(tb)tb.innerHTML='<tr><td colspan="6" class="text-center py-8 text-slate-400"><i class="fas fa-spinner fa-spin mr-2"></i>Memuat data...</td></tr>';
 try{
 let r=await runGoogleScriptPromise('getUploadedBooksList');
 if(r.success){
-masterBukuUploaded=r.data;
+masterBukuUploaded=r.data||[];
 applyAdminBukuFilters();
 isBukuLoaded=true;
+}else{
+masterBukuUploaded=[];
+if(tb)tb.innerHTML=`<tr><td colspan="6" class="text-center py-8 text-red-500 font-bold">Gagal memuat data: ${r.message||'Respons tidak valid'}</td></tr>`;
 }
-}catch(e){}
+}catch(e){
+masterBukuUploaded=[];
+if(tb)tb.innerHTML='<tr><td colspan="6" class="text-center py-8 text-red-500 font-bold">Gagal memuat data. Periksa koneksi atau deploy Apps Script.</td></tr>';
+}
 }
 function applyAdminBukuFilters(){
 const q=document.getElementById('searchBukuAdmin').value.toLowerCase();
