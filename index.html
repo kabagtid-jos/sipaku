@@ -323,6 +323,12 @@ let all=(raw===""||raw.toLowerCase()==="bebas"||raw.toLowerCase()==="semua"||raw
 let allowed=all?[]:raw.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
 return (arr||[]).map(i=>String(i.nama||i).trim()).filter(v=>v&&(all||allowed.includes(v.toLowerCase())));
 }
+function normalizeUploadText(value){
+return String(value||'').replace(/^'+/,'').trim().toLowerCase().replace(/\s+/g,' ');
+}
+function createUploadKey(lembaga,mapel,kelas){
+return `${normalizeUploadText(lembaga)}||${normalizeUploadText(mapel)}||${normalizeUploadText(kelas)}`;
+}
 function parseTeacherUploadTargets(text){
 let targets=[];let seen=new Set();let raw=String(text||'').trim();
 if(!raw)return targets;
@@ -333,7 +339,7 @@ let mapelText=parts.shift().trim(),lembaga='';
 ['>','|','='].some(sep=>{if(!mapelText.includes(sep))return false;let chunks=mapelText.split(sep);lembaga=chunks.shift().trim();mapelText=chunks.join(sep).trim();return true;});
 let mapel=mapelText;
 parts.join(':').split(',').forEach(k=>{
-let kelas=k.trim();let key=`${lembaga.toLowerCase()}||${mapel.toLowerCase()}||${kelas.toLowerCase()}`;
+let kelas=k.trim();let key=createUploadKey(lembaga,mapel,kelas);
 if(mapel&&kelas&&!seen.has(key)){seen.add(key);targets.push({lembaga,mapel,kelas,key});}
 });
 });
@@ -344,7 +350,7 @@ let pairs=parseTeacherUploadTargets(guru?.uploadTargets);
 if(pairs.length)return pairs;
 let allowedMapel=getAllowedUploadValues(masterMapel,guru?.mapel);
 let allowedKelas=getAllowedUploadValues(masterKelas,guru?.kelas);
-allowedKelas.forEach(k=>allowedMapel.forEach(m=>pairs.push({kelas:k,mapel:m,key:`${m.toLowerCase()}||${k.toLowerCase()}`})));
+allowedKelas.forEach(k=>allowedMapel.forEach(m=>pairs.push({lembaga:'',kelas:k,mapel:m,key:createUploadKey('',m,k)})));
 return pairs;
 }
 function ensureGuruTargetFields(){
@@ -390,8 +396,10 @@ const uploadedMap=new Map();
 (history||[]).forEach(d=>{
 if(String(d.tahun||'')!==String(periode))return;
 if(d.status==='File Tidak Ditemukan')return;
-const key=`${String(d.mapel||'').trim().toLowerCase()}||${String(d.kelas||'').trim().toLowerCase()}`;
-if(key!=='||')uploadedMap.set(key,d);
+const exactKey=createUploadKey(d.lembaga,d.mapel,d.kelas);
+const looseKey=createUploadKey('',d.mapel,d.kelas);
+if(exactKey!=='||||')uploadedMap.set(exactKey,d);
+if(looseKey!=='||||')uploadedMap.set(looseKey,d);
 });
 const uploaded=expected.filter(i=>uploadedMap.has(i.key)).map(i=>({...i,status:uploadedMap.get(i.key).status||'Menunggu Review'}));
 const missing=expected.filter(i=>!uploadedMap.has(i.key));
