@@ -329,10 +329,12 @@ if(!raw)return targets;
 raw.split(';').forEach(block=>{
 let parts=block.includes(':')?block.split(':'):block.split('|');
 if(parts.length<2)return;
-let mapel=parts.shift().trim();
+let mapelText=parts.shift().trim(),lembaga='';
+['>','|','='].some(sep=>{if(!mapelText.includes(sep))return false;let chunks=mapelText.split(sep);lembaga=chunks.shift().trim();mapelText=chunks.join(sep).trim();return true;});
+let mapel=mapelText;
 parts.join(':').split(',').forEach(k=>{
-let kelas=k.trim();let key=`${mapel.toLowerCase()}||${kelas.toLowerCase()}`;
-if(mapel&&kelas&&!seen.has(key)){seen.add(key);targets.push({mapel,kelas,key});}
+let kelas=k.trim();let key=`${lembaga.toLowerCase()}||${mapel.toLowerCase()}||${kelas.toLowerCase()}`;
+if(mapel&&kelas&&!seen.has(key)){seen.add(key);targets.push({lembaga,mapel,kelas,key});}
 });
 });
 return targets;
@@ -348,11 +350,11 @@ return pairs;
 function ensureGuruTargetFields(){
 const addAnchor=document.getElementById('inputGuruKelas')?.closest('.bg-white, .dark\\:bg-slate-800');
 if(addAnchor&&!document.getElementById('inputGuruUploadTargets')){
-addAnchor.insertAdjacentHTML('afterend','<div class="mb-4 bg-emerald-50/60 dark:bg-emerald-900/10 border border-emerald-200/60 dark:border-emerald-700/30 p-4 rounded-xl"><label class="block text-[10px] sm:text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase mb-1">Target Upload Spesifik</label><textarea id="inputGuruUploadTargets" rows="2" placeholder="Contoh: Akidah Akhlak: 10,11; Fikih Praktik: 7,8,10,11" class="w-full rounded-xl border border-emerald-200 dark:border-emerald-700 px-3 py-2 bg-white dark:bg-slate-800 text-xs outline-none"></textarea><p class="text-[10px] text-slate-500 mt-1 font-medium">Isi jika mapel tidak berlaku untuk semua kelas. Jika kosong, sistem memakai akses mapel x kelas seperti biasa.</p></div>');
+addAnchor.insertAdjacentHTML('afterend','<div class="mb-4 bg-emerald-50/60 dark:bg-emerald-900/10 border border-emerald-200/60 dark:border-emerald-700/30 p-4 rounded-xl"><label class="block text-[10px] sm:text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase mb-1">Target Upload Spesifik</label><textarea id="inputGuruUploadTargets" rows="2" placeholder="Contoh: Akidah Akhlak: 10,11; Fikih Praktik: 7,8 atau SMA Unggulan Abu Zairi | Bahasa Inggris: 10,11; MA Abu Zairi | Bahasa Inggris: 12" class="w-full rounded-xl border border-emerald-200 dark:border-emerald-700 px-3 py-2 bg-white dark:bg-slate-800 text-xs outline-none"></textarea><p class="text-[10px] text-slate-500 mt-1 font-medium">Untuk guru lintas lembaga, awali target dengan nama lembaga lalu tanda | agar rekap per lembaga akurat.</p></div>');
 }
 const editAnchor=document.getElementById('editGuruKelas')?.closest('.bg-slate-50, .dark\\:bg-slate-900');
 if(editAnchor&&!document.getElementById('editGuruUploadTargets')){
-editAnchor.insertAdjacentHTML('afterend','<div class="bg-emerald-50/60 dark:bg-emerald-900/10 border border-emerald-200/60 dark:border-emerald-700/30 p-4 rounded-xl"><label class="block text-[10px] sm:text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase mb-1">Target Upload Spesifik</label><textarea id="editGuruUploadTargets" rows="2" placeholder="Akidah Akhlak: 10,11; Fikih Praktik: 7,8,10,11" class="w-full rounded-xl border border-emerald-200 dark:border-emerald-700 px-3 py-2 bg-white dark:bg-slate-800 text-xs outline-none"></textarea></div>');
+editAnchor.insertAdjacentHTML('afterend','<div class="bg-emerald-50/60 dark:bg-emerald-900/10 border border-emerald-200/60 dark:border-emerald-700/30 p-4 rounded-xl"><label class="block text-[10px] sm:text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase mb-1">Target Upload Spesifik</label><textarea id="editGuruUploadTargets" rows="2" placeholder="Akidah Akhlak: 10,11; Fikih Praktik: 7,8 atau SMA Unggulan Abu Zairi | Bahasa Inggris: 10,11; MA Abu Zairi | Bahasa Inggris: 12" class="w-full rounded-xl border border-emerald-200 dark:border-emerald-700 px-3 py-2 bg-white dark:bg-slate-800 text-xs outline-none"></textarea></div>');
 }
 }
 function ensureGuruUploadStatusPanel(){
@@ -479,15 +481,16 @@ const pop=(id,arr,cons,def)=>{const el=document.getElementById(id);el.innerHTML=
 pop('lembaga',masterLembaga,loggedInGuru.lembaga,'-- Lembaga --');
 const targetPairs=parseTeacherUploadTargets(loggedInGuru.uploadTargets);
 if(targetPairs.length){
-const mapelEl=document.getElementById('mapelDropdown'),kelasEl=document.getElementById('kelasDropdown');
+const mapelEl=document.getElementById('mapelDropdown'),kelasEl=document.getElementById('kelasDropdown'),lembagaEl=document.getElementById('lembaga');
+const norm=v=>String(v||'').trim().toLowerCase().replace(/\s+/g,' ');
+const compact=v=>norm(v).replace(/[^a-z0-9]/g,'');
+const matchLembaga=(a,b)=>!a||!b||norm(a)===norm(b)||compact(a)===compact(b)||norm(a).includes(norm(b))||norm(b).includes(norm(a));
 const uniq=arr=>[...new Set(arr.map(v=>String(v||'').trim()).filter(Boolean))];
 const fill=(el,values,label,keep)=>{el.innerHTML=`<option value="" disabled selected>${label}</option>`;values.forEach(v=>el.add(new Option(v,v)));if(keep&&values.includes(keep))el.value=keep;else if(values.length===1)el.value=values[0];};
-const allMapel=uniq(targetPairs.map(p=>p.mapel)),allKelas=uniq(targetPairs.map(p=>p.kelas));
-const syncKelas=()=>{let keep=kelasEl.value;let selected=mapelEl.value;let values=selected?uniq(targetPairs.filter(p=>p.mapel===selected).map(p=>p.kelas)):allKelas;fill(kelasEl,values,'-- Kelas --',keep);};
-const syncMapel=()=>{let keep=mapelEl.value;let selected=kelasEl.value;let values=selected?uniq(targetPairs.filter(p=>p.kelas===selected).map(p=>p.mapel)):allMapel;fill(mapelEl,values,'-- Mapel --',keep);};
-fill(mapelEl,allMapel,'-- Mapel --','');fill(kelasEl,allKelas,'-- Kelas --','');
-mapelEl.onchange=syncKelas;kelasEl.onchange=syncMapel;
-if(mapelEl.value)syncKelas();if(kelasEl.value)syncMapel();
+const scopedPairs=()=>targetPairs.some(p=>p.lembaga)?targetPairs.filter(p=>matchLembaga(p.lembaga,lembagaEl.value)):targetPairs;
+const refreshTargets=()=>{let pairs=scopedPairs(),km=mapelEl.value,kk=kelasEl.value;let mapels=uniq((kk?pairs.filter(p=>p.kelas===kk):pairs).map(p=>p.mapel));fill(mapelEl,mapels,'-- Mapel --',km);let kelas=uniq((mapelEl.value?pairs.filter(p=>p.mapel===mapelEl.value):pairs).map(p=>p.kelas));fill(kelasEl,kelas,'-- Kelas --',kk);};
+mapelEl.onchange=refreshTargets;kelasEl.onchange=refreshTargets;lembagaEl.onchange=refreshTargets;
+refreshTargets();
 }else{pop('kelasDropdown',masterKelas,loggedInGuru.kelas,'-- Kelas --');pop('mapelDropdown',masterMapel,loggedInGuru.mapel,'-- Mapel --');document.getElementById('mapelDropdown').onchange=null;document.getElementById('kelasDropdown').onchange=null;}
 const elT=document.getElementById('tahun');elT.innerHTML='<option value="" disabled selected>-- Tahun --</option>';masterTahun.forEach(t=>elT.add(new Option(t,t)));
 }
