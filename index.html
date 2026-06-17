@@ -31,7 +31,7 @@ let lembagaChartInstance=null;let isAdminLoggedIn=false;let currentYearFilter=ne
 let masterGuru=[];let masterLembaga=[];let masterTahun=[];let masterMapel=[];let masterKelas=[];let masterTemplate=[];let masterPengumuman="";let masterBukuUploaded=[];
 let masterDeadline="";let deadlineInterval=null;let isDeadlinePassed=false;let lastDashboardData=null;let currentActiveGurus=[];
 let currentDeleteType='';let currentDeleteName='';let currentDeleteRows=[];let currentReceiptData=null;
-let isBukuLoaded=false;let loggedInGuru=null;
+let isBukuLoaded=false;let loggedInGuru=null;let guruUploadGateNotified=false;
 let currentBukuPage=1;const rowsPerPage=10;let sortConfigBuku={key:'timestamp',asc:false};let filteredBukuData=[];
 let currentGuruPage=1;let sortConfigGuru={key:'nama',asc:true};let filteredGuruData=[];
 function animateValueElement(obj,start,end,duration){
@@ -231,6 +231,7 @@ function closeModal(){modalHelper.close('uploadModal','uploadModalContent');}
 function closeLoginModal(){modalHelper.close('loginModal','loginModalContent');}
 function resetUploadFormUI(){
 loggedInGuru=null;
+guruUploadGateNotified=false;
 const form=document.getElementById('uploadForm');
 if(form)form.reset();
 const inputNiy=document.getElementById('inputCheckNiy');
@@ -243,6 +244,62 @@ if(element)element.classList.add('hidden');
 });
 const step1=document.getElementById('step1Niy');
 if(step1)step1.classList.remove('hidden');
+}
+function getLoggedInGuruProgress(){
+if(!loggedInGuru)return null;
+const name=String(loggedInGuru.nama||'').trim().toLowerCase();
+const row=lastDashboardData?.guru?.find(g=>String(g.name||'').trim().toLowerCase()===name);
+const target=Number(row?.target||loggedInGuru.target)||1;
+const count=Number(row?.count)||0;
+const pct=target>0?Math.min(100,Math.round((count/target)*100)):0;
+return {count,target,pct,isComplete:target>0&&count>=target};
+}
+function isLoggedInGuruUploadComplete(){
+const progress=getLoggedInGuruProgress();
+return !!progress?.isComplete;
+}
+async function ensureLoggedInGuruProgress(){
+if(!loggedInGuru)return;
+const name=String(loggedInGuru.nama||'').trim().toLowerCase();
+const hasRow=lastDashboardData?.guru?.some(g=>String(g.name||'').trim().toLowerCase()===name);
+if(!hasRow)await fetchDashboardOnly();
+}
+function showUploadCompletePopup(){
+showToast('Upload sudah selesai. Fitur upload dikunci.');
+}
+function updateGuruUploadGate(opts={}){
+const btn=document.getElementById('btnGuruUploadNew')||document.querySelector('#step2Dashboard button[onclick="goToUploadForm()"]');
+if(!btn)return;
+if(!btn.id)btn.id='btnGuruUploadNew';
+const progress=getLoggedInGuruProgress();
+const wrapper=document.querySelector('#step2Dashboard .overflow-y-auto');
+let notice=document.getElementById('uploadCompleteNotice');
+if(!notice&&wrapper){
+notice=document.createElement('div');
+notice.id='uploadCompleteNotice';
+const anchor=wrapper.firstElementChild;
+if(anchor&&anchor.nextSibling)wrapper.insertBefore(notice,anchor.nextSibling);
+else wrapper.appendChild(notice);
+}
+if(progress?.isComplete){
+btn.disabled=false;
+btn.setAttribute('aria-disabled','true');
+btn.onclick=showUploadCompletePopup;
+btn.className='relative z-10 w-full sm:w-auto bg-emerald-600 text-white px-5 py-2.5 sm:py-3 rounded-xl font-bold shadow-md shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 text-sm cursor-not-allowed';
+btn.innerHTML='<i class="fas fa-check-circle"></i> Upload Selesai';
+if(notice){
+notice.className='mb-4 sm:mb-6 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 text-emerald-700 dark:text-emerald-300 shadow-sm';
+notice.innerHTML=`<div class="flex items-start gap-3"><div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center shrink-0"><i class="fas fa-check-circle text-lg"></i></div><div><h4 class="font-black text-sm sm:text-base mb-1">Upload Selesai</h4><p class="text-xs sm:text-sm font-semibold leading-relaxed">Target buku sudah terpenuhi (${progress.count} / ${progress.target}). Form upload ditutup agar tidak ada unggahan ganda.</p></div></div>`;
+}
+if(opts.notify&&!guruUploadGateNotified){showUploadCompletePopup();guruUploadGateNotified=true;}
+}else{
+btn.disabled=false;
+btn.removeAttribute('aria-disabled');
+btn.onclick=goToUploadForm;
+btn.className='relative z-10 w-full sm:w-auto bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 sm:py-3 rounded-xl font-bold shadow-md shadow-brand-500/20 transition-all flex items-center justify-center gap-2 text-sm transform hover:-translate-y-0.5';
+btn.innerHTML='<i class="fas fa-plus-circle"></i> Unggah Dokumen Baru';
+if(notice){notice.className='hidden';notice.innerHTML='';}
+}
 }
 async function loadGuruHistory(){
 const tBody=document.getElementById('tableRiwayatGuru');
@@ -272,6 +329,7 @@ btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Loading...';
 const found=masterGuru.find(g=>String(g.niy)===niy&&g.pin===pin);
 if(found){
 loggedInGuru=found;
+guruUploadGateNotified=false;
 document.getElementById('dashNamaGuru').innerText=found.nama;
 document.getElementById('dashInfoGuru').innerHTML=`<i class="fas fa-id-badge"></i> NIY: ${found.niy} &nbsp; <i class="fas fa-envelope ml-2"></i> ${found.email||'-'}`;
 const tArea=document.getElementById('guruTemplateArea');const tList=document.getElementById('guruTemplateList');
@@ -280,6 +338,8 @@ tArea.classList.remove('hidden');
 tList.innerHTML=masterTemplate.map(t=>`<a href="${t.link}" target="_blank" class="bg-indigo-50 hover:bg-indigo-100 dark:bg-slate-700/50 border border-indigo-200 dark:border-indigo-500/30 p-2 rounded-lg flex items-center gap-2 text-xs font-bold text-indigo-700 dark:text-indigo-300 transition-all shadow-sm"><i class="fas fa-file-word text-lg"></i> <span class="truncate">${t.nama}</span></a>`).join('');
 }else{tArea.classList.add('hidden');}
 document.getElementById('step1Niy').classList.add('hidden');document.getElementById('step2Dashboard').classList.remove('hidden');document.getElementById('step2Dashboard').classList.add('flex');
+await ensureLoggedInGuruProgress();
+updateGuruUploadGate({notify:true});
 loadGuruHistory();
 }else{showToast('NIY atau PIN Salah!','error');}
 btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Masuk';
@@ -313,6 +373,7 @@ window.triggerPrintReceipt();
 };
 function goToUploadForm(){
 if(!loggedInGuru)return;
+if(isLoggedInGuruUploadComplete()){updateGuruUploadGate({notify:true});return;}
 document.getElementById('step2Dashboard').classList.add('hidden');document.getElementById('step3Form').classList.remove('hidden');document.getElementById('step3Form').classList.add('flex');
 document.getElementById('guru').value=loggedInGuru.nama;
 const pop=(id,arr,cons,def)=>{const el=document.getElementById(id);el.innerHTML=`<option value="" disabled selected>${def}</option>`;let sc=cons?String(cons).trim():"";let alwd=(sc===""||sc.toLowerCase()==="bebas"||sc.toLowerCase()==="semua"||sc==="-")?[]:sc.split(',').map(s=>s.trim().toLowerCase());let cnt=0,last="";arr.forEach(i=>{let v=String(i.nama||i).trim();if(!v)return;let sv=v.toLowerCase();if(alwd.length===0||alwd.includes(sv)){el.add(new Option(v,v));cnt++;last=v;}});if(cnt===1)el.value=last;};
@@ -419,14 +480,15 @@ isReupload:false
 };
 const finalRes=await runGoogleScriptPromise('confirmUpload',confirmData);
 pBar.style.width='100%';txt.innerHTML=`<i class="fas fa-check-circle"></i> Selesai!`;
-setTimeout(()=>{
+setTimeout(async()=>{
 btn.disabled=false;btnBg.classList.remove('opacity-0');pBar.style.width='0%';txt.innerHTML='<i class="fas fa-paper-plane"></i> Kirim Dokumen';document.getElementById('fileNameDisplay').innerHTML="";
 if(finalRes.success){
 showToast(finalRes.message);
 currentReceiptData={guru:confirmData.guru,lembaga:confirmData.lembaga,mapel:confirmData.mapel,kelas:confirmData.kelas,timestamp:finalRes.timestamp,status:"Menunggu Review"};
 window.triggerPrintReceipt();
-fetchDashboardOnly();
+await fetchDashboardOnly();
 backToDashboard();
+updateGuruUploadGate({notify:true});
 }
 else showToast(finalRes.message,'error');
 },1000);
