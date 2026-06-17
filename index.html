@@ -469,16 +469,20 @@ if(isLoggedInGuruUploadComplete()){updateGuruUploadGate({notify:true});return;}
 setUploadModalCompact(false);
 document.getElementById('step2Dashboard').classList.add('hidden');document.getElementById('step3Form').classList.remove('hidden');document.getElementById('step3Form').classList.add('flex');
 document.getElementById('guru').value=loggedInGuru.nama;
-const pop=(id,arr,cons,def)=>{const el=document.getElementById(id);el.innerHTML=`<option value="" disabled selected>${def}</option>`;let sc=cons?String(cons).trim():"";let alwd=(sc===""||sc.toLowerCase()==="bebas"||sc.toLowerCase()==="semua"||sc==="-")?[]:sc.split(',').map(s=>s.trim().toLowerCase());let cnt=0,last="";arr.forEach(i=>{let v=String(i.nama||i).trim();if(!v)return;let sv=v.toLowerCase();if(alwd.length===0||alwd.includes(sv)){el.add(new Option(v,v));cnt++;last=v;}});if(cnt===1)el.value=last;};
+const pop=(id,arr,cons,def)=>{const el=document.getElementById(id);el.innerHTML=`<option value="" disabled selected>${def}</option>`;let sc=cons?String(cons).trim():"";let alwd=(sc===""||sc.toLowerCase()==="bebas"||sc.toLowerCase()==="semua"||sc==="-")?[]:sc.split(',').map(s=>s.trim().toLowerCase());let cnt=0,last="";arr.forEach(i=>{let v=String(i.nama||i).trim();if(!v)return;let sv=v.toLowerCase();if(alwd.length===0||alwd.includes(sv)){el.add(new Option(v,v));cnt++;last=v;}});if(cnt===0&&sc&&alwd.length===1){el.add(new Option(sc,sc));el.value=sc;}else if(cnt===1)el.value=last;};
 pop('lembaga',masterLembaga,loggedInGuru.lembaga,'-- Lembaga --');
 const targetPairs=parseTeacherUploadTargets(loggedInGuru.uploadTargets);
 if(targetPairs.length){
 const mapelEl=document.getElementById('mapelDropdown'),kelasEl=document.getElementById('kelasDropdown');
-let uniqueMapel=[...new Set(targetPairs.map(p=>p.mapel))];
-mapelEl.innerHTML='<option value="" disabled selected>-- Mapel --</option>';uniqueMapel.forEach(m=>mapelEl.add(new Option(m,m)));
-const refreshKelas=()=>{let selected=mapelEl.value;let kelas=[...new Set(targetPairs.filter(p=>p.mapel===selected).map(p=>p.kelas))];kelasEl.innerHTML='<option value="" disabled selected>-- Kelas --</option>';kelas.forEach(k=>kelasEl.add(new Option(k,k)));if(kelas.length===1)kelasEl.value=kelas[0];};
-mapelEl.onchange=refreshKelas;if(uniqueMapel.length===1){mapelEl.value=uniqueMapel[0];refreshKelas();}
-}else{pop('kelasDropdown',masterKelas,loggedInGuru.kelas,'-- Kelas --');pop('mapelDropdown',masterMapel,loggedInGuru.mapel,'-- Mapel --');document.getElementById('mapelDropdown').onchange=null;}
+const uniq=arr=>[...new Set(arr.map(v=>String(v||'').trim()).filter(Boolean))];
+const fill=(el,values,label,keep)=>{el.innerHTML=`<option value="" disabled selected>${label}</option>`;values.forEach(v=>el.add(new Option(v,v)));if(keep&&values.includes(keep))el.value=keep;else if(values.length===1)el.value=values[0];};
+const allMapel=uniq(targetPairs.map(p=>p.mapel)),allKelas=uniq(targetPairs.map(p=>p.kelas));
+const syncKelas=()=>{let keep=kelasEl.value;let selected=mapelEl.value;let values=selected?uniq(targetPairs.filter(p=>p.mapel===selected).map(p=>p.kelas)):allKelas;fill(kelasEl,values,'-- Kelas --',keep);};
+const syncMapel=()=>{let keep=mapelEl.value;let selected=kelasEl.value;let values=selected?uniq(targetPairs.filter(p=>p.kelas===selected).map(p=>p.mapel)):allMapel;fill(mapelEl,values,'-- Mapel --',keep);};
+fill(mapelEl,allMapel,'-- Mapel --','');fill(kelasEl,allKelas,'-- Kelas --','');
+mapelEl.onchange=syncKelas;kelasEl.onchange=syncMapel;
+if(mapelEl.value)syncKelas();if(kelasEl.value)syncMapel();
+}else{pop('kelasDropdown',masterKelas,loggedInGuru.kelas,'-- Kelas --');pop('mapelDropdown',masterMapel,loggedInGuru.mapel,'-- Mapel --');document.getElementById('mapelDropdown').onchange=null;document.getElementById('kelasDropdown').onchange=null;}
 const elT=document.getElementById('tahun');elT.innerHTML='<option value="" disabled selected>-- Tahun --</option>';masterTahun.forEach(t=>elT.add(new Option(t,t)));
 }
 function backToDashboard(){
