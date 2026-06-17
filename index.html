@@ -204,29 +204,18 @@ try{let r=await runGoogleScriptPromise('archiveData');if(r.success){showToast(r.
 }else showToast("Proses arsip dibatalkan.");
 }
 };
-window.printAdminReport=function(){
-if(!isBukuLoaded&&masterBukuUploaded.length===0)return showToast("Tunggu data dokumen dimuat","error");
+window.printAdminReport=async function(){
+if(!masterGuru.length)return showToast("Tunggu data guru dimuat","error");
 const fT=document.getElementById('filterAdminTahun')?.value||'Semua';
 const fL=document.getElementById('filterAdminLembaga')?.value||'Semua';
-const norm=v=>String(v||'').trim().toLowerCase();
 const selectedBooks=masterBukuUploaded.filter(b=>(fT==='Semua'||String(b.tahun)===fT)&&(fL==='Semua'||b.lembaga===fL));
-const bookTeacherNames=[...new Set(selectedBooks.map(b=>String(b.guru||'').trim()).filter(Boolean))];
-const uploadedTeacherSet=new Set(bookTeacherNames.map(norm));
-const hasSelectedLembaga=g=>{let raw=String(g.lembaga||'').trim();if(!raw||['bebas','semua','-'].includes(raw.toLowerCase()))return false;return raw.split(',').map(norm).includes(norm(fL));};
-let reportGurus=(fL==='Semua')?masterGuru:masterGuru.filter(g=>hasSelectedLembaga(g)||uploadedTeacherSet.has(norm(g.nama)));
-if(fL!=='Semua')bookTeacherNames.forEach(n=>{if(!reportGurus.some(g=>norm(g.nama)===norm(n)))reportGurus.push({nama:n,target:0});});
-const countGuru=name=>{
-let rows=selectedBooks.filter(b=>norm(b.guru)===norm(name));
-let keys=new Set();
-rows.forEach(b=>{let k=`${norm(b.mapel)}||${norm(b.kelas)}`;if(k!=='||')keys.add(k);});
-return keys.size||rows.length;
-};
-const targetGuru=g=>parseTeacherUploadTargets(g.uploadTargets).length||Number(g.target)||1;
-let rows=reportGurus.map(g=>{let target=targetGuru(g),count=countGuru(g.nama);return {name:g.nama,target,count,pct:target>0?Math.min(100,Math.round((count/target)*100)):0};}).sort((a,b)=>a.name.localeCompare(b.name));
+let reportStats=null;
+try{reportStats=await runGoogleScriptPromise('getDashboardStats',fT,fL);}catch(e){return showToast("Gagal mengambil rekap lembaga","error");}
+let rows=(reportStats.guru||[]).map(g=>({name:g.name,target:g.target,count:g.count,pct:g.target>0?Math.min(100,Math.round((g.count/g.target)*100)):0})).sort((a,b)=>a.name.localeCompare(b.name));
 document.getElementById('reportYear').innerText=`${fT==='Semua'?'Semua Tahun':fT} | ${fL==='Semua'?'Semua Lembaga':fL}`;
 document.getElementById('reportDate').innerText=new Date().toLocaleString('id-ID');
-document.getElementById('reportTotalDoc').innerText=selectedBooks.length;
-document.getElementById('reportTotalLembaga').innerText=fL==='Semua'?[...new Set(selectedBooks.map(b=>b.lembaga).filter(Boolean))].length:(selectedBooks.length?1:0);
+document.getElementById('reportTotalDoc').innerText=reportStats.total||selectedBooks.length;
+document.getElementById('reportTotalLembaga').innerText=reportStats.totalRegisteredLembaga||0;
 let tbody="";
 rows.forEach((g,idx)=>{
 tbody+=`<tr><td class="border border-black px-3 py-2 text-center">${idx+1}</td><td class="border border-black px-3 py-2">${g.name}</td><td class="border border-black px-3 py-2 text-center">${g.target}</td><td class="border border-black px-3 py-2 text-center">${g.count}</td><td class="border border-black px-3 py-2 text-center font-bold">${g.pct}%</td></tr>`;
