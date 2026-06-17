@@ -97,6 +97,7 @@ fFilter('filterAdminTahun',masterTahun.sort((a,b)=>b-a),'Semua Tahun');fFilter('
 renderMultiSelect('ms-add-lembaga','label-ms-add-lembaga','inputGuruLembaga',masterLembaga,'-- Bebas Lembaga --','');
 renderMultiSelect('ms-add-mapel','label-ms-add-mapel','inputGuruMapel',masterMapel,'-- Bebas Mapel --','');
 renderMultiSelect('ms-add-kelas','label-ms-add-kelas','inputGuruKelas',masterKelas,'-- Bebas Kelas --','');
+ensureGuruTargetFields();
 filteredGuruData=[...masterGuru];renderTableGuruAdminData();renderAdminLists();startDeadlineTimer();renderDashboard(stats);
 }
 function renderAdminLists(){
@@ -257,7 +258,8 @@ function getLoggedInGuruProgress(){
 if(!loggedInGuru)return null;
 const name=String(loggedInGuru.nama||'').trim().toLowerCase();
 const row=lastDashboardData?.guru?.find(g=>String(g.name||'').trim().toLowerCase()===name);
-const target=Number(row?.target||loggedInGuru.target)||1;
+const specificTarget=parseTeacherUploadTargets(loggedInGuru.uploadTargets).length;
+const target=Number(row?.target||specificTarget||loggedInGuru.target)||1;
 const count=Number(row?.count)||0;
 const pct=target>0?Math.min(100,Math.round((count/target)*100)):0;
 return {count,target,pct,isComplete:target>0&&count>=target};
@@ -315,6 +317,38 @@ let all=(raw===""||raw.toLowerCase()==="bebas"||raw.toLowerCase()==="semua"||raw
 let allowed=all?[]:raw.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
 return (arr||[]).map(i=>String(i.nama||i).trim()).filter(v=>v&&(all||allowed.includes(v.toLowerCase())));
 }
+function parseTeacherUploadTargets(text){
+let targets=[];let seen=new Set();let raw=String(text||'').trim();
+if(!raw)return targets;
+raw.split(';').forEach(block=>{
+let parts=block.includes(':')?block.split(':'):block.split('|');
+if(parts.length<2)return;
+let mapel=parts.shift().trim();
+parts.join(':').split(',').forEach(k=>{
+let kelas=k.trim();let key=`${mapel.toLowerCase()}||${kelas.toLowerCase()}`;
+if(mapel&&kelas&&!seen.has(key)){seen.add(key);targets.push({mapel,kelas,key});}
+});
+});
+return targets;
+}
+function getTeacherExpectedTargets(guru){
+let pairs=parseTeacherUploadTargets(guru?.uploadTargets);
+if(pairs.length)return pairs;
+let allowedMapel=getAllowedUploadValues(masterMapel,guru?.mapel);
+let allowedKelas=getAllowedUploadValues(masterKelas,guru?.kelas);
+allowedKelas.forEach(k=>allowedMapel.forEach(m=>pairs.push({kelas:k,mapel:m,key:`${m.toLowerCase()}||${k.toLowerCase()}`})));
+return pairs;
+}
+function ensureGuruTargetFields(){
+const addAnchor=document.getElementById('inputGuruKelas')?.closest('.bg-white, .dark\\:bg-slate-800');
+if(addAnchor&&!document.getElementById('inputGuruUploadTargets')){
+addAnchor.insertAdjacentHTML('afterend','<div class="mb-4 bg-emerald-50/60 dark:bg-emerald-900/10 border border-emerald-200/60 dark:border-emerald-700/30 p-4 rounded-xl"><label class="block text-[10px] sm:text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase mb-1">Target Upload Spesifik</label><textarea id="inputGuruUploadTargets" rows="2" placeholder="Contoh: Akidah Akhlak: 10,11; Fikih Praktik: 7,8,10,11" class="w-full rounded-xl border border-emerald-200 dark:border-emerald-700 px-3 py-2 bg-white dark:bg-slate-800 text-xs outline-none"></textarea><p class="text-[10px] text-slate-500 mt-1 font-medium">Isi jika mapel tidak berlaku untuk semua kelas. Jika kosong, sistem memakai akses mapel x kelas seperti biasa.</p></div>');
+}
+const editAnchor=document.getElementById('editGuruKelas')?.closest('.bg-slate-50, .dark\\:bg-slate-900');
+if(editAnchor&&!document.getElementById('editGuruUploadTargets')){
+editAnchor.insertAdjacentHTML('afterend','<div class="bg-emerald-50/60 dark:bg-emerald-900/10 border border-emerald-200/60 dark:border-emerald-700/30 p-4 rounded-xl"><label class="block text-[10px] sm:text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase mb-1">Target Upload Spesifik</label><textarea id="editGuruUploadTargets" rows="2" placeholder="Akidah Akhlak: 10,11; Fikih Praktik: 7,8,10,11" class="w-full rounded-xl border border-emerald-200 dark:border-emerald-700 px-3 py-2 bg-white dark:bg-slate-800 text-xs outline-none"></textarea></div>');
+}
+}
 function ensureGuruUploadStatusPanel(){
 const wrapper=document.querySelector('#step2Dashboard .overflow-y-auto');
 if(!wrapper)return null;
@@ -338,15 +372,12 @@ function renderGuruUploadStatus(history){
 const panel=ensureGuruUploadStatusPanel();
 if(!panel||!loggedInGuru)return;
 const periode=getCurrentUploadPeriod();
-const allowedMapel=getAllowedUploadValues(masterMapel,loggedInGuru.mapel);
-const allowedKelas=getAllowedUploadValues(masterKelas,loggedInGuru.kelas);
-if(allowedMapel.length===0||allowedKelas.length===0){
+const expected=getTeacherExpectedTargets(loggedInGuru);
+if(expected.length===0){
 panel.className='mb-4 sm:mb-6 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl sm:rounded-2xl p-4 text-amber-700 dark:text-amber-300 text-xs sm:text-sm font-bold';
-panel.innerHTML='<i class="fas fa-info-circle mr-1.5"></i> Data mapel atau kelas belum tersedia, sehingga daftar status upload belum bisa dibuat.';
+panel.innerHTML='<i class="fas fa-info-circle mr-1.5"></i> Target upload guru belum tersedia. Isi Target Upload Spesifik atau akses mapel/kelas di admin.';
 return;
 }
-const expected=[];
-allowedKelas.forEach(k=>allowedMapel.forEach(m=>expected.push({kelas:k,mapel:m,key:`${m.toLowerCase()}||${k.toLowerCase()}`})));
 const uploadedMap=new Map();
 (history||[]).forEach(d=>{
 if(String(d.tahun||'')!==String(periode))return;
@@ -439,7 +470,15 @@ setUploadModalCompact(false);
 document.getElementById('step2Dashboard').classList.add('hidden');document.getElementById('step3Form').classList.remove('hidden');document.getElementById('step3Form').classList.add('flex');
 document.getElementById('guru').value=loggedInGuru.nama;
 const pop=(id,arr,cons,def)=>{const el=document.getElementById(id);el.innerHTML=`<option value="" disabled selected>${def}</option>`;let sc=cons?String(cons).trim():"";let alwd=(sc===""||sc.toLowerCase()==="bebas"||sc.toLowerCase()==="semua"||sc==="-")?[]:sc.split(',').map(s=>s.trim().toLowerCase());let cnt=0,last="";arr.forEach(i=>{let v=String(i.nama||i).trim();if(!v)return;let sv=v.toLowerCase();if(alwd.length===0||alwd.includes(sv)){el.add(new Option(v,v));cnt++;last=v;}});if(cnt===1)el.value=last;};
-pop('lembaga',masterLembaga,loggedInGuru.lembaga,'-- Lembaga --');pop('kelasDropdown',masterKelas,loggedInGuru.kelas,'-- Kelas --');pop('mapelDropdown',masterMapel,loggedInGuru.mapel,'-- Mapel --');
+pop('lembaga',masterLembaga,loggedInGuru.lembaga,'-- Lembaga --');
+const targetPairs=parseTeacherUploadTargets(loggedInGuru.uploadTargets);
+if(targetPairs.length){
+const mapelEl=document.getElementById('mapelDropdown'),kelasEl=document.getElementById('kelasDropdown');
+let uniqueMapel=[...new Set(targetPairs.map(p=>p.mapel))];
+mapelEl.innerHTML='<option value="" disabled selected>-- Mapel --</option>';uniqueMapel.forEach(m=>mapelEl.add(new Option(m,m)));
+const refreshKelas=()=>{let selected=mapelEl.value;let kelas=[...new Set(targetPairs.filter(p=>p.mapel===selected).map(p=>p.kelas))];kelasEl.innerHTML='<option value="" disabled selected>-- Kelas --</option>';kelas.forEach(k=>kelasEl.add(new Option(k,k)));if(kelas.length===1)kelasEl.value=kelas[0];};
+mapelEl.onchange=refreshKelas;if(uniqueMapel.length===1){mapelEl.value=uniqueMapel[0];refreshKelas();}
+}else{pop('kelasDropdown',masterKelas,loggedInGuru.kelas,'-- Kelas --');pop('mapelDropdown',masterMapel,loggedInGuru.mapel,'-- Mapel --');document.getElementById('mapelDropdown').onchange=null;}
 const elT=document.getElementById('tahun');elT.innerHTML='<option value="" disabled selected>-- Tahun --</option>';masterTahun.forEach(t=>elT.add(new Option(t,t)));
 }
 function backToDashboard(){
@@ -815,6 +854,8 @@ document.getElementById('editGuruEmail').value=g.email||'';
 renderMultiSelect('ms-edit-lembaga','label-ms-edit-lembaga','editGuruLembaga',masterLembaga,'-- Bebas --',g.lembaga);
 renderMultiSelect('ms-edit-mapel','label-ms-edit-mapel','editGuruMapel',masterMapel,'-- Bebas --',g.mapel);
 renderMultiSelect('ms-edit-kelas','label-ms-edit-kelas','editGuruKelas',masterKelas,'-- Bebas --',g.kelas);
+ensureGuruTargetFields();
+const editTargets=document.getElementById('editGuruUploadTargets');if(editTargets)editTargets.value=g.uploadTargets||'';
 modalHelper.open('editGuruModal','editGuruModalContent','editGuruName');
 }
 function closeEditGuruModal(){modalHelper.close('editGuruModal','editGuruModalContent');}
@@ -899,10 +940,10 @@ renderAdminLists();initApp();
 document.getElementById('reviewBukuForm')?.addEventListener('submit',async e=>{e.preventDefault();const b=document.getElementById('btnSubmitReview'),o=b.innerHTML;b.innerHTML='Menyimpan...';b.disabled=true;try{let r=await runGoogleScriptPromise('updateBookStatus',document.getElementById('reviewRowIndex').value,document.getElementById('reviewStatus').value,document.getElementById('reviewCatatan').value);if(r.success){showToast('Status Diperbarui');closeReviewModal();loadDataBukuAdmin();}}catch(x){showToast('Error','error');}b.innerHTML=o;b.disabled=false;});
 document.getElementById('formAddGuru')?.addEventListener('submit',e=>{e.preventDefault();let p=document.getElementById('inputGuruPin').value;if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error');
 const b=document.getElementById('btnSaveGuru'),o=b.innerHTML;b.innerHTML='Loading...';b.disabled=true;
-runGoogleScriptPromise('addDataAdmin','Guru',{nama:document.getElementById('inputGuruNama').value.trim(),target:parseInt(document.getElementById('inputGuruTarget').value)||1,pin:p,niy:document.getElementById('inputGuruNiy').value,lembaga:document.getElementById('inputGuruLembaga').value,mapel:document.getElementById('inputGuruMapel').value,kelas:document.getElementById('inputGuruKelas').value,email:document.getElementById('inputGuruEmail').value})
+runGoogleScriptPromise('addDataAdmin','Guru',{nama:document.getElementById('inputGuruNama').value.trim(),target:parseInt(document.getElementById('inputGuruTarget').value)||1,pin:p,niy:document.getElementById('inputGuruNiy').value,lembaga:document.getElementById('inputGuruLembaga').value,mapel:document.getElementById('inputGuruMapel').value,kelas:document.getElementById('inputGuruKelas').value,email:document.getElementById('inputGuruEmail').value,uploadTargets:document.getElementById('inputGuruUploadTargets')?.value||''})
 .then(r=>{if(r.success){showToast('Guru Ditambah');document.getElementById('formAddGuru').reset();updateMSLabel('ms-add-lembaga','label-ms-add-lembaga','-- Bebas --');updateMSLabel('ms-add-mapel','label-ms-add-mapel','-- Bebas --');updateMSLabel('ms-add-kelas','label-ms-add-kelas','-- Bebas --');initApp();}else showToast(r.message,'error');b.innerHTML=o;b.disabled=false;}).catch(()=>{showToast('Error','error');b.innerHTML=o;b.disabled=false;});
 });
-document.getElementById('editGuruForm')?.addEventListener('submit',async e=>{e.preventDefault();let p=document.getElementById('editGuruPin').value;if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error');const b=document.getElementById('btnSubmitEditGuru'),o=b.innerHTML;b.innerHTML='Loading...';b.disabled=true;try{let r=await runGoogleScriptPromise('updateDataAdmin','Guru',document.getElementById('editGuruOldName').value,document.getElementById('editGuruName').value,{target:document.getElementById('editGuruTarget').value,pin:p,niy:document.getElementById('editGuruNiy').value,lembaga:document.getElementById('editGuruLembaga').value,mapel:document.getElementById('editGuruMapel').value,kelas:document.getElementById('editGuruKelas').value,email:document.getElementById('editGuruEmail').value});if(r.success){showToast('Disimpan');initApp();closeEditGuruModal();}else showToast(r.message,'error');}catch(x){}b.innerHTML=o;b.disabled=false;});
+document.getElementById('editGuruForm')?.addEventListener('submit',async e=>{e.preventDefault();let p=document.getElementById('editGuruPin').value;if(!/^\d{8}$/.test(p))return showToast('PIN harus 8 angka!','error');const b=document.getElementById('btnSubmitEditGuru'),o=b.innerHTML;b.innerHTML='Loading...';b.disabled=true;try{let r=await runGoogleScriptPromise('updateDataAdmin','Guru',document.getElementById('editGuruOldName').value,document.getElementById('editGuruName').value,{target:document.getElementById('editGuruTarget').value,pin:p,niy:document.getElementById('editGuruNiy').value,lembaga:document.getElementById('editGuruLembaga').value,mapel:document.getElementById('editGuruMapel').value,kelas:document.getElementById('editGuruKelas').value,email:document.getElementById('editGuruEmail').value,uploadTargets:document.getElementById('editGuruUploadTargets')?.value||''});if(r.success){showToast('Disimpan');initApp();closeEditGuruModal();}else showToast(r.message,'error');}catch(x){}b.innerHTML=o;b.disabled=false;});
 const submitAdminForm=(e,t,fid,bid,payload)=>{e.preventDefault();const b=document.getElementById(bid),o=b.innerHTML;b.innerHTML='<i class="fas fa-spinner fa-spin"></i>';b.disabled=true;runGoogleScriptPromise('addDataAdmin',t,payload).then(r=>{if(r.success){showToast('Berhasil Ditambah');document.getElementById(fid).reset();initApp();}else showToast(r.message,'error');b.innerHTML=o;b.disabled=false;}).catch(()=>{showToast('Error','error');b.innerHTML=o;b.disabled=false;});}
 document.getElementById('formAddMapel')?.addEventListener('submit',e=>submitAdminForm(e,'Mapel','formAddMapel','btnSaveMapel',{nama:document.getElementById('inputMapelNama').value.trim()}));
 document.getElementById('formAddLembaga')?.addEventListener('submit',e=>submitAdminForm(e,'Lembaga','formAddLembaga','btnSaveLembaga',{nama:document.getElementById('inputLembagaNama').value.trim(),target:parseInt(document.getElementById('inputLembagaTarget').value)||100}));
