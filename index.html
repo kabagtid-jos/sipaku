@@ -393,13 +393,14 @@ panel.innerHTML='<i class="fas fa-info-circle mr-1.5"></i> Target upload guru be
 return;
 }
 const uploadedMap=new Map();
+const expectedHasLembaga=expected.some(i=>normalizeUploadText(i.lembaga));
 (history||[]).forEach(d=>{
 if(String(d.tahun||'')!==String(periode))return;
 if(d.status==='File Tidak Ditemukan')return;
 const exactKey=createUploadKey(d.lembaga,d.mapel,d.kelas);
 const looseKey=createUploadKey('',d.mapel,d.kelas);
 if(exactKey!=='||||')uploadedMap.set(exactKey,d);
-if(looseKey!=='||||')uploadedMap.set(looseKey,d);
+if(!expectedHasLembaga&&looseKey!=='||||')uploadedMap.set(looseKey,d);
 });
 const uploaded=expected.filter(i=>uploadedMap.has(i.key)).map(i=>({...i,status:uploadedMap.get(i.key).status||'Menunggu Review'}));
 const missing=expected.filter(i=>!uploadedMap.has(i.key));
